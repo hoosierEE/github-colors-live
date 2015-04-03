@@ -1,13 +1,12 @@
-function hg(u) {
+function hg(aUrl) {
     var xh = null;
     xh = new XMLHttpRequest();
-    xh.open("GET",u,false);
+    xh.open("GET",aUrl,false);
     xh.send(null);
     return xh.responseText;
 }
-
-var a = function() {
-    console.log(hg('https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml'));
-}
-
+var yml = "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml";
+var langs = jsyaml.safeLoad(hg(yml));
+var a = function() { console.log(langs); }
 window.onload = a;
+
