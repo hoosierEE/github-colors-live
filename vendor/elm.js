@@ -2772,9 +2772,9 @@ Elm.LiveColor.make = function (_elm) {
    $Text = Elm.Text.make(_elm);
    var lc = $Json$Decode.keyValuePairs($Json$Decode.value);
    var scene = function (a) {
-      return A2($Json$Decode.decodeValue,
+      return $Text.asText(A2($Json$Decode.decodeValue,
       lc,
-      a);
+      a));
    };
    var LC = F2(function (a,b) {
       return {_: {}
@@ -2808,10 +2808,8 @@ Elm.LiveColor.make = function (_elm) {
       return v;
    }));
    var main = A2($Signal._op["<~"],
-   $Text.asText,
-   A2($Signal._op["<~"],
    scene,
-   clrs));
+   clrs);
    _elm.LiveColor.values = {_op: _op
                            ,LC: LC
                            ,lc: lc

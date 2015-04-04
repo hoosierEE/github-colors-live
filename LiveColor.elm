@@ -37,10 +37,9 @@ type alias LC = { lang : String
 lc : Decoder (List (String, Value))
 lc = keyValuePairs value
 
-
 -- run the decoder on the incoming value
-scene a = decodeValue lc a
+scene a = asText (decodeValue lc a)
 
 -- display results
-main = asText <~ (scene <~ clrs)
+main = scene <~ clrs
 
