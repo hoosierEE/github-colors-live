@@ -2,12 +2,14 @@ module LiveColor where
 
 import Http
 import Signal (..)
-import Json.Decode (Decoder,string,Value)
+import Json.Decode (..)
 import Text (asText)
 
+-- PORTS
+port clrs : Signal Value -- result of YAML -> JSON conversion
 -- send the result of an Http request over to the JS for processing
-port convertYaml : Signal String
-port convertYaml =
+port yamlReq : Signal String
+port yamlReq =
     let url = constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
         res : Signal (Http.Response String)
         res = Http.sendGet url
@@ -18,12 +20,27 @@ port convertYaml =
             Http.Failure _ _ -> ""
     in decodeResponse <~ res
 
--- get JSON after some javascript library converts it from Yaml for us
-port clrs : Signal Value
+-- CONVERSIONS
+-- The values we care about are Language Name and Color.  Color might be absent,
+-- and for now we'll treat both as strings.  Later we can conver the (hex) color
+-- string to an Elm color.
+type alias LC = { lang : String
+                , colr : Maybe String
+                }
 
--- Extract a List(String, maybe String) from a JSON object
+-- extract value from JSON
+-- lc : Decoder LC
+-- lc =
+--     object2 LC
+--     ("lang" := string)
+--     (maybe ("colr" := string))
+lc : Decoder (List (String, Value))
+lc = keyValuePairs value
 
+
+-- run the decoder on the incoming value
+scene a = decodeValue lc a
 
 -- display results
-main = asText <~ clrs
+main = asText <~ (scene <~ clrs)
 

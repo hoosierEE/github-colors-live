@@ -2767,16 +2767,21 @@ Elm.LiveColor.make = function (_elm) {
    $moduleName = "LiveColor",
    $Http = Elm.Http.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var clrs = _P.portIn("clrs",
-   _P.incomingSignal(function (v) {
-      return v;
-   }));
-   var main = A2($Signal._op["<~"],
-   $Text.asText,
-   clrs);
-   var convertYaml = _P.portOut("convertYaml",
+   var lc = $Json$Decode.keyValuePairs($Json$Decode.value);
+   var scene = function (a) {
+      return A2($Json$Decode.decodeValue,
+      lc,
+      a);
+   };
+   var LC = F2(function (a,b) {
+      return {_: {}
+             ,colr: b
+             ,lang: a};
+   });
+   var yamlReq = _P.portOut("yamlReq",
    _P.outgoingSignal(function (v) {
       return v;
    }),
@@ -2789,7 +2794,7 @@ Elm.LiveColor.make = function (_elm) {
                return result._0;
                case "Waiting": return "";}
             _U.badCase($moduleName,
-            "between lines 15 and 19");
+            "between lines 17 and 21");
          }();
       };
       var url = $Signal.constant("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml");
@@ -2798,7 +2803,19 @@ Elm.LiveColor.make = function (_elm) {
       decodeResponse,
       res);
    }());
+   var clrs = _P.portIn("clrs",
+   _P.incomingSignal(function (v) {
+      return v;
+   }));
+   var main = A2($Signal._op["<~"],
+   $Text.asText,
+   A2($Signal._op["<~"],
+   scene,
+   clrs));
    _elm.LiveColor.values = {_op: _op
+                           ,LC: LC
+                           ,lc: lc
+                           ,scene: scene
                            ,main: main};
    return _elm.LiveColor.values;
 };
