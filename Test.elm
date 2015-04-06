@@ -1,4 +1,3 @@
-import Result
 import Text (asText,plainText)
 import Json.Decode (..)
 
@@ -20,7 +19,10 @@ testdata0 = """
 
 print d s = asText (decodeString d s)
 
-getResult a = Result.map
+-- resFromStr s = getResult (decodeString (keyValuePairs lang) s)
+getResult a = case a of
+    Ok rs -> rs
+    Err s -> s
 
 main = (print (keyValuePairs lang) testdata0)
 

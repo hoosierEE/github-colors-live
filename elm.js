@@ -2700,7 +2700,13 @@ Elm.Main.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Text = Elm.Text.make(_elm);
    var getResult = function (a) {
-      return $Result.map;
+      return function () {
+         switch (a.ctor)
+         {case "Err": return a._0;
+            case "Ok": return a._0;}
+         _U.badCase($moduleName,
+         "between lines 23 and 25");
+      }();
    };
    var print = F2(function (d,s) {
       return $Text.asText(A2($Json$Decode.decodeString,

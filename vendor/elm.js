@@ -2769,15 +2769,40 @@ Elm.LiveColor.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var defaultColor = $Json$Decode.oneOf(_L.fromArray([A2($Json$Decode._op[":="],
-                                                      "color",
-                                                      $Json$Decode.string)
-                                                      ,$Json$Decode.succeed("#cccccc")]));
-   var lv = $Json$Decode.keyValuePairs($Json$Decode.value);
-   var scene = function (a) {
+   var lang$ = A2($Json$Decode.at,
+   _L.fromArray(["color"]),
+   $Json$Decode.string);
+   var printd = function (s) {
       return $Text.asText(A2($Json$Decode.decodeValue,
-      lv,
-      a));
+      lang$,
+      s));
+   };
+   var Language = function (a) {
+      return {_: {},color: a};
+   };
+   var lang = A2($Json$Decode.object1,
+   Language,
+   $Json$Decode.oneOf(_L.fromArray([A2($Json$Decode._op[":="],
+                                   "color",
+                                   $Json$Decode.string)
+                                   ,$Json$Decode.succeed("#cccccc")])));
+   var lng = A3($Json$Decode.object2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   }),
+   $Json$Decode.value,
+   lang);
+   var printf = function (s) {
+      return $Text.asText(A2($Json$Decode.decodeValue,
+      $Json$Decode.keyValuePairs(lng),
+      s));
+   };
+   var printe = function (s) {
+      return $Text.asText(A2($Json$Decode.decodeValue,
+      $Json$Decode.keyValuePairs(lang),
+      s));
    };
    var yamlReq = _P.portOut("yamlReq",
    _P.outgoingSignal(function (v) {
@@ -2806,12 +2831,16 @@ Elm.LiveColor.make = function (_elm) {
       return v;
    }));
    var main = A2($Signal.map,
-   scene,
+   printf,
    clrs);
    _elm.LiveColor.values = {_op: _op
-                           ,lv: lv
-                           ,defaultColor: defaultColor
-                           ,scene: scene
+                           ,Language: Language
+                           ,lang: lang
+                           ,lang$: lang$
+                           ,lng: lng
+                           ,printd: printd
+                           ,printe: printe
+                           ,printf: printf
                            ,main: main};
    return _elm.LiveColor.values;
 };

@@ -1,14 +1,14 @@
 module LiveColor where
 
-import List
 import Http
 import Signal
 import Json.Decode (..)
 import Text (asText,plainText)
 
 -- PORTS
-port clrs : Signal Value -- result of YAML -> JSON conversion
-port yamlReq : Signal String -- Http GET the yaml string
+port clrs : Signal Value -- (INPUT) result of YAML -> JSON conversion
+
+port yamlReq : Signal String -- (OUTPUT) Http GET the yaml string
 port yamlReq =
     let url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
         res : Signal (Http.Response String)
@@ -21,21 +21,28 @@ port yamlReq =
     in Signal.map decodeResponse res
 
 -- CONVERSIONS
+type alias Language = { color: String }
 
--- extract value from JSON
-lv : Decoder (List (String,Value))
-lv = keyValuePairs value
+-- Design the decoders
+lang : Decoder Language
+lang = object1 Language (oneOf ["color" := string, succeed "#cccccc"])
 
--- turn a (String,Value) into a (String,String)
--- TODO
+lang' : Decoder String
+lang' = at ["color"] string
 
--- get the color, or use a default value
-defaultColor : Decoder String
-defaultColor = oneOf ["color" := string, succeed "#cccccc"]
+lng : Decoder (Value,Language)
+lng = object2 (,) value (lang)
 
--- run the decoder on the incoming value
-scene a = asText (decodeValue lv a)
+
+-- Err ("expecting an object with field 'color' but got {\"ABAP\":{\"type\": ...
+pa s = asText (decodeValue lang' s)
+
+-- Ok ([("xBase",{ color = "#3a4040" }),("wisp",{ color = "#7582D1" ...
+pb s = asText (decodeValue (keyValuePairs lang) s)
+
+-- Ok ([("xBase",(<internal structure>,{ color = "#3a4040" })),("wisp",(<internal structure>,{ color = "#7 ...
+pc s = asText (decodeValue (keyValuePairs lng) s)
 
 -- display results
-main = Signal.map scene clrs
+main = Signal.map pc clrs
 
