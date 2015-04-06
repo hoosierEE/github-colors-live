@@ -2302,75 +2302,6 @@ Elm.Graphics.Element.make = function (_elm) {
                                   ,outward: outward};
    return _elm.Graphics.Element.values;
 };
-Elm.Http = Elm.Http || {};
-Elm.Http.make = function (_elm) {
-   "use strict";
-   _elm.Http = _elm.Http || {};
-   if (_elm.Http.values)
-   return _elm.Http.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   _P = _N.Ports.make(_elm),
-   $moduleName = "Http",
-   $Native$Http = Elm.Native.Http.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var send = $Native$Http.send;
-   var Request = F4(function (a,
-   b,
-   c,
-   d) {
-      return {_: {}
-             ,body: c
-             ,headers: d
-             ,url: b
-             ,verb: a};
-   });
-   var request = Request;
-   var get = function (url) {
-      return A4(Request,
-      "GET",
-      url,
-      "",
-      _L.fromArray([]));
-   };
-   var sendGet = function (requestStrings) {
-      return send(A2($Signal.map,
-      get,
-      requestStrings));
-   };
-   var post = F2(function (url,
-   body) {
-      return A4(Request,
-      "POST",
-      url,
-      body,
-      _L.fromArray([]));
-   });
-   var Failure = F2(function (a,
-   b) {
-      return {ctor: "Failure"
-             ,_0: a
-             ,_1: b};
-   });
-   var Waiting = {ctor: "Waiting"};
-   var Success = function (a) {
-      return {ctor: "Success"
-             ,_0: a};
-   };
-   _elm.Http.values = {_op: _op
-                      ,send: send
-                      ,sendGet: sendGet
-                      ,get: get
-                      ,post: post
-                      ,request: request
-                      ,Request: Request
-                      ,Success: Success
-                      ,Waiting: Waiting
-                      ,Failure: Failure};
-   return _elm.Http.values;
-};
 Elm.Json = Elm.Json || {};
 Elm.Json.Decode = Elm.Json.Decode || {};
 Elm.Json.Decode.make = function (_elm) {
@@ -2753,67 +2684,50 @@ Elm.List.make = function (_elm) {
                       ,sortWith: sortWith};
    return _elm.List.values;
 };
-Elm.LiveColor = Elm.LiveColor || {};
-Elm.LiveColor.make = function (_elm) {
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
    "use strict";
-   _elm.LiveColor = _elm.LiveColor || {};
-   if (_elm.LiveColor.values)
-   return _elm.LiveColor.values;
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "LiveColor",
-   $Http = Elm.Http.make(_elm),
+   $moduleName = "Main",
    $Json$Decode = Elm.Json.Decode.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
+   $Result = Elm.Result.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var defaultColor = $Json$Decode.oneOf(_L.fromArray([A2($Json$Decode._op[":="],
-                                                      "color",
-                                                      $Json$Decode.string)
-                                                      ,$Json$Decode.succeed("#cccccc")]));
-   var lv = $Json$Decode.keyValuePairs($Json$Decode.value);
-   var scene = function (a) {
-      return $Text.asText(A2($Json$Decode.decodeValue,
-      lv,
-      a));
+   var getResult = function (a) {
+      return $Result.map;
    };
-   var yamlReq = _P.portOut("yamlReq",
-   _P.outgoingSignal(function (v) {
-      return v;
-   }),
-   function () {
-      var decodeResponse = function (result) {
-         return function () {
-            switch (result.ctor)
-            {case "Failure": return "";
-               case "Success":
-               return result._0;
-               case "Waiting": return "";}
-            _U.badCase($moduleName,
-            "between lines 17 and 21");
-         }();
-      };
-      var url = $Signal.constant("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml");
-      var res = $Http.sendGet(url);
-      return A2($Signal.map,
-      decodeResponse,
-      res);
-   }());
-   var clrs = _P.portIn("clrs",
-   _P.incomingSignal(function (v) {
-      return v;
-   }));
-   var main = A2($Signal.map,
-   scene,
-   clrs);
-   _elm.LiveColor.values = {_op: _op
-                           ,lv: lv
-                           ,defaultColor: defaultColor
-                           ,scene: scene
-                           ,main: main};
-   return _elm.LiveColor.values;
+   var print = F2(function (d,s) {
+      return $Text.asText(A2($Json$Decode.decodeString,
+      d,
+      s));
+   });
+   var testdata0 = "\n{\n    \"Apple\":{\"color\":\"#aeaeae\"},\n    \"Orange\":{\"color\":\"#abcabc\"},\n    \"Kiwi\":{\"tartness\":7000},\n    \"Pear\":{\"color\":\"#00bb99\",\"tartness\":100}\n}\n";
+   var Language = function (a) {
+      return {_: {},color: a};
+   };
+   var lang = A2($Json$Decode.object1,
+   Language,
+   $Json$Decode.oneOf(_L.fromArray([A2($Json$Decode._op[":="],
+                                   "color",
+                                   $Json$Decode.string)
+                                   ,$Json$Decode.succeed("#cccccc")])));
+   var main = A2(print,
+   $Json$Decode.keyValuePairs(lang),
+   testdata0);
+   _elm.Main.values = {_op: _op
+                      ,Language: Language
+                      ,lang: lang
+                      ,testdata0: testdata0
+                      ,print: print
+                      ,getResult: getResult
+                      ,main: main};
+   return _elm.Main.values;
 };
 Elm.Maybe = Elm.Maybe || {};
 Elm.Maybe.make = function (_elm) {
@@ -4364,70 +4278,6 @@ Elm.Native.Graphics.Element.make = function(localRuntime) {
         guid: Utils.guid
     };
 
-};
-
-Elm.Native.Http = {};
-Elm.Native.Http.make = function(elm) {
-
-    elm.Native = elm.Native || {};
-    elm.Native.Http = elm.Native.Http || {};
-    if (elm.Native.Http.values) return elm.Native.Http.values;
-
-    var List = Elm.List.make(elm);
-    var Signal = Elm.Signal.make(elm);
-
-    function registerReq(queue,responses) {
-        return function(req) {
-            if (req.url.length > 0) {
-                sendReq(queue,responses,req);
-            }
-        };
-    }
-
-    function updateQueue(queue,responses) {
-        if (queue.length > 0) {
-            elm.notify(responses.id, queue[0].value);
-            if (queue[0].value.ctor !== 'Waiting') {
-                queue.shift();
-                setTimeout(function() { updateQueue(queue,responses); }, 0);
-            }
-        }
-    }
-
-    function sendReq(queue,responses,req) {
-        var response = { value: { ctor:'Waiting' } };
-        queue.push(response);
-
-        var request = (window.ActiveXObject
-                       ? new ActiveXObject("Microsoft.XMLHTTP")
-                       : new XMLHttpRequest());
-
-        request.onreadystatechange = function(e) {
-            if (request.readyState === 4) {
-                response.value = (request.status >= 200 && request.status < 300 ?
-                                  { ctor:'Success', _0:request.responseText } :
-                                  { ctor:'Failure', _0:request.status, _1:request.statusText });
-                setTimeout(function() { updateQueue(queue,responses); }, 0);
-            }
-        };
-        request.open(req.verb, req.url, true);
-        function setHeader(pair) {
-            request.setRequestHeader( pair._0, pair._1 );
-        }
-        A2( List.map, setHeader, req.headers );
-        request.send(req.body);
-    }
-
-    function send(requests) {
-        var responses = Signal.constant(elm.Http.values.Waiting);
-        var sender = A2( Signal.map, registerReq([],responses), requests );
-        function f(x) { return function(y) { return x; } }
-        return A3( Signal.map2, f, responses, sender );
-    }
-
-    return elm.Native.Http.values = {
-        send:send
-    };
 };
 
 Elm.Native.Json = {};

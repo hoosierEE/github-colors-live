@@ -8,5 +8,7 @@ lc.ports.yamlReq.subscribe(function(s) {
         payload = jsyaml.safeLoad(s);
     }
     lc.ports.clrs.send(payload);
+    // debugging
+    console.log(payload);
 });
 
