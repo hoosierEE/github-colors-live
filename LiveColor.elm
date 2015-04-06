@@ -1,16 +1,15 @@
 module LiveColor where
 
 import Http
-import Graphics.Element (flow,down)
 import Signal
-import List
-import Array (..)
-import Text (asText,plainText)
+import Text (asText)
 
 -- PORTS
-port clrs : Signal (List (List (Maybe String))) -- (INPUT) result of YAML -> JSON conversion and filtering.
+-- input
+port clrs : Signal (List (List (Maybe String))) -- result of YAML -> JSON conversion and filtering.
 
-port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
+-- output
+port yamlReq : Signal String -- Http SEND GET the yaml string
 port yamlReq =
     let url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
         res : Signal (Http.Response String)
@@ -21,8 +20,6 @@ port yamlReq =
             Http.Waiting -> ""
             Http.Failure _ _ -> ""
     in Signal.map dResponse res
-
-scene a = flow down (List.map (\c -> asText c) a)
 
 -- display results
 main = Signal.map asText clrs
