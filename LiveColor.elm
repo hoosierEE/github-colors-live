@@ -8,8 +8,7 @@ import Array (..)
 import Text (asText,plainText)
 
 -- PORTS
--- port clrs : Signal (Array(Array(String, Maybe String)))-- (INPUT) result of YAML -> JSON conversion and filtering.
-port clrs : Signal (Array(List(String, Maybe String)))-- (INPUT) result of YAML -> JSON conversion and filtering.
+port clrs : Signal (List (List String)) -- (INPUT) result of YAML -> JSON conversion and filtering.
 
 port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
 port yamlReq =

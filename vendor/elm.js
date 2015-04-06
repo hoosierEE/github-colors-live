@@ -1591,11 +1591,9 @@ Elm.LiveColor.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "LiveColor",
-   $Array = Elm.Array.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Http = Elm.Http.make(_elm),
    $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Text = Elm.Text.make(_elm);
    var scene = function (a) {
@@ -1620,7 +1618,7 @@ Elm.LiveColor.make = function (_elm) {
                return result._0;
                case "Waiting": return "";}
             _U.badCase($moduleName,
-            "between lines 20 and 24");
+            "between lines 19 and 23");
          }();
       };
       var url = $Signal.constant("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml");
@@ -1631,13 +1629,9 @@ Elm.LiveColor.make = function (_elm) {
    }());
    var clrs = _P.portIn("clrs",
    _P.incomingSignal(function (v) {
-      return typeof v === "object" && v instanceof Array ? Elm.Native.Array.make(_elm).fromJSArray(v.map(function (v) {
+      return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
          return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
-            return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
-                                                                 ,_0: typeof v[0] === "string" || typeof v[0] === "object" && v[0] instanceof String ? v[0] : _U.badPort("a string",
-                                                                 v[0])
-                                                                 ,_1: v[1] === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v[1] === "string" || typeof v[1] === "object" && v[1] instanceof String ? v[1] : _U.badPort("a string",
-                                                                 v[1]))} : _U.badPort("an array",
+            return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
             v);
          })) : _U.badPort("an array",v);
       })) : _U.badPort("an array",v);
