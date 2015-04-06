@@ -1594,6 +1594,7 @@ Elm.LiveColor.make = function (_elm) {
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Http = Elm.Http.make(_elm),
    $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Text = Elm.Text.make(_elm);
    var scene = function (a) {
@@ -1631,8 +1632,8 @@ Elm.LiveColor.make = function (_elm) {
    _P.incomingSignal(function (v) {
       return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
          return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
-            return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
-            v);
+            return v === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+            v));
          })) : _U.badPort("an array",v);
       })) : _U.badPort("an array",v);
    }));
