@@ -7,9 +7,10 @@ lc.ports.yamlReq.subscribe(function(s) {
     if (s !== "") {
         var payload = jsyaml.safeLoad(s);
         for(var language in payload) {
-            var thisEntry = [language, JSON.stringify(language.color)];
+            var thisEntry = [language, payload[language].color];
             filt.push(thisEntry);
         }
+        console.log(filt);
         lc.ports.clrs.send(JSON.parse(JSON.stringify(filt)));
     }
 });
