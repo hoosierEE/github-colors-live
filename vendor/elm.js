@@ -1897,12 +1897,11 @@ Elm.LiveColor.make = function (_elm) {
    $Text = Elm.Text.make(_elm);
    var fromHex = function (x) {
       return function () {
-         var fc = $String.fromChar;
          var cs = $String.toList($String.toLower(x));
          var vals = A2($List.map,
          function (c) {
             return A2($String.indexes,
-            fc(c),
+            $String.fromChar(c),
             "0123456789abcdef");
          },
          cs);
@@ -1974,9 +1973,9 @@ Elm.LiveColor.make = function (_elm) {
                "between lines 37 and 40");
             }();
          };
-         var txtFn = function (a) {
-            return $Text.asText(a);
-         };
+         var txtFn = F2(function (a,b) {
+            return $Graphics$Element.color($Color.white)($Text.plainText(a));
+         });
          var boxed = function (_v2) {
             return function () {
                switch (_v2.ctor)
@@ -1985,9 +1984,9 @@ Elm.LiveColor.make = function (_elm) {
                     300,
                     30,
                     $Graphics$Element.middle,
-                    txtFn(_v2._0)));}
+                    A2(txtFn,_v2._0,_v2._1)));}
                _U.badCase($moduleName,
-               "on line 41, column 13 to 68");
+               "on line 41, column 13 to 72");
             }();
          };
          var doAll = function (lst) {

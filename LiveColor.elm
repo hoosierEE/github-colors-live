@@ -9,7 +9,7 @@ import List
 import Maybe
 import Signal
 import String
-import Text (asText)
+import Text (asText,plainText)
 
 ------------
 -- PORTS --
@@ -33,12 +33,12 @@ port yamlReq =
 scene : List(String,Maybe String) -> Element
 scene ls =
     let
-        txtFn a = asText <| a
+        txtFn a b = color Color.white <| plainText <| a
         clrFn a = case a of
             Just a -> rgbFromCss a
             Nothing -> rgbFromCss "#ccc"
         boxed (txt,clr) =
-            container 300 30 middle (txtFn txt) |> color (clrFn clr)
+            container 300 30 middle (txtFn txt clr) |> color (clrFn clr)
         --doBoth tpl = (txtFn tpl) `beside` (clrFn tpl)
         doAll lst = List.map (\tpl -> boxed tpl) lst
     in flow down <| doAll ls
@@ -48,7 +48,6 @@ scene ls =
 ------------
 main = Signal.map scene clrs
 
-
 ---------------
 -- UTILITIES --
 ---------------
@@ -56,8 +55,7 @@ main = Signal.map scene clrs
 fromHex : String -> Int
 fromHex x =
     let cs = String.toList <| String.toLower x
-        fc = String.fromChar
-        vals = List.map (\c -> (String.indexes (fc c) "0123456789abcdef")) cs
+        vals = List.map (\c -> (String.indexes (String.fromChar c) "0123456789abcdef")) cs
         valList = List.concat <| List.reverse vals
         indexedVals = List.reverse <| List.indexedMap (\idx val -> 16^idx * val) valList
     in List.foldr (+) 0 indexedVals
