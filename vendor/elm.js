@@ -1897,23 +1897,28 @@ Elm.LiveColor.make = function (_elm) {
    $Text = Elm.Text.make(_elm);
    var fromHex = function (x) {
       return function () {
-         var i = A2($String.indexes,
-         x,
-         "0123456789abcdef0123456789ABCDEF");
-         var i$ = A2($List.map,
-         function (x) {
-            return A2($Basics.rem,x,16);
+         var fc = $String.fromChar;
+         var cs = $String.toList($String.toLower(x));
+         var vals = A2($List.map,
+         function (c) {
+            return A2($String.indexes,
+            fc(c),
+            "0123456789abcdef");
          },
-         i);
-         return A2($List.foldr,
+         cs);
+         var valList = $List.concat($List.reverse(vals));
+         var indexedVals = $List.reverse(A2($List.indexedMap,
+         F2(function (idx,val) {
+            return Math.pow(16,
+            idx) * val;
+         }),
+         valList));
+         return A3($List.foldr,
          F2(function (x,y) {
             return x + y;
          }),
-         0)(A2($List.indexedMap,
-         F2(function (a,b) {
-            return Math.pow(2,a) * b;
-         }),
-         i$));
+         0,
+         indexedVals);
       }();
    };
    var rgbFromCss = function (cssColorString) {
@@ -1940,15 +1945,15 @@ Elm.LiveColor.make = function (_elm) {
          var $ = {ctor: "_Tuple3"
                  ,_0: fromHex(A3($String.slice,
                  0,
-                 1,
+                 2,
                  str))
                  ,_1: fromHex(A3($String.slice,
                  2,
-                 3,
+                 4,
                  str))
                  ,_2: fromHex(A3($String.slice,
                  4,
-                 5,
+                 6,
                  str))},
          r = $._0,
          g = $._1,
@@ -1958,29 +1963,41 @@ Elm.LiveColor.make = function (_elm) {
    };
    var scene = function (ls) {
       return function () {
-         var clrFn = function (clr) {
-            return $Text.asText(rgbFromCss(A2($Maybe.withDefault,
-            "#ccc",
-            $Basics.snd(clr))));
+         var clrFn = function (a) {
+            return function () {
+               switch (a.ctor)
+               {case "Just":
+                  return rgbFromCss(a._0);
+                  case "Nothing":
+                  return rgbFromCss("#ccc");}
+               _U.badCase($moduleName,
+               "between lines 37 and 40");
+            }();
          };
-         var txtFn = function (txt) {
-            return $Text.asText($Basics.fst(txt));
+         var txtFn = function (a) {
+            return $Text.asText(a);
          };
-         var doBoth = function (tpl) {
-            return A2($Graphics$Element.beside,
-            txtFn(tpl),
-            clrFn(tpl));
+         var boxed = function (_v2) {
+            return function () {
+               switch (_v2.ctor)
+               {case "_Tuple2":
+                  return $Graphics$Element.color(clrFn(_v2._1))(A4($Graphics$Element.container,
+                    300,
+                    30,
+                    $Graphics$Element.middle,
+                    txtFn(_v2._0)));}
+               _U.badCase($moduleName,
+               "on line 41, column 13 to 68");
+            }();
          };
          var doAll = function (lst) {
             return A2($List.map,
             function (tpl) {
-               return doBoth(tpl);
+               return boxed(tpl);
             },
             lst);
          };
-         return A2($Graphics$Element.flow,
-         $Graphics$Element.down,
-         doAll(ls));
+         return $Graphics$Element.flow($Graphics$Element.down)(doAll(ls));
       }();
    };
    var yamlReq = _P.portOut("yamlReq",

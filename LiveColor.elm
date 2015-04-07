@@ -30,13 +30,18 @@ port yamlReq =
 ------------
 -- RENDER --
 ------------
+scene : List(String,Maybe String) -> Element
 scene ls =
-    let txtFn txt = asText <| fst txt
-        clrFn clr = rgbFromCss <| Maybe.withDefault "#ccc" (snd clr)
-        boxed (txt,clr) = container 30 30 middle (txtFn txt) |> color (clrFn clr)
+    let
+        txtFn a = asText <| a
+        clrFn a = case a of
+            Just a -> rgbFromCss a
+            Nothing -> rgbFromCss "#ccc"
+        boxed (txt,clr) =
+            container 300 30 middle (txtFn txt) |> color (clrFn clr)
         --doBoth tpl = (txtFn tpl) `beside` (clrFn tpl)
         doAll lst = List.map (\tpl -> boxed tpl) lst
-    in flow down (doAll ls)
+    in flow down <| doAll ls
 
 ------------
 -- WIRING --
@@ -44,15 +49,18 @@ scene ls =
 main = Signal.map scene clrs
 
 
-
 ---------------
 -- UTILITIES --
 ---------------
 -- hex to decimal
+fromHex : String -> Int
 fromHex x =
-    let i = (String.indexes x "0123456789abcdef0123456789ABCDEF")
-        i' = List.map (\x -> x `rem` 16) i
-    in List.foldr (+) 0 <| List.indexedMap (\a b -> 2^a * b) i'
+    let cs = String.toList <| String.toLower x
+        fc = String.fromChar
+        vals = List.map (\c -> (String.indexes (fc c) "0123456789abcdef")) cs
+        valList = List.concat <| List.reverse vals
+        indexedVals = List.reverse <| List.indexedMap (\idx val -> 16^idx * val) valList
+    in List.foldr (+) 0 indexedVals
 
 -- CSS colors typically come in one of two formats, #rrggbb or #rgb
 -- browsers do this: #123 becomes #112233
@@ -67,6 +75,6 @@ rgbFromCss cssColorString =
                 , String.right 1 noHastag -- blue
                 ]
              else noHastag
-        (r,g,b) = (fromHex <| String.slice 0 1 str, fromHex <| String.slice 2 3 str, fromHex <| String.slice 4 5 str)
+        (r,g,b) = (fromHex <| String.slice 0 2 str, fromHex <| String.slice 2 4 str, fromHex <| String.slice 4 6 str)
     in Color.rgb r g b
 
