@@ -60,9 +60,9 @@ fromHex x =
         indexedVals = List.reverse <| List.indexedMap (\idx val -> 16^idx * val) valList
     in List.foldr (+) 0 indexedVals
 
--- CSS colors typically come in one of two formats, #rrggbb or #rgb
--- browsers do this: #123 becomes #112233
--- Let's convert that mess into a lovely (rr,gg,bb) color!
+{- CSS colors typically come in one of two formats, #rrggbb or #rgb
+ - browsers do this: #123 becomes #112233
+ - Let's convert that mess into a lovely (rr,gg,bb) color!  -}
 rgbFromCss : String -> Color.Color
 rgbFromCss cssColorString =
     let noHastag = String.dropLeft 1 cssColorString -- drop the "#"
