@@ -32,10 +32,10 @@ port yamlReq =
 ------------
 scene ls =
     let txtFn txt = asText <| fst txt
-        clrFn clr = asText <| rgbFromCss <| Maybe.withDefault "#ccc" (snd clr)
-        --boxed (txt,clr) = flow outward [txtFn txt, spacer 30 30 |> clrFn]
-        doBoth tpl = (txtFn tpl) `beside` (clrFn tpl)
-        doAll lst = List.map (\tpl -> doBoth tpl) lst
+        clrFn clr = rgbFromCss <| Maybe.withDefault "#ccc" (snd clr)
+        boxed (txt,clr) = container 30 30 middle (txtFn txt) |> color (clrFn clr)
+        --doBoth tpl = (txtFn tpl) `beside` (clrFn tpl)
+        doAll lst = List.map (\tpl -> boxed tpl) lst
     in flow down (doAll ls)
 
 ------------
