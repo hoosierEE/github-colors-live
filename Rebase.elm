@@ -1,9 +1,9 @@
 module Rebase (decimalFromHex) where
--- module Hex where
 
 import String (indexes,fromChar,toList)
 import List (map,head,reverse,indexedMap,foldr)
 
+-- convert a hexadecimal String into an Int
 decimalFromHex : String -> Int
 decimalFromHex hexString =
     let xs = reverse <| toList hexString
