@@ -34,8 +34,17 @@ port yamlReq =
 scene : (Int,Int) -> List (String, Maybe String) -> Element
 scene (w,h) ls =
     let
-        title = (width w << T.centered << T.typeface ["Tahoma","Geneva","sans-serif"] << T.height 40 << T.fromString) "GitHub Language Colors"
-        txtFn = T.centered << T.height 18 << T.typeface ["Lucida Console","monospace"] << T.fromString
+        -- titleStyle : T.Style
+        ds = T.defaultStyle
+        titleStyle = T.style { typeface = ["BentonSansRegular","sans"]
+                             , height = Just 80
+                             , color = Color.charcoal
+                             , bold = False
+                             , italic = False
+                             , line = Nothing
+                             }
+        title = (link "https://github.com/hoosierEE/github-colors-live" << width w << T.centered << titleStyle << T.fromString) "GitHub Language Colors"
+        txtFn = T.centered << T.height 26 << T.typeface ["Lucida Console","monospace"] << T.fromString
         clrFn c = case c of
             Just c -> Color.toHsl <| rgbFromCss c
             Nothing -> Color.toHsl <| rgbFromCss "ccc"

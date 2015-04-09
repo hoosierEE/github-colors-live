@@ -1925,7 +1925,7 @@ Elm.LiveColor.make = function (_elm) {
                           _v0._1,
                           hexColor));}
                      _U.badCase($moduleName,
-                     "on line 71, column 67 to 111");
+                     "on line 80, column 67 to 111");
                   }();
                },
                ids));
@@ -1947,7 +1947,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v4._1,
                     str));}
                _U.badCase($moduleName,
-               "on line 74, column 21 to 66");
+               "on line 83, column 21 to 66");
             }();
          };
          var _ = A2($List.map,
@@ -1965,7 +1965,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 76, column 19 to 42");
+            "on line 85, column 19 to 42");
          }();
          var g = function () {
             switch (_.ctor)
@@ -1979,7 +1979,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 76, column 19 to 42");
+            "on line 85, column 19 to 42");
          }();
          var r = function () {
             switch (_.ctor)
@@ -1993,7 +1993,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 76, column 19 to 42");
+            "on line 85, column 19 to 42");
          }();
          return A3($Color.rgb,r,g,b);
       }();
@@ -2012,11 +2012,11 @@ Elm.LiveColor.make = function (_elm) {
                           case "Nothing":
                           return $Color.toHsl(rgbFromCss("ccc"));}
                        _U.badCase($moduleName,
-                       "between lines 39 and 43");
+                       "between lines 48 and 52");
                     }();
                  };
                  var txtFn = function ($) {
-                    return $Text.centered($Text.height(18)($Text.typeface(_L.fromArray(["Lucida Console"
+                    return $Text.centered($Text.height(26)($Text.typeface(_L.fromArray(["Lucida Console"
                                                                                        ,"monospace"]))($Text.fromString($))));
                  };
                  var alphs = A2($List.map,
@@ -2028,7 +2028,7 @@ Elm.LiveColor.make = function (_elm) {
                                  ,_0: txtFn(_v35._0)
                                  ,_1: clrFn(_v35._1)};}
                        _U.badCase($moduleName,
-                       "on line 43, column 38 to 54");
+                       "on line 52, column 38 to 54");
                     }();
                  },
                  ls);
@@ -2068,7 +2068,7 @@ Elm.LiveColor.make = function (_elm) {
                                _v39._0)));
                             }();}
                        _U.badCase($moduleName,
-                       "between lines 49 and 51");
+                       "between lines 58 and 60");
                     }();
                  };
                  var fds = function (t) {
@@ -2076,11 +2076,18 @@ Elm.LiveColor.make = function (_elm) {
                     boxed,
                     t));
                  };
+                 var titleStyle = $Text.style({_: {}
+                                              ,bold: false
+                                              ,color: $Color.charcoal
+                                              ,height: $Maybe.Just(80)
+                                              ,italic: false
+                                              ,line: $Maybe.Nothing
+                                              ,typeface: _L.fromArray(["BentonSansRegular"
+                                                                      ,"sans"])});
                  var title = function ($) {
-                    return $Graphics$Element.width(_v29._0)($Text.centered($Text.typeface(_L.fromArray(["Tahoma"
-                                                                                                       ,"Geneva"
-                                                                                                       ,"sans-serif"]))($Text.height(40)($Text.fromString($)))));
+                    return $Graphics$Element.link("https://github.com/hoosierEE/github-colors-live")($Graphics$Element.width(_v29._0)($Text.centered(titleStyle($Text.fromString($)))));
                  }("GitHub Language Colors");
+                 var ds = $Text.defaultStyle;
                  return A2($Graphics$Element.flow,
                  $Graphics$Element.down,
                  _L.fromArray([title
@@ -2089,7 +2096,7 @@ Elm.LiveColor.make = function (_elm) {
                               cols))]));
               }();}
          _U.badCase($moduleName,
-         "between lines 36 and 53");
+         "between lines 36 and 62");
       }();
    });
    var yamlReq = _P.portOut("yamlReq",

@@ -1,14 +1,13 @@
 {
     "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/USER/PROJECT.git",
-    "license": "BSD3",
+    "summary": "Display the colors used by GitHub in its language stats bar.",
+    "repository": "https://github.com/hoosierEE/github-colors-live.git",
+    "license": "MIT",
     "source-directories": [
         "."
     ],
     "exposed-modules": [],
     "dependencies": {
-        "elm-lang/core": "1.1.1 <= v < 2.0.0",
-        "johnpmayer/elm-linear-algebra": "1.0.0 < v <= 2.0.0"
+        "elm-lang/core": "1.1.1 <= v < 2.0.0"
     }
 }
