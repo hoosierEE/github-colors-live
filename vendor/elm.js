@@ -1925,7 +1925,7 @@ Elm.LiveColor.make = function (_elm) {
                           _v0._1,
                           hexColor));}
                      _U.badCase($moduleName,
-                     "on line 80, column 67 to 111");
+                     "on line 82, column 67 to 111");
                   }();
                },
                ids));
@@ -1947,7 +1947,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v4._1,
                     str));}
                _U.badCase($moduleName,
-               "on line 83, column 21 to 66");
+               "on line 85, column 21 to 66");
             }();
          };
          var _ = A2($List.map,
@@ -1965,7 +1965,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 85, column 19 to 42");
+            "on line 87, column 19 to 42");
          }();
          var g = function () {
             switch (_.ctor)
@@ -1979,7 +1979,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 85, column 19 to 42");
+            "on line 87, column 19 to 42");
          }();
          var r = function () {
             switch (_.ctor)
@@ -1993,7 +1993,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 85, column 19 to 42");
+            "on line 87, column 19 to 42");
          }();
          return A3($Color.rgb,r,g,b);
       }();
@@ -2004,31 +2004,25 @@ Elm.LiveColor.make = function (_elm) {
          switch (_v29.ctor)
          {case "_Tuple2":
             return function () {
-                 var clrFn = function (c) {
-                    return function () {
-                       switch (c.ctor)
-                       {case "Just":
-                          return $Color.toHsl(rgbFromCss(c._0));
-                          case "Nothing":
-                          return $Color.toHsl(rgbFromCss("ccc"));}
-                       _U.badCase($moduleName,
-                       "between lines 48 and 52");
-                    }();
+                 var clrFn = rgbFromCss;
+                 var txtTiny = function ($) {
+                    return $Text.centered($Text.height(12)($Text.typeface(_L.fromArray(["BentonSansRegular"
+                                                                                       ,"sans"]))($Text.fromString($))));
                  };
                  var txtFn = function ($) {
-                    return $Text.centered($Text.height(26)($Text.typeface(_L.fromArray(["Lucida Console"
-                                                                                       ,"monospace"]))($Text.fromString($))));
+                    return $Text.centered($Text.height(26)($Text.typeface(_L.fromArray(["BentonSansRegular"
+                                                                                       ,"sans"]))($Text.fromString($))));
                  };
                  var alphs = A2($List.map,
-                 function (_v35) {
+                 function (_v33) {
                     return function () {
-                       switch (_v35.ctor)
+                       switch (_v33.ctor)
                        {case "_Tuple2":
                           return {ctor: "_Tuple2"
-                                 ,_0: txtFn(_v35._0)
-                                 ,_1: clrFn(_v35._1)};}
+                                 ,_0: txtFn(_v33._0)
+                                 ,_1: clrFn(_v33._1)};}
                        _U.badCase($moduleName,
-                       "on line 52, column 38 to 54");
+                       "on line 51, column 38 to 54");
                     }();
                  },
                  ls);
@@ -2036,39 +2030,54 @@ Elm.LiveColor.make = function (_elm) {
                  function ($) {
                     return function (_) {
                        return _.hue;
-                    }($Basics.snd($));
+                    }($Color.toHsl($Basics.snd($)));
                  },
                  alphs);
                  var columnAlpha = A2($List._op["::"],
                  {ctor: "_Tuple2"
                  ,_0: txtFn("alphabetical")
-                 ,_1: clrFn($Maybe.Nothing)},
+                 ,_1: A3($Color.rgb,
+                 244,
+                 244,
+                 244)},
                  alphs);
                  var columnHue = A2($List._op["::"],
                  {ctor: "_Tuple2"
                  ,_0: txtFn("by hue")
-                 ,_1: clrFn($Maybe.Nothing)},
+                 ,_1: A3($Color.rgb,
+                 244,
+                 244,
+                 244)},
                  hues);
                  var cols = _L.fromArray([columnAlpha
                                          ,columnHue]);
-                 var boxed = function (_v39) {
+                 var boxed = function (_v37) {
                     return function () {
-                       switch (_v39.ctor)
+                       switch (_v37.ctor)
                        {case "_Tuple2":
                           return function () {
-                               var c = A3($Color.hsl,
-                               _v39._1.hue,
-                               _v39._1.saturation,
-                               _v39._1.lightness);
+                               var rc = $Color.toRgb(_v37._1);
+                               var rc$ = A3($Color.rgb,
+                               rc.red,
+                               rc.green,
+                               rc.blue);
+                               var hc = $Color.toHsl(_v37._1);
+                               var hc$ = A3($Color.hsl,
+                               hc.hue,
+                               hc.saturation,
+                               hc.lightness);
                                var mw = _v29._0 / $List.length(cols) | 0;
-                               return $Graphics$Element.width(mw)($Graphics$Element.color(c)(A4($Graphics$Element.container,
+                               return $Graphics$Element.width(mw)($Graphics$Element.color(rc$)(A4($Graphics$Element.container,
                                mw,
                                60,
                                $Graphics$Element.middle,
-                               _v39._0)));
+                               A2($Graphics$Element.flow,
+                               $Graphics$Element.down,
+                               _L.fromArray([_v37._0
+                                            ,txtTiny($Basics.toString(rc$))])))));
                             }();}
                        _U.badCase($moduleName,
-                       "between lines 58 and 60");
+                       "between lines 57 and 62");
                     }();
                  };
                  var fds = function (t) {
@@ -2082,10 +2091,10 @@ Elm.LiveColor.make = function (_elm) {
                                               ,height: $Maybe.Just(80)
                                               ,italic: false
                                               ,line: $Maybe.Nothing
-                                              ,typeface: _L.fromArray(["BentonSansRegular"
+                                              ,typeface: _L.fromArray(["BentonSansBold"
                                                                       ,"sans"])});
                  var title = function ($) {
-                    return $Graphics$Element.link("https://github.com/hoosierEE/github-colors-live")($Graphics$Element.width(_v29._0)($Text.centered(titleStyle($Text.fromString($)))));
+                    return $Graphics$Element.width(_v29._0)($Text.centered(titleStyle($Text.fromString($))));
                  }("GitHub Language Colors");
                  var ds = $Text.defaultStyle;
                  return A2($Graphics$Element.flow,
@@ -2096,7 +2105,7 @@ Elm.LiveColor.make = function (_elm) {
                               cols))]));
               }();}
          _U.badCase($moduleName,
-         "between lines 36 and 62");
+         "between lines 36 and 64");
       }();
    });
    var yamlReq = _P.portOut("yamlReq",
@@ -2127,8 +2136,8 @@ Elm.LiveColor.make = function (_elm) {
          return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
                                                               ,_0: typeof v[0] === "string" || typeof v[0] === "object" && v[0] instanceof String ? v[0] : _U.badPort("a string",
                                                               v[0])
-                                                              ,_1: v[1] === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v[1] === "string" || typeof v[1] === "object" && v[1] instanceof String ? v[1] : _U.badPort("a string",
-                                                              v[1]))} : _U.badPort("an array",
+                                                              ,_1: typeof v[1] === "string" || typeof v[1] === "object" && v[1] instanceof String ? v[1] : _U.badPort("a string",
+                                                              v[1])} : _U.badPort("an array",
          v);
       })) : _U.badPort("an array",v);
    }));

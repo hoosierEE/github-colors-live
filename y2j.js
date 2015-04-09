@@ -7,7 +7,11 @@ lc.ports.yamlReq.subscribe(function(s) {
     if (s !== "") {
         var payload = jsyaml.safeLoad(s);
         for(var language in payload) {
-            var thisEntry = [language, payload[language].color];
+            var justColor = payload[language].color;
+            if (typeof justColor === "undefined") {
+                justColor = "#ccc";
+            }
+            var thisEntry = [language, justColor];
             filt.push(thisEntry);
         }
         // console.log(filt);
