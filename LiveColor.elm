@@ -1,12 +1,12 @@
 module LiveColor where
 
+import Math.Vector3 as Vec
 import Color
 import Graphics.Element (..)
 import Graphics.Collage (..)
 import Rebase
 import Http
 import List
-import Maybe
 import Signal
 import String
 import Text as T
@@ -35,15 +35,25 @@ port yamlReq =
 scene : (Int,Int) -> List (String, Maybe String) -> Element
 scene (w,h) ls =
     let
-        txtFn t = T.justified <| T.fromString t
+        title = (width w << T.centered << T.typeface ["helvetica neue","helvetica","serif"] << T.height 40 << T.fromString) "Github Language Colors, Sorted"
+        byAlp : List (Element, { alpha : Float, hue : Float, lightness : Float, saturation : Float })
+        byAlp = List.map (\(a,b) -> (txtFn a, clrFn b)) ls
+        txtFn = T.centered << T.height 18 << T.fromString
         clrFn c = case c of
-            Just c -> rgbFromCss c
-            Nothing -> rgbFromCss "#ccc"
+            Just c -> Color.toHsl <| rgbFromCss c
+            Nothing -> Color.toHsl <| rgbFromCss "#fff"
+        stylize lst = List.map boxed lst
+        fds (h,t) = flow down [txtFn h, flow down <| stylize t]
+        -- dHue (a,b) = Vec.distance (Vec.vec3 a.hue a.saturation a.lightness) (Vec.fromTuple b)
+        byHue = List.sortBy (.hue << snd) byAlp
+        bySat = List.sortBy (.saturation << snd) byAlp
+        byLig = List.sortBy (.lightness << snd) byAlp
+        cols = [("alphabetical",byAlp),("by hue",byHue),("saturation",bySat),("lightness",byLig)]
         boxed (txt,clr) =
-            let mw = max 250 (w//3)
-            in container mw 30 middle (width mw <| txtFn txt) |> color (clrFn clr)
-        doAll lst = List.map boxed lst
-    in flow down <| doAll ls
+            let mw = w // List.length cols
+                c = Color.hsl clr.hue clr.saturation clr.lightness
+            in color c <| container mw 60 middle (width mw <| txt)
+    in flow down [title, flow right <| List.map fds cols]
 
 ------------
 -- WIRING --
