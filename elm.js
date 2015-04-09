@@ -675,6 +675,602 @@ Elm.Color.make = function (_elm) {
                        ,darkCharcoal: darkCharcoal};
    return _elm.Color.values;
 };
+Elm.ColorTest = Elm.ColorTest || {};
+Elm.ColorTest.make = function (_elm) {
+   "use strict";
+   _elm.ColorTest = _elm.ColorTest || {};
+   if (_elm.ColorTest.values)
+   return _elm.ColorTest.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "ColorTest",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Rebase = Elm.Rebase.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $Window = Elm.Window.make(_elm);
+   var rgbFromCss = function (cssColorString) {
+      return function () {
+         var rgbIndexes = _L.fromArray([{ctor: "_Tuple2"
+                                        ,_0: 0
+                                        ,_1: 2}
+                                       ,{ctor: "_Tuple2",_0: 2,_1: 4}
+                                       ,{ctor: "_Tuple2"
+                                        ,_0: 4
+                                        ,_1: 6}]);
+         var hexColor = _U.eq(A2($String.left,
+         1,
+         cssColorString),
+         "#") ? A2($String.dropLeft,
+         1,
+         cssColorString) : cssColorString;
+         var str = _U.eq($String.length(hexColor),
+         3) ? function () {
+            var dub = function (ids) {
+               return $String.concat(A2($List.map,
+               function (_v0) {
+                  return function () {
+                     switch (_v0.ctor)
+                     {case "_Tuple2":
+                        return $String.repeat(2)(A3($String.slice,
+                          _v0._0,
+                          _v0._1,
+                          hexColor));}
+                     _U.badCase($moduleName,
+                     "on line 71, column 67 to 111");
+                  }();
+               },
+               ids));
+            };
+            return dub(_L.fromArray([{ctor: "_Tuple2"
+                                     ,_0: 0
+                                     ,_1: 1}
+                                    ,{ctor: "_Tuple2",_0: 1,_1: 2}
+                                    ,{ctor: "_Tuple2"
+                                     ,_0: 2
+                                     ,_1: 3}]));
+         }() : hexColor;
+         var dfh = function (_v4) {
+            return function () {
+               switch (_v4.ctor)
+               {case "_Tuple2":
+                  return $Rebase.decimalFromHex(A3($String.slice,
+                    _v4._0,
+                    _v4._1,
+                    str));}
+               _U.badCase($moduleName,
+               "on line 74, column 21 to 66");
+            }();
+         };
+         var _ = A2($List.map,
+         dfh,
+         rgbIndexes);
+         var b = function () {
+            switch (_.ctor)
+            {case "::": switch (_._1.ctor)
+                 {case "::":
+                    switch (_._1._1.ctor)
+                      {case "::":
+                         switch (_._1._1._1.ctor)
+                           {case "[]": return _._1._1._0;}
+                           break;}
+                      break;}
+                 break;}
+            _U.badCase($moduleName,
+            "on line 76, column 19 to 42");
+         }();
+         var g = function () {
+            switch (_.ctor)
+            {case "::": switch (_._1.ctor)
+                 {case "::":
+                    switch (_._1._1.ctor)
+                      {case "::":
+                         switch (_._1._1._1.ctor)
+                           {case "[]": return _._1._0;}
+                           break;}
+                      break;}
+                 break;}
+            _U.badCase($moduleName,
+            "on line 76, column 19 to 42");
+         }();
+         var r = function () {
+            switch (_.ctor)
+            {case "::": switch (_._1.ctor)
+                 {case "::":
+                    switch (_._1._1.ctor)
+                      {case "::":
+                         switch (_._1._1._1.ctor)
+                           {case "[]": return _._0;}
+                           break;}
+                      break;}
+                 break;}
+            _U.badCase($moduleName,
+            "on line 76, column 19 to 42");
+         }();
+         return A3($Color.rgb,r,g,b);
+      }();
+   };
+   var scene = F2(function (_v29,
+   ls) {
+      return function () {
+         switch (_v29.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var clrFn = function (c) {
+                    return function () {
+                       switch (c.ctor)
+                       {case "Just":
+                          return $Color.toRgb(rgbFromCss(c._0));
+                          case "Nothing":
+                          return $Color.toRgb(rgbFromCss("#ccc"));}
+                       return $Color.toRgb(rgbFromCss("#f00"));
+                    }();
+                 };
+                 var txtFn = function ($) {
+                    return $Text.centered($Text.height(18)($Text.fromString($)));
+                 };
+                 var byAlp = A2($List.map,
+                 function (_v35) {
+                    return function () {
+                       switch (_v35.ctor)
+                       {case "_Tuple2":
+                          return {ctor: "_Tuple2"
+                                 ,_0: txtFn(_v35._0)
+                                 ,_1: clrFn(_v35._1)};}
+                       _U.badCase($moduleName,
+                       "on line 42, column 38 to 54");
+                    }();
+                 },
+                 ls);
+                 var byHue = A2($List.sortBy,
+                 function ($) {
+                    return function (_) {
+                       return _.red;
+                    }($Basics.snd($));
+                 },
+                 byAlp);
+                 var bySat = A2($List.sortBy,
+                 function ($) {
+                    return function (_) {
+                       return _.green;
+                    }($Basics.snd($));
+                 },
+                 byAlp);
+                 var byLig = A2($List.sortBy,
+                 function ($) {
+                    return function (_) {
+                       return _.blue;
+                    }($Basics.snd($));
+                 },
+                 byAlp);
+                 var cols = _L.fromArray([byAlp
+                                         ,byHue
+                                         ,bySat
+                                         ,byLig]);
+                 var boxed = function (_v39) {
+                    return function () {
+                       switch (_v39.ctor)
+                       {case "_Tuple2":
+                          return function () {
+                               var c = A3($Color.rgb,
+                               _v39._1.red,
+                               _v39._1.green,
+                               _v39._1.blue);
+                               var mw = _v29._0 / $List.length(cols) | 0;
+                               return $Graphics$Element.width(mw)($Graphics$Element.color(c)(A4($Graphics$Element.container,
+                               mw,
+                               60,
+                               $Graphics$Element.middle,
+                               _v39._0)));
+                            }();}
+                       _U.badCase($moduleName,
+                       "between lines 49 and 51");
+                    }();
+                 };
+                 var stylize = function (lst) {
+                    return A2($List.map,
+                    boxed,
+                    lst);
+                 };
+                 var fds = function (t) {
+                    return $Graphics$Element.flow($Graphics$Element.down)(stylize(t));
+                 };
+                 var title = function ($) {
+                    return $Graphics$Element.width(_v29._0)($Text.centered($Text.typeface(_L.fromArray(["helvetica"
+                                                                                                       ,"serif"]))($Text.height(40)($Text.fromString($)))));
+                 }("Github Language Colors, Sorted");
+                 return A2($Graphics$Element.flow,
+                 $Graphics$Element.down,
+                 _L.fromArray([title
+                              ,$Graphics$Element.flow($Graphics$Element.right)(A2($List.map,
+                              fds,
+                              cols))]));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 31 and 52");
+      }();
+   });
+   var clrs = $Signal.constant(_L.fromArray([{ctor: "_Tuple2"
+                                             ,_0: "Antlr"
+                                             ,_1: $Maybe.Just("9dc3ff")}
+                                            ,{ctor: "_Tuple2"
+                                             ,_0: "ActionScript"
+                                             ,_1: $Maybe.Just("#882B0F")}
+                                            ,{ctor: "_Tuple2"
+                                             ,_0: "Clojure"
+                                             ,_1: $Maybe.Just("#db5855")}
+                                            ,{ctor: "_Tuple2"
+                                             ,_0: "J"
+                                             ,_1: $Maybe.Just("#2d8abd")}
+                                            ,{ctor: "_Tuple2"
+                                             ,_0: "APL"
+                                             ,_1: $Maybe.Just("#8a0707")}]));
+   var main = A3($Signal.map2,
+   scene,
+   $Window.dimensions,
+   clrs);
+   _elm.ColorTest.values = {_op: _op
+                           ,clrs: clrs
+                           ,scene: scene
+                           ,main: main
+                           ,rgbFromCss: rgbFromCss};
+   return _elm.ColorTest.values;
+};
+Elm.Graphics = Elm.Graphics || {};
+Elm.Graphics.Collage = Elm.Graphics.Collage || {};
+Elm.Graphics.Collage.make = function (_elm) {
+   "use strict";
+   _elm.Graphics = _elm.Graphics || {};
+   _elm.Graphics.Collage = _elm.Graphics.Collage || {};
+   if (_elm.Graphics.Collage.values)
+   return _elm.Graphics.Collage.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Graphics.Collage",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Native$Graphics$Collage = Elm.Native.Graphics.Collage.make(_elm),
+   $Transform2D = Elm.Transform2D.make(_elm);
+   var ngon = F2(function (n,r) {
+      return function () {
+         var m = $Basics.toFloat(n);
+         var t = 2 * $Basics.pi / m;
+         var f = function (i) {
+            return {ctor: "_Tuple2"
+                   ,_0: r * $Basics.cos(t * i)
+                   ,_1: r * $Basics.sin(t * i)};
+         };
+         return A2($List.map,
+         f,
+         _L.range(0,m - 1));
+      }();
+   });
+   var oval = F2(function (w,h) {
+      return function () {
+         var hh = h / 2;
+         var hw = w / 2;
+         var n = 50;
+         var t = 2 * $Basics.pi / n;
+         var f = function (i) {
+            return {ctor: "_Tuple2"
+                   ,_0: hw * $Basics.cos(t * i)
+                   ,_1: hh * $Basics.sin(t * i)};
+         };
+         return A2($List.map,
+         f,
+         _L.range(0,n - 1));
+      }();
+   });
+   var circle = function (r) {
+      return A2(oval,2 * r,2 * r);
+   };
+   var rect = F2(function (w,h) {
+      return function () {
+         var hh = h / 2;
+         var hw = w / 2;
+         return _L.fromArray([{ctor: "_Tuple2"
+                              ,_0: 0 - hw
+                              ,_1: 0 - hh}
+                             ,{ctor: "_Tuple2"
+                              ,_0: 0 - hw
+                              ,_1: hh}
+                             ,{ctor: "_Tuple2",_0: hw,_1: hh}
+                             ,{ctor: "_Tuple2"
+                              ,_0: hw
+                              ,_1: 0 - hh}]);
+      }();
+   });
+   var square = function (n) {
+      return A2(rect,n,n);
+   };
+   var polygon = function (points) {
+      return points;
+   };
+   var segment = F2(function (p1,
+   p2) {
+      return _L.fromArray([p1,p2]);
+   });
+   var path = function (ps) {
+      return ps;
+   };
+   var collage = $Native$Graphics$Collage.collage;
+   var alpha = F2(function (a,f) {
+      return _U.replace([["alpha"
+                         ,a]],
+      f);
+   });
+   var rotate = F2(function (t,f) {
+      return _U.replace([["theta"
+                         ,f.theta + t]],
+      f);
+   });
+   var scale = F2(function (s,f) {
+      return _U.replace([["scale"
+                         ,f.scale * s]],
+      f);
+   });
+   var moveY = F2(function (y,f) {
+      return _U.replace([["y"
+                         ,f.y + y]],
+      f);
+   });
+   var moveX = F2(function (x,f) {
+      return _U.replace([["x"
+                         ,f.x + x]],
+      f);
+   });
+   var move = F2(function (_v0,f) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return _U.replace([["x"
+                               ,f.x + _v0._0]
+                              ,["y",f.y + _v0._1]],
+              f);}
+         _U.badCase($moduleName,
+         "on line 179, column 20 to 48");
+      }();
+   });
+   var form = function (f) {
+      return {_: {}
+             ,alpha: 1
+             ,form: f
+             ,scale: 1
+             ,theta: 0
+             ,x: 0
+             ,y: 0};
+   };
+   var Fill = function (a) {
+      return {ctor: "Fill",_0: a};
+   };
+   var Line = function (a) {
+      return {ctor: "Line",_0: a};
+   };
+   var FGroup = F2(function (a,b) {
+      return {ctor: "FGroup"
+             ,_0: a
+             ,_1: b};
+   });
+   var group = function (fs) {
+      return form(A2(FGroup,
+      $Transform2D.identity,
+      fs));
+   };
+   var groupTransform = F2(function (matrix,
+   fs) {
+      return form(A2(FGroup,
+      matrix,
+      fs));
+   });
+   var FElement = function (a) {
+      return {ctor: "FElement"
+             ,_0: a};
+   };
+   var toForm = function (e) {
+      return form(FElement(e));
+   };
+   var FImage = F4(function (a,
+   b,
+   c,
+   d) {
+      return {ctor: "FImage"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d};
+   });
+   var sprite = F4(function (w,
+   h,
+   pos,
+   src) {
+      return form(A4(FImage,
+      w,
+      h,
+      pos,
+      src));
+   });
+   var FShape = F2(function (a,b) {
+      return {ctor: "FShape"
+             ,_0: a
+             ,_1: b};
+   });
+   var fill = F2(function (style,
+   shape) {
+      return form(A2(FShape,
+      Fill(style),
+      shape));
+   });
+   var outlined = F2(function (style,
+   shape) {
+      return form(A2(FShape,
+      Line(style),
+      shape));
+   });
+   var FPath = F2(function (a,b) {
+      return {ctor: "FPath"
+             ,_0: a
+             ,_1: b};
+   });
+   var traced = F2(function (style,
+   path) {
+      return form(A2(FPath,
+      style,
+      path));
+   });
+   var LineStyle = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,cap: c
+             ,color: a
+             ,dashOffset: f
+             ,dashing: e
+             ,join: d
+             ,width: b};
+   });
+   var Clipped = {ctor: "Clipped"};
+   var Sharp = function (a) {
+      return {ctor: "Sharp",_0: a};
+   };
+   var Smooth = {ctor: "Smooth"};
+   var Padded = {ctor: "Padded"};
+   var Round = {ctor: "Round"};
+   var Flat = {ctor: "Flat"};
+   var defaultLine = {_: {}
+                     ,cap: Flat
+                     ,color: $Color.black
+                     ,dashOffset: 0
+                     ,dashing: _L.fromArray([])
+                     ,join: Sharp(10)
+                     ,width: 1};
+   var solid = function (clr) {
+      return _U.replace([["color"
+                         ,clr]],
+      defaultLine);
+   };
+   var dashed = function (clr) {
+      return _U.replace([["color"
+                         ,clr]
+                        ,["dashing"
+                         ,_L.fromArray([8,4])]],
+      defaultLine);
+   };
+   var dotted = function (clr) {
+      return _U.replace([["color"
+                         ,clr]
+                        ,["dashing"
+                         ,_L.fromArray([3,3])]],
+      defaultLine);
+   };
+   var Grad = function (a) {
+      return {ctor: "Grad",_0: a};
+   };
+   var gradient = F2(function (grad,
+   shape) {
+      return A2(fill,
+      Grad(grad),
+      shape);
+   });
+   var Texture = function (a) {
+      return {ctor: "Texture"
+             ,_0: a};
+   };
+   var textured = F2(function (src,
+   shape) {
+      return A2(fill,
+      Texture(src),
+      shape);
+   });
+   var Solid = function (a) {
+      return {ctor: "Solid",_0: a};
+   };
+   var filled = F2(function (color,
+   shape) {
+      return A2(fill,
+      Solid(color),
+      shape);
+   });
+   var Form = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,alpha: e
+             ,form: f
+             ,scale: b
+             ,theta: a
+             ,x: c
+             ,y: d};
+   });
+   _elm.Graphics.Collage.values = {_op: _op
+                                  ,Form: Form
+                                  ,Solid: Solid
+                                  ,Texture: Texture
+                                  ,Grad: Grad
+                                  ,Flat: Flat
+                                  ,Round: Round
+                                  ,Padded: Padded
+                                  ,Smooth: Smooth
+                                  ,Sharp: Sharp
+                                  ,Clipped: Clipped
+                                  ,LineStyle: LineStyle
+                                  ,defaultLine: defaultLine
+                                  ,solid: solid
+                                  ,dashed: dashed
+                                  ,dotted: dotted
+                                  ,FPath: FPath
+                                  ,FShape: FShape
+                                  ,FImage: FImage
+                                  ,FElement: FElement
+                                  ,FGroup: FGroup
+                                  ,Line: Line
+                                  ,Fill: Fill
+                                  ,form: form
+                                  ,fill: fill
+                                  ,filled: filled
+                                  ,textured: textured
+                                  ,gradient: gradient
+                                  ,outlined: outlined
+                                  ,traced: traced
+                                  ,sprite: sprite
+                                  ,toForm: toForm
+                                  ,group: group
+                                  ,groupTransform: groupTransform
+                                  ,move: move
+                                  ,moveX: moveX
+                                  ,moveY: moveY
+                                  ,scale: scale
+                                  ,rotate: rotate
+                                  ,alpha: alpha
+                                  ,collage: collage
+                                  ,path: path
+                                  ,segment: segment
+                                  ,polygon: polygon
+                                  ,rect: rect
+                                  ,square: square
+                                  ,oval: oval
+                                  ,circle: circle
+                                  ,ngon: ngon};
+   return _elm.Graphics.Collage.values;
+};
 Elm.Graphics = Elm.Graphics || {};
 Elm.Graphics.Element = Elm.Graphics.Element || {};
 Elm.Graphics.Element.make = function (_elm) {
@@ -1226,53 +1822,74 @@ Elm.Graphics.Element.make = function (_elm) {
                                   ,outward: outward};
    return _elm.Graphics.Element.values;
 };
-Elm.Hex = Elm.Hex || {};
-Elm.Hex.make = function (_elm) {
+Elm.Http = Elm.Http || {};
+Elm.Http.make = function (_elm) {
    "use strict";
-   _elm.Hex = _elm.Hex || {};
-   if (_elm.Hex.values)
-   return _elm.Hex.values;
+   _elm.Http = _elm.Http || {};
+   if (_elm.Http.values)
+   return _elm.Http.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "Hex",
-   $Basics = Elm.Basics.make(_elm),
-   $List = Elm.List.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Text = Elm.Text.make(_elm);
-   var decimalFromHex = function (hexString) {
-      return function () {
-         var xs = $List.reverse($String.toList(hexString));
-         var vals = A2($List.map,
-         function (c) {
-            return $List.head(A2($String.indexes,
-            $String.fromChar(c),
-            "0123456789ABCDEF0123456789abcdef"));
-         },
-         xs);
-         var powered = A2($List.indexedMap,
-         F2(function (idx,val) {
-            return Math.pow(16,
-            idx) * A2($Basics._op["%"],
-            val,
-            16);
-         }),
-         vals);
-         return A3($List.foldr,
-         F2(function (x,y) {
-            return x + y;
-         }),
-         0,
-         powered);
-      }();
+   $moduleName = "Http",
+   $Native$Http = Elm.Native.Http.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var send = $Native$Http.send;
+   var Request = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,body: c
+             ,headers: d
+             ,url: b
+             ,verb: a};
+   });
+   var request = Request;
+   var get = function (url) {
+      return A4(Request,
+      "GET",
+      url,
+      "",
+      _L.fromArray([]));
    };
-   var main = $Text.asText(decimalFromHex("010"));
-   _elm.Hex.values = {_op: _op
-                     ,main: main
-                     ,decimalFromHex: decimalFromHex};
-   return _elm.Hex.values;
+   var sendGet = function (requestStrings) {
+      return send(A2($Signal.map,
+      get,
+      requestStrings));
+   };
+   var post = F2(function (url,
+   body) {
+      return A4(Request,
+      "POST",
+      url,
+      body,
+      _L.fromArray([]));
+   });
+   var Failure = F2(function (a,
+   b) {
+      return {ctor: "Failure"
+             ,_0: a
+             ,_1: b};
+   });
+   var Waiting = {ctor: "Waiting"};
+   var Success = function (a) {
+      return {ctor: "Success"
+             ,_0: a};
+   };
+   _elm.Http.values = {_op: _op
+                      ,send: send
+                      ,sendGet: sendGet
+                      ,get: get
+                      ,post: post
+                      ,request: request
+                      ,Request: Request
+                      ,Success: Success
+                      ,Waiting: Waiting
+                      ,Failure: Failure};
+   return _elm.Http.values;
 };
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
@@ -1760,6 +2377,425 @@ Elm.Native.Color.make = function(elm) {
         toCss:toCss
     };
 
+};
+
+
+// setup
+Elm.Native = Elm.Native || {};
+Elm.Native.Graphics = Elm.Native.Graphics || {};
+Elm.Native.Graphics.Collage = Elm.Native.Graphics.Collage || {};
+
+// definition
+Elm.Native.Graphics.Collage.make = function(localRuntime) {
+    'use strict';
+
+    // attempt to short-circuit
+    localRuntime.Native = localRuntime.Native || {};
+    localRuntime.Native.Graphics = localRuntime.Native.Graphics || {};
+    localRuntime.Native.Graphics.Collage = localRuntime.Native.Graphics.Collage || {};
+    if ('values' in localRuntime.Native.Graphics.Collage) {
+        return localRuntime.Native.Graphics.Collage.values;
+    }
+
+    // okay, we cannot short-ciruit, so now we define everything
+    var Color = Elm.Native.Color.make(localRuntime);
+    var List = Elm.Native.List.make(localRuntime);
+    var Transform = Elm.Transform2D.make(localRuntime);
+
+    var Element = Elm.Graphics.Element.make(localRuntime);
+    var NativeElement = Elm.Native.Graphics.Element.make(localRuntime);
+
+
+    function trace(ctx, path) {
+        var points = List.toArray(path);
+        var i = points.length - 1;
+        if (i <= 0) {
+            return;
+        }
+        ctx.moveTo(points[i]._0, points[i]._1);
+        while (i--) {
+            ctx.lineTo(points[i]._0, points[i]._1);
+        }
+        if (path.closed) {
+            i = points.length - 1;
+            ctx.lineTo(points[i]._0, points[i]._1);
+        }
+    }
+
+    function line(ctx,style,path) {
+        (style.dashing.ctor === '[]')
+            ? trace(ctx, path)
+            : customLineHelp(ctx, style, path);
+        ctx.scale(1,-1);
+        ctx.stroke();
+    }
+
+    function customLineHelp(ctx, style, path) {
+        var points = List.toArray(path);
+        if (path.closed) {
+            points.push(points[0]);
+        }
+        var pattern = List.toArray(style.dashing);
+        var i = points.length - 1;
+        if (i <= 0) {
+            return;
+        }
+        var x0 = points[i]._0, y0 = points[i]._1;
+        var x1=0, y1=0, dx=0, dy=0, remaining=0, nx=0, ny=0;
+        var pindex = 0, plen = pattern.length;
+        var draw = true, segmentLength = pattern[0];
+        ctx.moveTo(x0,y0);
+        while (i--) {
+            x1 = points[i]._0; y1 = points[i]._1;
+            dx = x1 - x0; dy = y1 - y0;
+            remaining = Math.sqrt(dx * dx + dy * dy);
+            while (segmentLength <= remaining) {
+                x0 += dx * segmentLength / remaining;
+                y0 += dy * segmentLength / remaining;
+                ctx[draw ? 'lineTo' : 'moveTo'](x0, y0);
+                // update starting position
+                dx = x1 - x0; dy = y1 - y0;
+                remaining = Math.sqrt(dx * dx + dy * dy);
+                // update pattern
+                draw = !draw;
+                pindex = (pindex + 1) % plen;
+                segmentLength = pattern[pindex];
+            }
+            if (remaining > 0) {
+                ctx[draw ? 'lineTo' : 'moveTo'](x1, y1);
+                segmentLength -= remaining;
+            }
+            x0 = x1; y0 = y1;
+        }
+    }
+
+    function drawLine(ctx, style, path) {
+        ctx.lineWidth = style.width;
+
+        var cap = style.cap.ctor;
+        ctx.lineCap = cap === 'Flat'
+            ? 'butt'
+            : cap === 'Round'
+                ? 'round'
+                : 'square';
+
+        var join = style.join.ctor;
+        ctx.lineJoin = join === 'Smooth'
+            ? 'round'
+            : join === 'Sharp'
+                ? 'miter'
+                : 'bevel';
+
+        ctx.miterLimit = style.join._0 || 10;
+        ctx.strokeStyle = Color.toCss(style.color);
+
+        return line(ctx, style, path);
+    }
+
+    function texture(redo, ctx, src) {
+        var img = new Image();
+        img.src = src;
+        img.onload = redo;
+        return ctx.createPattern(img, 'repeat');
+    }
+
+    function gradient(ctx, grad) {
+        var g;
+        var stops = [];
+        if (grad.ctor === 'Linear') {
+            var p0 = grad._0, p1 = grad._1;
+            g = ctx.createLinearGradient(p0._0, -p0._1, p1._0, -p1._1);
+            stops = List.toArray(grad._2);
+        } else {
+            var p0 = grad._0, p2 = grad._2;
+            g = ctx.createRadialGradient(p0._0, -p0._1, grad._1, p2._0, -p2._1, grad._3);
+            stops = List.toArray(grad._4);
+        }
+        var len = stops.length;
+        for (var i = 0; i < len; ++i) {
+            var stop = stops[i];
+            g.addColorStop(stop._0, Color.toCss(stop._1));
+        }
+        return g;
+    }
+
+    function drawShape(redo, ctx, style, path) {
+        trace(ctx, path);
+        var sty = style.ctor;
+        ctx.fillStyle = sty === 'Solid'
+            ? Color.toCss(style._0)
+            : sty === 'Texture'
+                ? texture(redo, ctx, style._0)
+                : gradient(ctx, style._0);
+
+        ctx.scale(1,-1);
+        ctx.fill();
+    }
+
+    function drawImage(redo, ctx, form) {
+        var img = new Image();
+        img.onload = redo;
+        img.src = form._3;
+        var w = form._0,
+            h = form._1,
+            pos = form._2,
+            srcX = pos._0,
+            srcY = pos._1,
+            srcW = w,
+            srcH = h,
+            destX = -w/2,
+            destY = -h/2,
+            destW = w,
+            destH = h;
+
+        ctx.scale(1,-1);
+        ctx.drawImage(img, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
+    }
+
+    function renderForm(redo, ctx, form) {
+        ctx.save();
+        var x = form.x, y = form.y, theta = form.theta, scale = form.scale;
+        if (x !== 0 || y !== 0) ctx.translate(x, y);
+        if (theta !== 0) ctx.rotate(theta);
+        if (scale !== 1) ctx.scale(scale,scale);
+        if (form.alpha !== 1) ctx.globalAlpha = ctx.globalAlpha * form.alpha;
+        ctx.beginPath();
+        var f = form.form;
+        switch(f.ctor) {
+        case 'FPath' : drawLine(ctx, f._0, f._1); break;
+        case 'FImage': drawImage(redo, ctx, f); break;
+        case 'FShape':
+          if (f._0.ctor === 'Line') {
+            f._1.closed = true;
+            drawLine(ctx, f._0._0, f._1);
+          } else {
+            drawShape(redo, ctx, f._0._0, f._1);
+          }
+        break;
+        }
+        ctx.restore();
+    }
+
+    function formToMatrix(form) {
+       var scale = form.scale;
+       var matrix = A6( Transform.matrix, scale, 0, 0, scale, form.x, form.y );
+
+       var theta = form.theta
+       if (theta !== 0) {
+           matrix = A2( Transform.multiply, matrix, Transform.rotation(theta) );
+       }
+
+       return matrix;
+    }
+
+    function str(n) {
+        if (n < 0.00001 && n > -0.00001) return 0;
+        return n;
+    }
+
+    function makeTransform(w, h, form, matrices) {
+        var props = form.form._0.props;
+        var m = A6( Transform.matrix, 1, 0, 0, -1,
+                    (w - props.width ) / 2,
+                    (h - props.height) / 2 );
+        var len = matrices.length;
+        for (var i = 0; i < len; ++i) {
+            m = A2( Transform.multiply, m, matrices[i] );
+        }
+        m = A2( Transform.multiply, m, formToMatrix(form) );
+
+        return 'matrix(' + str( m[0]) + ', ' + str( m[3]) + ', ' +
+                           str(-m[1]) + ', ' + str(-m[4]) + ', ' +
+                           str( m[2]) + ', ' + str( m[5]) + ')';
+    }
+
+    function stepperHelp(list) {
+        var arr = List.toArray(list);
+        var i = 0;
+        function peekNext() {
+            return i < arr.length ? arr[i].form.ctor : '';
+        }
+        // assumes that there is a next element
+        function next() {
+            var out = arr[i];
+            ++i;
+            return out;
+        }
+        return {
+            peekNext:peekNext,
+            next:next
+        };
+    }
+
+    function formStepper(forms) {
+        var ps = [stepperHelp(forms)];
+        var matrices = [];
+        var alphas = [];
+        function peekNext() {
+            var len = ps.length;
+            var formType = '';
+            for (var i = 0; i < len; ++i ) {
+                if (formType = ps[i].peekNext()) return formType;
+            }
+            return '';
+        }
+        // assumes that there is a next element
+        function next(ctx) {
+            while (!ps[0].peekNext()) {
+                ps.shift();
+                matrices.pop();
+                alphas.shift();
+                if (ctx) { ctx.restore(); }
+            }
+            var out = ps[0].next();
+            var f = out.form;
+            if (f.ctor === 'FGroup') {
+                ps.unshift(stepperHelp(f._1));
+                var m = A2(Transform.multiply, f._0, formToMatrix(out));
+                ctx.save();
+                ctx.transform(m[0], m[3], m[1], m[4], m[2], m[5]);
+                matrices.push(m);
+
+                var alpha = (alphas[0] || 1) * out.alpha;
+                alphas.unshift(alpha);
+                ctx.globalAlpha = alpha;
+            }
+            return out;
+        }
+        function transforms() { return matrices; }
+        function alpha() { return alphas[0] || 1; }
+        return {
+            peekNext:peekNext,
+            next:next,
+            transforms:transforms,
+            alpha:alpha
+        };
+    }
+
+    function makeCanvas(w,h) {
+        var canvas = NativeElement.createNode('canvas');
+        canvas.style.width  = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.style.display = "block";
+        canvas.style.position = "absolute";
+        canvas.width  = w;
+        canvas.height = h;
+        return canvas;
+    }
+
+    function render(model) {
+        var div = NativeElement.createNode('div');
+        div.style.overflow = 'hidden';
+        div.style.position = 'relative';
+        update(div, model, model);
+        return div;
+    }
+
+    function nodeStepper(w,h,div) {
+        var kids = div.childNodes;
+        var i = 0;
+        function transform(transforms, ctx) {
+            ctx.translate(w/2, h/2);
+            ctx.scale(1,-1);
+            var len = transforms.length;
+            for (var i = 0; i < len; ++i) {
+                var m = transforms[i];
+                ctx.save();
+                ctx.transform(m[0], m[3], m[1], m[4], m[2], m[5]);
+            }
+            return ctx;
+        }
+        function nextContext(transforms) {
+            while (i < kids.length) {
+                var node = kids[i];
+                if (node.getContext) {
+                    node.width = w;
+                    node.height = h;
+                    node.style.width = w + 'px';
+                    node.style.height = h + 'px';
+                    ++i;
+                    return transform(transforms, node.getContext('2d'));
+                }
+                div.removeChild(node);
+            }
+            var canvas = makeCanvas(w,h);
+            div.appendChild(canvas);
+            // we have added a new node, so we must step our position
+            ++i;
+            return transform(transforms, canvas.getContext('2d'));
+        }
+        function addElement(matrices, alpha, form) {
+            var kid = kids[i];
+            var elem = form.form._0;
+
+            var node = (!kid || kid.getContext)
+                ? NativeElement.render(elem)
+                : NativeElement.update(kid, kid.oldElement, elem);
+
+            node.style.position = 'absolute';
+            node.style.opacity = alpha * form.alpha * elem.props.opacity;
+            NativeElement.addTransform(node.style, makeTransform(w, h, form, matrices));
+            node.oldElement = elem;
+            ++i;
+            if (!kid) {
+                div.appendChild(node);
+            } else {
+                div.insertBefore(node, kid);
+            }
+        }
+        function clearRest() {
+            while (i < kids.length) {
+                div.removeChild(kids[i]);
+            }
+        }
+        return { nextContext:nextContext, addElement:addElement, clearRest:clearRest };
+    }
+
+
+    function update(div, _, model) {
+        var w = model.w;
+        var h = model.h;
+
+        var forms = formStepper(model.forms);
+        var nodes = nodeStepper(w,h,div);
+        var ctx = null;
+        var formType = '';
+
+        while (formType = forms.peekNext()) {
+            // make sure we have context if we need it
+            if (ctx === null && formType !== 'FElement') {
+                ctx = nodes.nextContext(forms.transforms());
+                ctx.globalAlpha = forms.alpha();
+            }
+
+            var form = forms.next(ctx);
+            // if it is FGroup, all updates are made within formStepper when next is called.
+            if (formType === 'FElement') {
+                // update or insert an element, get a new context
+                nodes.addElement(forms.transforms(), forms.alpha(), form);
+                ctx = null;
+            } else if (formType !== 'FGroup') {
+                renderForm(function() { update(div, model, model); }, ctx, form);
+            }
+        }
+        nodes.clearRest();
+        return div;
+    }
+
+
+    function collage(w,h,forms) {
+        return A3(Element.newElement, w, h, {
+            ctor: 'Custom',
+            type: 'Collage',
+            render: render,
+            update: update,
+            model: {w:w, h:h, forms:forms}
+      	});
+    }
+
+    return localRuntime.Native.Graphics.Collage.values = {
+        collage:F3(collage)
+    };
 };
 
 
@@ -2279,6 +3315,70 @@ Elm.Native.Graphics.Element.make = function(localRuntime) {
         guid: Utils.guid
     };
 
+};
+
+Elm.Native.Http = {};
+Elm.Native.Http.make = function(elm) {
+
+    elm.Native = elm.Native || {};
+    elm.Native.Http = elm.Native.Http || {};
+    if (elm.Native.Http.values) return elm.Native.Http.values;
+
+    var List = Elm.List.make(elm);
+    var Signal = Elm.Signal.make(elm);
+
+    function registerReq(queue,responses) {
+        return function(req) {
+            if (req.url.length > 0) {
+                sendReq(queue,responses,req);
+            }
+        };
+    }
+
+    function updateQueue(queue,responses) {
+        if (queue.length > 0) {
+            elm.notify(responses.id, queue[0].value);
+            if (queue[0].value.ctor !== 'Waiting') {
+                queue.shift();
+                setTimeout(function() { updateQueue(queue,responses); }, 0);
+            }
+        }
+    }
+
+    function sendReq(queue,responses,req) {
+        var response = { value: { ctor:'Waiting' } };
+        queue.push(response);
+
+        var request = (window.ActiveXObject
+                       ? new ActiveXObject("Microsoft.XMLHTTP")
+                       : new XMLHttpRequest());
+
+        request.onreadystatechange = function(e) {
+            if (request.readyState === 4) {
+                response.value = (request.status >= 200 && request.status < 300 ?
+                                  { ctor:'Success', _0:request.responseText } :
+                                  { ctor:'Failure', _0:request.status, _1:request.statusText });
+                setTimeout(function() { updateQueue(queue,responses); }, 0);
+            }
+        };
+        request.open(req.verb, req.url, true);
+        function setHeader(pair) {
+            request.setRequestHeader( pair._0, pair._1 );
+        }
+        A2( List.map, setHeader, req.headers );
+        request.send(req.body);
+    }
+
+    function send(requests) {
+        var responses = Signal.constant(elm.Http.values.Waiting);
+        var sender = A2( Signal.map, registerReq([],responses), requests );
+        function f(x) { return function(y) { return x; } }
+        return A3( Signal.map2, f, responses, sender );
+    }
+
+    return elm.Native.Http.values = {
+        send:send
+    };
 };
 
 Elm.Native.List = {};
@@ -4085,6 +5185,106 @@ Elm.Native.Text.make = function(elm) {
     };
 };
 
+Elm.Native.Transform2D = {};
+Elm.Native.Transform2D.make = function(elm) {
+
+ elm.Native = elm.Native || {};
+ elm.Native.Transform2D = elm.Native.Transform2D || {};
+ if (elm.Native.Transform2D.values) return elm.Native.Transform2D.values;
+
+ var A;
+ if (typeof Float32Array === 'undefined') {
+     A = function(arr) {
+         this.length = arr.length;
+         this[0] = arr[0];
+         this[1] = arr[1];
+         this[2] = arr[2];
+         this[3] = arr[3];
+         this[4] = arr[4];
+         this[5] = arr[5];
+     };
+ } else {
+     A = Float32Array;
+ }
+
+ // layout of matrix in an array is
+ //
+ //   | m11 m12 dx |
+ //   | m21 m22 dy |
+ //   |  0   0   1 |
+ //
+ //  new A([ m11, m12, dx, m21, m22, dy ])
+
+ var identity = new A([1,0,0,0,1,0]);
+ function matrix(m11, m12, m21, m22, dx, dy) {
+     return new A([m11, m12, dx, m21, m22, dy]);
+ }
+ function rotation(t) {
+     var c = Math.cos(t);
+     var s = Math.sin(t);
+     return new A([c, -s, 0, s, c, 0]);
+ }
+ function rotate(t,m) {
+     var c = Math.cos(t);
+     var s = Math.sin(t);
+     var m11 = m[0], m12 = m[1], m21 = m[3], m22 = m[4];
+     return new A([m11*c + m12*s, -m11*s + m12*c, m[2],
+                   m21*c + m22*s, -m21*s + m22*c, m[5]]);
+ }
+ /*
+ function move(xy,m) {
+     var x = xy._0;
+     var y = xy._1;
+     var m11 = m[0], m12 = m[1], m21 = m[3], m22 = m[4];
+     return new A([m11, m12, m11*x + m12*y + m[2],
+                   m21, m22, m21*x + m22*y + m[5]]);
+ }
+ function scale(s,m) { return new A([m[0]*s, m[1]*s, m[2], m[3]*s, m[4]*s, m[5]]); }
+ function scaleX(x,m) { return new A([m[0]*x, m[1], m[2], m[3]*x, m[4], m[5]]); }
+ function scaleY(y,m) { return new A([m[0], m[1]*y, m[2], m[3], m[4]*y, m[5]]); }
+ function reflectX(m) { return new A([-m[0], m[1], m[2], -m[3], m[4], m[5]]); }
+ function reflectY(m) { return new A([m[0], -m[1], m[2], m[3], -m[4], m[5]]); }
+
+ function transform(m11, m21, m12, m22, mdx, mdy, n) {
+     var n11 = n[0], n12 = n[1], n21 = n[3], n22 = n[4], ndx = n[2], ndy = n[5];
+     return new A([m11*n11 + m12*n21,
+                   m11*n12 + m12*n22,
+                   m11*ndx + m12*ndy + mdx,
+                   m21*n11 + m22*n21,
+                   m21*n12 + m22*n22,
+                   m21*ndx + m22*ndy + mdy]);
+ }
+ */
+ function multiply(m, n) {
+     var m11 = m[0], m12 = m[1], m21 = m[3], m22 = m[4], mdx = m[2], mdy = m[5];
+     var n11 = n[0], n12 = n[1], n21 = n[3], n22 = n[4], ndx = n[2], ndy = n[5];
+     return new A([m11*n11 + m12*n21,
+                   m11*n12 + m12*n22,
+                   m11*ndx + m12*ndy + mdx,
+                   m21*n11 + m22*n21,
+                   m21*n12 + m22*n22,
+                   m21*ndx + m22*ndy + mdy]);
+ }
+
+ return elm.Native.Transform2D.values = {
+     identity:identity,
+     matrix:F6(matrix),
+     rotation:rotation,
+     multiply:F2(multiply)
+     /*
+     transform:F7(transform),
+     rotate:F2(rotate),
+     move:F2(move),
+     scale:F2(scale),
+     scaleX:F2(scaleX),
+     scaleY:F2(scaleY),
+     reflectX:reflectX,
+     reflectY:reflectY
+     */
+ };
+
+};
+
 Elm.Native = Elm.Native || {};
 Elm.Native.Utils = {};
 Elm.Native.Utils.make = function(localRuntime) {
@@ -4391,6 +5591,114 @@ Elm.Native.Utils.make = function(localRuntime) {
     };
 };
 
+Elm.Native = Elm.Native || {};
+Elm.Native.Window = {};
+Elm.Native.Window.make = function(localRuntime) {
+
+    localRuntime.Native = localRuntime.Native || {};
+    localRuntime.Native.Window = localRuntime.Native.Window || {};
+    if (localRuntime.Native.Window.values) {
+        return localRuntime.Native.Window.values;
+    }
+
+    var Signal = Elm.Signal.make(localRuntime);
+    var NS = Elm.Native.Signal.make(localRuntime);
+    var Tuple2 = Elm.Native.Utils.make(localRuntime).Tuple2;
+
+    function getWidth() {
+        return localRuntime.node.clientWidth;
+    }
+    function getHeight() {
+        if (localRuntime.isFullscreen()) {
+            return window.innerHeight;
+        }
+        return localRuntime.node.clientHeight;
+    }
+
+    var dimensions = NS.input(Tuple2(getWidth(), getHeight()));
+    dimensions.defaultNumberOfKids = 2;
+
+    // Do not move width and height into Elm. By setting the default number of kids,
+    // the resize listener can be detached.
+    var width  = A2(Signal.map, function(p){return p._0;}, dimensions);
+    width.defaultNumberOfKids = 0;
+
+    var height = A2(Signal.map, function(p){return p._1;}, dimensions);
+    height.defaultNumberOfKids = 0;
+
+    function resizeIfNeeded() {
+        // Do not trigger event if the dimensions have not changed.
+        // This should be most of the time.
+        var w = getWidth();
+        var h = getHeight();
+        if (dimensions.value._0 === w && dimensions.value._1 === h) return;
+
+        setTimeout(function () {
+            // Check again to see if the dimensions have changed.
+            // It is conceivable that the dimensions have changed
+            // again while some other event was being processed.
+            var w = getWidth();
+            var h = getHeight();
+            if (dimensions.value._0 === w && dimensions.value._1 === h) return;
+            localRuntime.notify(dimensions.id, Tuple2(w,h));
+        }, 0);
+    }
+    localRuntime.addListener([dimensions.id], window, 'resize', resizeIfNeeded);
+
+    return localRuntime.Native.Window.values = {
+        dimensions: dimensions,
+        width: width,
+        height: height,
+        resizeIfNeeded: resizeIfNeeded
+    };
+
+};
+
+Elm.Rebase = Elm.Rebase || {};
+Elm.Rebase.make = function (_elm) {
+   "use strict";
+   _elm.Rebase = _elm.Rebase || {};
+   if (_elm.Rebase.values)
+   return _elm.Rebase.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Rebase",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $String = Elm.String.make(_elm);
+   var decimalFromHex = function (hexString) {
+      return function () {
+         var xs = $List.reverse($String.toList(hexString));
+         var vals = A2($List.map,
+         function ($) {
+            return $List.head(A2($Basics.flip,
+            $String.indexes,
+            "0123456789ABCDEF0123456789abcdef")($String.fromChar($)));
+         },
+         xs);
+         var powered = A2($List.indexedMap,
+         F2(function (idx,val) {
+            return Math.pow(16,
+            idx) * A2($Basics._op["%"],
+            val,
+            16);
+         }),
+         vals);
+         return A3($List.foldr,
+         F2(function (x,y) {
+            return x + y;
+         }),
+         0,
+         powered);
+      }();
+   };
+   _elm.Rebase.values = {_op: _op
+                        ,decimalFromHex: decimalFromHex};
+   return _elm.Rebase.values;
+};
 Elm.Result = Elm.Result || {};
 Elm.Result.make = function (_elm) {
    "use strict";
@@ -4945,4 +6253,93 @@ Elm.Text.make = function (_elm) {
                       ,markdown: markdown
                       ,asText: asText};
    return _elm.Text.values;
+};
+Elm.Transform2D = Elm.Transform2D || {};
+Elm.Transform2D.make = function (_elm) {
+   "use strict";
+   _elm.Transform2D = _elm.Transform2D || {};
+   if (_elm.Transform2D.values)
+   return _elm.Transform2D.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Transform2D",
+   $Native$Transform2D = Elm.Native.Transform2D.make(_elm);
+   var multiply = $Native$Transform2D.multiply;
+   var rotation = $Native$Transform2D.rotation;
+   var matrix = $Native$Transform2D.matrix;
+   var translation = F2(function (x,
+   y) {
+      return A6(matrix,
+      1,
+      0,
+      0,
+      1,
+      x,
+      y);
+   });
+   var scale = function (s) {
+      return A6(matrix,
+      s,
+      0,
+      0,
+      s,
+      0,
+      0);
+   };
+   var scaleX = function (x) {
+      return A6(matrix,
+      x,
+      0,
+      0,
+      1,
+      0,
+      0);
+   };
+   var scaleY = function (y) {
+      return A6(matrix,
+      1,
+      0,
+      0,
+      y,
+      0,
+      0);
+   };
+   var identity = $Native$Transform2D.identity;
+   var Transform2D = {ctor: "Transform2D"};
+   _elm.Transform2D.values = {_op: _op
+                             ,identity: identity
+                             ,matrix: matrix
+                             ,multiply: multiply
+                             ,rotation: rotation
+                             ,translation: translation
+                             ,scale: scale
+                             ,scaleX: scaleX
+                             ,scaleY: scaleY};
+   return _elm.Transform2D.values;
+};
+Elm.Window = Elm.Window || {};
+Elm.Window.make = function (_elm) {
+   "use strict";
+   _elm.Window = _elm.Window || {};
+   if (_elm.Window.values)
+   return _elm.Window.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Window",
+   $Native$Window = Elm.Native.Window.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var height = $Native$Window.height;
+   var width = $Native$Window.width;
+   var dimensions = $Native$Window.dimensions;
+   _elm.Window.values = {_op: _op
+                        ,dimensions: dimensions
+                        ,width: width
+                        ,height: height};
+   return _elm.Window.values;
 };

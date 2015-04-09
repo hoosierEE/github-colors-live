@@ -216,6 +216,1432 @@ Elm.Char.make = function (_elm) {
                       ,fromCode: fromCode};
    return _elm.Char.values;
 };
+Elm.Color = Elm.Color || {};
+Elm.Color.make = function (_elm) {
+   "use strict";
+   _elm.Color = _elm.Color || {};
+   if (_elm.Color.values)
+   return _elm.Color.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Color",
+   $Basics = Elm.Basics.make(_elm);
+   var Radial = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {ctor: "Radial"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d
+             ,_4: e};
+   });
+   var radial = Radial;
+   var Linear = F3(function (a,
+   b,
+   c) {
+      return {ctor: "Linear"
+             ,_0: a
+             ,_1: b
+             ,_2: c};
+   });
+   var linear = Linear;
+   var fmod = F2(function (f,n) {
+      return function () {
+         var integer = $Basics.floor(f);
+         return $Basics.toFloat(A2($Basics._op["%"],
+         integer,
+         n)) + f - $Basics.toFloat(integer);
+      }();
+   });
+   var rgbToHsl = F3(function (red,
+   green,
+   blue) {
+      return function () {
+         var b = $Basics.toFloat(blue) / 255;
+         var g = $Basics.toFloat(green) / 255;
+         var r = $Basics.toFloat(red) / 255;
+         var cMax = A2($Basics.max,
+         A2($Basics.max,r,g),
+         b);
+         var cMin = A2($Basics.min,
+         A2($Basics.min,r,g),
+         b);
+         var c = cMax - cMin;
+         var lightness = (cMax + cMin) / 2;
+         var saturation = _U.eq(lightness,
+         0) ? 0 : c / (1 - $Basics.abs(2 * lightness - 1));
+         var hue = $Basics.degrees(60) * (_U.eq(cMax,
+         r) ? A2(fmod,
+         (g - b) / c,
+         6) : _U.eq(cMax,
+         g) ? (b - r) / c + 2 : _U.eq(cMax,
+         b) ? (r - g) / c + 4 : _U.badIf($moduleName,
+         "between lines 141 and 143"));
+         return {ctor: "_Tuple3"
+                ,_0: hue
+                ,_1: saturation
+                ,_2: lightness};
+      }();
+   });
+   var hslToRgb = F3(function (hue,
+   saturation,
+   lightness) {
+      return function () {
+         var hue$ = hue / $Basics.degrees(60);
+         var chroma = (1 - $Basics.abs(2 * lightness - 1)) * saturation;
+         var x = chroma * (1 - $Basics.abs(A2(fmod,
+         hue$,
+         2) - 1));
+         var $ = _U.cmp(hue$,
+         0) < 0 ? {ctor: "_Tuple3"
+                  ,_0: 0
+                  ,_1: 0
+                  ,_2: 0} : _U.cmp(hue$,
+         1) < 0 ? {ctor: "_Tuple3"
+                  ,_0: chroma
+                  ,_1: x
+                  ,_2: 0} : _U.cmp(hue$,
+         2) < 0 ? {ctor: "_Tuple3"
+                  ,_0: x
+                  ,_1: chroma
+                  ,_2: 0} : _U.cmp(hue$,
+         3) < 0 ? {ctor: "_Tuple3"
+                  ,_0: 0
+                  ,_1: chroma
+                  ,_2: x} : _U.cmp(hue$,
+         4) < 0 ? {ctor: "_Tuple3"
+                  ,_0: 0
+                  ,_1: x
+                  ,_2: chroma} : _U.cmp(hue$,
+         5) < 0 ? {ctor: "_Tuple3"
+                  ,_0: x
+                  ,_1: 0
+                  ,_2: chroma} : _U.cmp(hue$,
+         6) < 0 ? {ctor: "_Tuple3"
+                  ,_0: chroma
+                  ,_1: 0
+                  ,_2: x} : {ctor: "_Tuple3"
+                            ,_0: 0
+                            ,_1: 0
+                            ,_2: 0},
+         r = $._0,
+         g = $._1,
+         b = $._2;
+         var m = lightness - chroma / 2;
+         return {ctor: "_Tuple3"
+                ,_0: r + m
+                ,_1: g + m
+                ,_2: b + m};
+      }();
+   });
+   var toRgb = function (color) {
+      return function () {
+         switch (color.ctor)
+         {case "HSLA":
+            return function () {
+                 var $ = A3(hslToRgb,
+                 color._0,
+                 color._1,
+                 color._2),
+                 r = $._0,
+                 g = $._1,
+                 b = $._2;
+                 return {_: {}
+                        ,alpha: color._3
+                        ,blue: $Basics.round(255 * b)
+                        ,green: $Basics.round(255 * g)
+                        ,red: $Basics.round(255 * r)};
+              }();
+            case "RGBA": return {_: {}
+                                ,alpha: color._3
+                                ,blue: color._2
+                                ,green: color._1
+                                ,red: color._0};}
+         _U.badCase($moduleName,
+         "between lines 115 and 123");
+      }();
+   };
+   var toHsl = function (color) {
+      return function () {
+         switch (color.ctor)
+         {case "HSLA": return {_: {}
+                              ,alpha: color._3
+                              ,hue: color._0
+                              ,lightness: color._2
+                              ,saturation: color._1};
+            case "RGBA":
+            return function () {
+                 var $ = A3(rgbToHsl,
+                 color._0,
+                 color._1,
+                 color._2),
+                 h = $._0,
+                 s = $._1,
+                 l = $._2;
+                 return {_: {}
+                        ,alpha: color._3
+                        ,hue: h
+                        ,lightness: l
+                        ,saturation: s};
+              }();}
+         _U.badCase($moduleName,
+         "between lines 105 and 112");
+      }();
+   };
+   var HSLA = F4(function (a,
+   b,
+   c,
+   d) {
+      return {ctor: "HSLA"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d};
+   });
+   var hsla = F4(function (hue,
+   saturation,
+   lightness,
+   alpha) {
+      return A4(HSLA,
+      hue - $Basics.turns($Basics.toFloat($Basics.floor(hue / (2 * $Basics.pi)))),
+      saturation,
+      lightness,
+      alpha);
+   });
+   var hsl = F3(function (hue,
+   saturation,
+   lightness) {
+      return A4(hsla,
+      hue,
+      saturation,
+      lightness,
+      1);
+   });
+   var complement = function (color) {
+      return function () {
+         switch (color.ctor)
+         {case "HSLA": return A4(hsla,
+              color._0 + $Basics.degrees(180),
+              color._1,
+              color._2,
+              color._3);
+            case "RGBA":
+            return function () {
+                 var $ = A3(rgbToHsl,
+                 color._0,
+                 color._1,
+                 color._2),
+                 h = $._0,
+                 s = $._1,
+                 l = $._2;
+                 return A4(hsla,
+                 h + $Basics.degrees(180),
+                 s,
+                 l,
+                 color._3);
+              }();}
+         _U.badCase($moduleName,
+         "between lines 96 and 102");
+      }();
+   };
+   var grayscale = function (p) {
+      return A4(HSLA,0,0,1 - p,1);
+   };
+   var greyscale = function (p) {
+      return A4(HSLA,0,0,1 - p,1);
+   };
+   var RGBA = F4(function (a,
+   b,
+   c,
+   d) {
+      return {ctor: "RGBA"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d};
+   });
+   var rgba = RGBA;
+   var rgb = F3(function (r,g,b) {
+      return A4(RGBA,r,g,b,1);
+   });
+   var lightRed = A4(RGBA,
+   239,
+   41,
+   41,
+   1);
+   var red = A4(RGBA,204,0,0,1);
+   var darkRed = A4(RGBA,
+   164,
+   0,
+   0,
+   1);
+   var lightOrange = A4(RGBA,
+   252,
+   175,
+   62,
+   1);
+   var orange = A4(RGBA,
+   245,
+   121,
+   0,
+   1);
+   var darkOrange = A4(RGBA,
+   206,
+   92,
+   0,
+   1);
+   var lightYellow = A4(RGBA,
+   255,
+   233,
+   79,
+   1);
+   var yellow = A4(RGBA,
+   237,
+   212,
+   0,
+   1);
+   var darkYellow = A4(RGBA,
+   196,
+   160,
+   0,
+   1);
+   var lightGreen = A4(RGBA,
+   138,
+   226,
+   52,
+   1);
+   var green = A4(RGBA,
+   115,
+   210,
+   22,
+   1);
+   var darkGreen = A4(RGBA,
+   78,
+   154,
+   6,
+   1);
+   var lightBlue = A4(RGBA,
+   114,
+   159,
+   207,
+   1);
+   var blue = A4(RGBA,
+   52,
+   101,
+   164,
+   1);
+   var darkBlue = A4(RGBA,
+   32,
+   74,
+   135,
+   1);
+   var lightPurple = A4(RGBA,
+   173,
+   127,
+   168,
+   1);
+   var purple = A4(RGBA,
+   117,
+   80,
+   123,
+   1);
+   var darkPurple = A4(RGBA,
+   92,
+   53,
+   102,
+   1);
+   var lightBrown = A4(RGBA,
+   233,
+   185,
+   110,
+   1);
+   var brown = A4(RGBA,
+   193,
+   125,
+   17,
+   1);
+   var darkBrown = A4(RGBA,
+   143,
+   89,
+   2,
+   1);
+   var black = A4(RGBA,0,0,0,1);
+   var white = A4(RGBA,
+   255,
+   255,
+   255,
+   1);
+   var lightGrey = A4(RGBA,
+   238,
+   238,
+   236,
+   1);
+   var grey = A4(RGBA,
+   211,
+   215,
+   207,
+   1);
+   var darkGrey = A4(RGBA,
+   186,
+   189,
+   182,
+   1);
+   var lightGray = A4(RGBA,
+   238,
+   238,
+   236,
+   1);
+   var gray = A4(RGBA,
+   211,
+   215,
+   207,
+   1);
+   var darkGray = A4(RGBA,
+   186,
+   189,
+   182,
+   1);
+   var lightCharcoal = A4(RGBA,
+   136,
+   138,
+   133,
+   1);
+   var charcoal = A4(RGBA,
+   85,
+   87,
+   83,
+   1);
+   var darkCharcoal = A4(RGBA,
+   46,
+   52,
+   54,
+   1);
+   _elm.Color.values = {_op: _op
+                       ,RGBA: RGBA
+                       ,HSLA: HSLA
+                       ,rgba: rgba
+                       ,rgb: rgb
+                       ,hsla: hsla
+                       ,hsl: hsl
+                       ,grayscale: grayscale
+                       ,greyscale: greyscale
+                       ,complement: complement
+                       ,toHsl: toHsl
+                       ,toRgb: toRgb
+                       ,fmod: fmod
+                       ,rgbToHsl: rgbToHsl
+                       ,hslToRgb: hslToRgb
+                       ,Linear: Linear
+                       ,Radial: Radial
+                       ,linear: linear
+                       ,radial: radial
+                       ,lightRed: lightRed
+                       ,red: red
+                       ,darkRed: darkRed
+                       ,lightOrange: lightOrange
+                       ,orange: orange
+                       ,darkOrange: darkOrange
+                       ,lightYellow: lightYellow
+                       ,yellow: yellow
+                       ,darkYellow: darkYellow
+                       ,lightGreen: lightGreen
+                       ,green: green
+                       ,darkGreen: darkGreen
+                       ,lightBlue: lightBlue
+                       ,blue: blue
+                       ,darkBlue: darkBlue
+                       ,lightPurple: lightPurple
+                       ,purple: purple
+                       ,darkPurple: darkPurple
+                       ,lightBrown: lightBrown
+                       ,brown: brown
+                       ,darkBrown: darkBrown
+                       ,black: black
+                       ,white: white
+                       ,lightGrey: lightGrey
+                       ,grey: grey
+                       ,darkGrey: darkGrey
+                       ,lightGray: lightGray
+                       ,gray: gray
+                       ,darkGray: darkGray
+                       ,lightCharcoal: lightCharcoal
+                       ,charcoal: charcoal
+                       ,darkCharcoal: darkCharcoal};
+   return _elm.Color.values;
+};
+Elm.Graphics = Elm.Graphics || {};
+Elm.Graphics.Collage = Elm.Graphics.Collage || {};
+Elm.Graphics.Collage.make = function (_elm) {
+   "use strict";
+   _elm.Graphics = _elm.Graphics || {};
+   _elm.Graphics.Collage = _elm.Graphics.Collage || {};
+   if (_elm.Graphics.Collage.values)
+   return _elm.Graphics.Collage.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Graphics.Collage",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Native$Graphics$Collage = Elm.Native.Graphics.Collage.make(_elm),
+   $Transform2D = Elm.Transform2D.make(_elm);
+   var ngon = F2(function (n,r) {
+      return function () {
+         var m = $Basics.toFloat(n);
+         var t = 2 * $Basics.pi / m;
+         var f = function (i) {
+            return {ctor: "_Tuple2"
+                   ,_0: r * $Basics.cos(t * i)
+                   ,_1: r * $Basics.sin(t * i)};
+         };
+         return A2($List.map,
+         f,
+         _L.range(0,m - 1));
+      }();
+   });
+   var oval = F2(function (w,h) {
+      return function () {
+         var hh = h / 2;
+         var hw = w / 2;
+         var n = 50;
+         var t = 2 * $Basics.pi / n;
+         var f = function (i) {
+            return {ctor: "_Tuple2"
+                   ,_0: hw * $Basics.cos(t * i)
+                   ,_1: hh * $Basics.sin(t * i)};
+         };
+         return A2($List.map,
+         f,
+         _L.range(0,n - 1));
+      }();
+   });
+   var circle = function (r) {
+      return A2(oval,2 * r,2 * r);
+   };
+   var rect = F2(function (w,h) {
+      return function () {
+         var hh = h / 2;
+         var hw = w / 2;
+         return _L.fromArray([{ctor: "_Tuple2"
+                              ,_0: 0 - hw
+                              ,_1: 0 - hh}
+                             ,{ctor: "_Tuple2"
+                              ,_0: 0 - hw
+                              ,_1: hh}
+                             ,{ctor: "_Tuple2",_0: hw,_1: hh}
+                             ,{ctor: "_Tuple2"
+                              ,_0: hw
+                              ,_1: 0 - hh}]);
+      }();
+   });
+   var square = function (n) {
+      return A2(rect,n,n);
+   };
+   var polygon = function (points) {
+      return points;
+   };
+   var segment = F2(function (p1,
+   p2) {
+      return _L.fromArray([p1,p2]);
+   });
+   var path = function (ps) {
+      return ps;
+   };
+   var collage = $Native$Graphics$Collage.collage;
+   var alpha = F2(function (a,f) {
+      return _U.replace([["alpha"
+                         ,a]],
+      f);
+   });
+   var rotate = F2(function (t,f) {
+      return _U.replace([["theta"
+                         ,f.theta + t]],
+      f);
+   });
+   var scale = F2(function (s,f) {
+      return _U.replace([["scale"
+                         ,f.scale * s]],
+      f);
+   });
+   var moveY = F2(function (y,f) {
+      return _U.replace([["y"
+                         ,f.y + y]],
+      f);
+   });
+   var moveX = F2(function (x,f) {
+      return _U.replace([["x"
+                         ,f.x + x]],
+      f);
+   });
+   var move = F2(function (_v0,f) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return _U.replace([["x"
+                               ,f.x + _v0._0]
+                              ,["y",f.y + _v0._1]],
+              f);}
+         _U.badCase($moduleName,
+         "on line 179, column 20 to 48");
+      }();
+   });
+   var form = function (f) {
+      return {_: {}
+             ,alpha: 1
+             ,form: f
+             ,scale: 1
+             ,theta: 0
+             ,x: 0
+             ,y: 0};
+   };
+   var Fill = function (a) {
+      return {ctor: "Fill",_0: a};
+   };
+   var Line = function (a) {
+      return {ctor: "Line",_0: a};
+   };
+   var FGroup = F2(function (a,b) {
+      return {ctor: "FGroup"
+             ,_0: a
+             ,_1: b};
+   });
+   var group = function (fs) {
+      return form(A2(FGroup,
+      $Transform2D.identity,
+      fs));
+   };
+   var groupTransform = F2(function (matrix,
+   fs) {
+      return form(A2(FGroup,
+      matrix,
+      fs));
+   });
+   var FElement = function (a) {
+      return {ctor: "FElement"
+             ,_0: a};
+   };
+   var toForm = function (e) {
+      return form(FElement(e));
+   };
+   var FImage = F4(function (a,
+   b,
+   c,
+   d) {
+      return {ctor: "FImage"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d};
+   });
+   var sprite = F4(function (w,
+   h,
+   pos,
+   src) {
+      return form(A4(FImage,
+      w,
+      h,
+      pos,
+      src));
+   });
+   var FShape = F2(function (a,b) {
+      return {ctor: "FShape"
+             ,_0: a
+             ,_1: b};
+   });
+   var fill = F2(function (style,
+   shape) {
+      return form(A2(FShape,
+      Fill(style),
+      shape));
+   });
+   var outlined = F2(function (style,
+   shape) {
+      return form(A2(FShape,
+      Line(style),
+      shape));
+   });
+   var FPath = F2(function (a,b) {
+      return {ctor: "FPath"
+             ,_0: a
+             ,_1: b};
+   });
+   var traced = F2(function (style,
+   path) {
+      return form(A2(FPath,
+      style,
+      path));
+   });
+   var LineStyle = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,cap: c
+             ,color: a
+             ,dashOffset: f
+             ,dashing: e
+             ,join: d
+             ,width: b};
+   });
+   var Clipped = {ctor: "Clipped"};
+   var Sharp = function (a) {
+      return {ctor: "Sharp",_0: a};
+   };
+   var Smooth = {ctor: "Smooth"};
+   var Padded = {ctor: "Padded"};
+   var Round = {ctor: "Round"};
+   var Flat = {ctor: "Flat"};
+   var defaultLine = {_: {}
+                     ,cap: Flat
+                     ,color: $Color.black
+                     ,dashOffset: 0
+                     ,dashing: _L.fromArray([])
+                     ,join: Sharp(10)
+                     ,width: 1};
+   var solid = function (clr) {
+      return _U.replace([["color"
+                         ,clr]],
+      defaultLine);
+   };
+   var dashed = function (clr) {
+      return _U.replace([["color"
+                         ,clr]
+                        ,["dashing"
+                         ,_L.fromArray([8,4])]],
+      defaultLine);
+   };
+   var dotted = function (clr) {
+      return _U.replace([["color"
+                         ,clr]
+                        ,["dashing"
+                         ,_L.fromArray([3,3])]],
+      defaultLine);
+   };
+   var Grad = function (a) {
+      return {ctor: "Grad",_0: a};
+   };
+   var gradient = F2(function (grad,
+   shape) {
+      return A2(fill,
+      Grad(grad),
+      shape);
+   });
+   var Texture = function (a) {
+      return {ctor: "Texture"
+             ,_0: a};
+   };
+   var textured = F2(function (src,
+   shape) {
+      return A2(fill,
+      Texture(src),
+      shape);
+   });
+   var Solid = function (a) {
+      return {ctor: "Solid",_0: a};
+   };
+   var filled = F2(function (color,
+   shape) {
+      return A2(fill,
+      Solid(color),
+      shape);
+   });
+   var Form = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,alpha: e
+             ,form: f
+             ,scale: b
+             ,theta: a
+             ,x: c
+             ,y: d};
+   });
+   _elm.Graphics.Collage.values = {_op: _op
+                                  ,Form: Form
+                                  ,Solid: Solid
+                                  ,Texture: Texture
+                                  ,Grad: Grad
+                                  ,Flat: Flat
+                                  ,Round: Round
+                                  ,Padded: Padded
+                                  ,Smooth: Smooth
+                                  ,Sharp: Sharp
+                                  ,Clipped: Clipped
+                                  ,LineStyle: LineStyle
+                                  ,defaultLine: defaultLine
+                                  ,solid: solid
+                                  ,dashed: dashed
+                                  ,dotted: dotted
+                                  ,FPath: FPath
+                                  ,FShape: FShape
+                                  ,FImage: FImage
+                                  ,FElement: FElement
+                                  ,FGroup: FGroup
+                                  ,Line: Line
+                                  ,Fill: Fill
+                                  ,form: form
+                                  ,fill: fill
+                                  ,filled: filled
+                                  ,textured: textured
+                                  ,gradient: gradient
+                                  ,outlined: outlined
+                                  ,traced: traced
+                                  ,sprite: sprite
+                                  ,toForm: toForm
+                                  ,group: group
+                                  ,groupTransform: groupTransform
+                                  ,move: move
+                                  ,moveX: moveX
+                                  ,moveY: moveY
+                                  ,scale: scale
+                                  ,rotate: rotate
+                                  ,alpha: alpha
+                                  ,collage: collage
+                                  ,path: path
+                                  ,segment: segment
+                                  ,polygon: polygon
+                                  ,rect: rect
+                                  ,square: square
+                                  ,oval: oval
+                                  ,circle: circle
+                                  ,ngon: ngon};
+   return _elm.Graphics.Collage.values;
+};
+Elm.Graphics = Elm.Graphics || {};
+Elm.Graphics.Element = Elm.Graphics.Element || {};
+Elm.Graphics.Element.make = function (_elm) {
+   "use strict";
+   _elm.Graphics = _elm.Graphics || {};
+   _elm.Graphics.Element = _elm.Graphics.Element || {};
+   if (_elm.Graphics.Element.values)
+   return _elm.Graphics.Element.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Graphics.Element",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Graphics$Element = Elm.Native.Graphics.Element.make(_elm);
+   var DOut = {ctor: "DOut"};
+   var outward = DOut;
+   var DIn = {ctor: "DIn"};
+   var inward = DIn;
+   var DRight = {ctor: "DRight"};
+   var right = DRight;
+   var DLeft = {ctor: "DLeft"};
+   var left = DLeft;
+   var DDown = {ctor: "DDown"};
+   var down = DDown;
+   var DUp = {ctor: "DUp"};
+   var up = DUp;
+   var Position = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,horizontal: a
+             ,vertical: b
+             ,x: c
+             ,y: d};
+   });
+   var Relative = function (a) {
+      return {ctor: "Relative"
+             ,_0: a};
+   };
+   var relative = Relative;
+   var Absolute = function (a) {
+      return {ctor: "Absolute"
+             ,_0: a};
+   };
+   var absolute = Absolute;
+   var N = {ctor: "N"};
+   var bottomLeftAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: N
+             ,vertical: N
+             ,x: x
+             ,y: y};
+   });
+   var Z = {ctor: "Z"};
+   var middle = {_: {}
+                ,horizontal: Z
+                ,vertical: Z
+                ,x: Relative(0.5)
+                ,y: Relative(0.5)};
+   var midLeft = _U.replace([["horizontal"
+                             ,N]
+                            ,["x",Absolute(0)]],
+   middle);
+   var middleAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: Z
+             ,vertical: Z
+             ,x: x
+             ,y: y};
+   });
+   var midLeftAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: N
+             ,vertical: Z
+             ,x: x
+             ,y: y};
+   });
+   var midBottomAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: Z
+             ,vertical: N
+             ,x: x
+             ,y: y};
+   });
+   var P = {ctor: "P"};
+   var topLeft = {_: {}
+                 ,horizontal: N
+                 ,vertical: P
+                 ,x: Absolute(0)
+                 ,y: Absolute(0)};
+   var bottomLeft = _U.replace([["vertical"
+                                ,N]],
+   topLeft);
+   var topRight = _U.replace([["horizontal"
+                              ,P]],
+   topLeft);
+   var bottomRight = _U.replace([["horizontal"
+                                 ,P]],
+   bottomLeft);
+   var midRight = _U.replace([["horizontal"
+                              ,P]],
+   midLeft);
+   var midTop = _U.replace([["vertical"
+                            ,P]
+                           ,["y",Absolute(0)]],
+   middle);
+   var midBottom = _U.replace([["vertical"
+                               ,N]],
+   midTop);
+   var topLeftAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: N
+             ,vertical: P
+             ,x: x
+             ,y: y};
+   });
+   var topRightAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: P
+             ,vertical: P
+             ,x: x
+             ,y: y};
+   });
+   var bottomRightAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: P
+             ,vertical: N
+             ,x: x
+             ,y: y};
+   });
+   var midRightAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: P
+             ,vertical: Z
+             ,x: x
+             ,y: y};
+   });
+   var midTopAt = F2(function (x,
+   y) {
+      return {_: {}
+             ,horizontal: Z
+             ,vertical: P
+             ,x: x
+             ,y: y};
+   });
+   var Tiled = {ctor: "Tiled"};
+   var Cropped = function (a) {
+      return {ctor: "Cropped"
+             ,_0: a};
+   };
+   var Fitted = {ctor: "Fitted"};
+   var Plain = {ctor: "Plain"};
+   var Custom = {ctor: "Custom"};
+   var RawHtml = {ctor: "RawHtml"};
+   var Spacer = {ctor: "Spacer"};
+   var Flow = F2(function (a,b) {
+      return {ctor: "Flow"
+             ,_0: a
+             ,_1: b};
+   });
+   var Container = F2(function (a,
+   b) {
+      return {ctor: "Container"
+             ,_0: a
+             ,_1: b};
+   });
+   var Image = F4(function (a,
+   b,
+   c,
+   d) {
+      return {ctor: "Image"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d};
+   });
+   var link = F2(function (href,
+   e) {
+      return function () {
+         var p = e.props;
+         return {_: {}
+                ,element: e.element
+                ,props: _U.replace([["href"
+                                    ,href]],
+                p)};
+      }();
+   });
+   var tag = F2(function (name,e) {
+      return function () {
+         var p = e.props;
+         return {_: {}
+                ,element: e.element
+                ,props: _U.replace([["tag"
+                                    ,name]],
+                p)};
+      }();
+   });
+   var color = F2(function (c,e) {
+      return function () {
+         var p = e.props;
+         return {_: {}
+                ,element: e.element
+                ,props: _U.replace([["color"
+                                    ,$Maybe.Just(c)]],
+                p)};
+      }();
+   });
+   var opacity = F2(function (o,
+   e) {
+      return function () {
+         var p = e.props;
+         return {_: {}
+                ,element: e.element
+                ,props: _U.replace([["opacity"
+                                    ,o]],
+                p)};
+      }();
+   });
+   var height = F2(function (nh,
+   e) {
+      return function () {
+         var p = e.props;
+         var props = function () {
+            var _v0 = e.element;
+            switch (_v0.ctor)
+            {case "Image":
+               return _U.replace([["width"
+                                  ,$Basics.round($Basics.toFloat(_v0._1) / $Basics.toFloat(_v0._2) * $Basics.toFloat(nh))]],
+                 p);}
+            return p;
+         }();
+         return {_: {}
+                ,element: e.element
+                ,props: _U.replace([["height"
+                                    ,nh]],
+                p)};
+      }();
+   });
+   var width = F2(function (nw,e) {
+      return function () {
+         var p = e.props;
+         var props = function () {
+            var _v5 = e.element;
+            switch (_v5.ctor)
+            {case "Image":
+               return _U.replace([["height"
+                                  ,$Basics.round($Basics.toFloat(_v5._2) / $Basics.toFloat(_v5._1) * $Basics.toFloat(nw))]],
+                 p);
+               case "RawHtml":
+               return _U.replace([["height"
+                                  ,$Basics.snd(A2($Native$Graphics$Element.htmlHeight,
+                                  nw,
+                                  e.element))]],
+                 p);}
+            return p;
+         }();
+         return {_: {}
+                ,element: e.element
+                ,props: _U.replace([["width"
+                                    ,nw]],
+                props)};
+      }();
+   });
+   var size = F3(function (w,h,e) {
+      return A2(height,
+      h,
+      A2(width,w,e));
+   });
+   var sizeOf = function (e) {
+      return {ctor: "_Tuple2"
+             ,_0: e.props.width
+             ,_1: e.props.height};
+   };
+   var heightOf = function (e) {
+      return e.props.height;
+   };
+   var widthOf = function (e) {
+      return e.props.width;
+   };
+   var Element = F2(function (a,
+   b) {
+      return {_: {}
+             ,element: b
+             ,props: a};
+   });
+   var Properties = F9(function (a,
+   b,
+   c,
+   d,
+   e,
+   f,
+   g,
+   h,
+   i) {
+      return {_: {}
+             ,click: i
+             ,color: e
+             ,height: c
+             ,hover: h
+             ,href: f
+             ,id: a
+             ,opacity: d
+             ,tag: g
+             ,width: b};
+   });
+   var newElement = F3(function (w,
+   h,
+   e) {
+      return {_: {}
+             ,element: e
+             ,props: A9(Properties,
+             $Native$Graphics$Element.guid({ctor: "_Tuple0"}),
+             w,
+             h,
+             1,
+             $Maybe.Nothing,
+             "",
+             "",
+             {ctor: "_Tuple0"},
+             {ctor: "_Tuple0"})};
+   });
+   var image = F3(function (w,
+   h,
+   src) {
+      return A3(newElement,
+      w,
+      h,
+      A4(Image,Plain,w,h,src));
+   });
+   var fittedImage = F3(function (w,
+   h,
+   src) {
+      return A3(newElement,
+      w,
+      h,
+      A4(Image,Fitted,w,h,src));
+   });
+   var croppedImage = F4(function (pos,
+   w,
+   h,
+   src) {
+      return A3(newElement,
+      w,
+      h,
+      A4(Image,Cropped(pos),w,h,src));
+   });
+   var tiledImage = F3(function (w,
+   h,
+   src) {
+      return A3(newElement,
+      w,
+      h,
+      A4(Image,Tiled,w,h,src));
+   });
+   var container = F4(function (w,
+   h,
+   pos,
+   e) {
+      return A3(newElement,
+      w,
+      h,
+      A2(Container,pos,e));
+   });
+   var spacer = F2(function (w,h) {
+      return A3(newElement,
+      w,
+      h,
+      Spacer);
+   });
+   var empty = A2(spacer,0,0);
+   var flow = F2(function (dir,
+   es) {
+      return function () {
+         var newFlow = F2(function (w,
+         h) {
+            return A3(newElement,
+            w,
+            h,
+            A2(Flow,dir,es));
+         });
+         var hs = A2($List.map,
+         heightOf,
+         es);
+         var ws = A2($List.map,
+         widthOf,
+         es);
+         return _U.eq(es,
+         _L.fromArray([])) ? empty : function () {
+            switch (dir.ctor)
+            {case "DDown":
+               return A2(newFlow,
+                 $List.maximum(ws),
+                 $List.sum(hs));
+               case "DIn": return A2(newFlow,
+                 $List.maximum(ws),
+                 $List.maximum(hs));
+               case "DLeft": return A2(newFlow,
+                 $List.sum(ws),
+                 $List.maximum(hs));
+               case "DOut": return A2(newFlow,
+                 $List.maximum(ws),
+                 $List.maximum(hs));
+               case "DRight":
+               return A2(newFlow,
+                 $List.sum(ws),
+                 $List.maximum(hs));
+               case "DUp": return A2(newFlow,
+                 $List.maximum(ws),
+                 $List.sum(hs));}
+            _U.badCase($moduleName,
+            "between lines 280 and 291");
+         }();
+      }();
+   });
+   var above = F2(function (hi,
+   lo) {
+      return A3(newElement,
+      A2($Basics.max,
+      widthOf(hi),
+      widthOf(lo)),
+      heightOf(hi) + heightOf(lo),
+      A2(Flow,
+      DDown,
+      _L.fromArray([hi,lo])));
+   });
+   var below = F2(function (lo,
+   hi) {
+      return A3(newElement,
+      A2($Basics.max,
+      widthOf(hi),
+      widthOf(lo)),
+      heightOf(hi) + heightOf(lo),
+      A2(Flow,
+      DDown,
+      _L.fromArray([hi,lo])));
+   });
+   var beside = F2(function (lft,
+   rht) {
+      return A3(newElement,
+      widthOf(lft) + widthOf(rht),
+      A2($Basics.max,
+      heightOf(lft),
+      heightOf(rht)),
+      A2(Flow,
+      right,
+      _L.fromArray([lft,rht])));
+   });
+   var layers = function (es) {
+      return function () {
+         var hs = A2($List.map,
+         heightOf,
+         es);
+         var ws = A2($List.map,
+         widthOf,
+         es);
+         return A3(newElement,
+         $List.maximum(ws),
+         $List.maximum(hs),
+         A2(Flow,DOut,es));
+      }();
+   };
+   _elm.Graphics.Element.values = {_op: _op
+                                  ,Properties: Properties
+                                  ,Element: Element
+                                  ,empty: empty
+                                  ,widthOf: widthOf
+                                  ,heightOf: heightOf
+                                  ,sizeOf: sizeOf
+                                  ,width: width
+                                  ,height: height
+                                  ,size: size
+                                  ,opacity: opacity
+                                  ,color: color
+                                  ,tag: tag
+                                  ,link: link
+                                  ,newElement: newElement
+                                  ,Image: Image
+                                  ,Container: Container
+                                  ,Flow: Flow
+                                  ,Spacer: Spacer
+                                  ,RawHtml: RawHtml
+                                  ,Custom: Custom
+                                  ,Plain: Plain
+                                  ,Fitted: Fitted
+                                  ,Cropped: Cropped
+                                  ,Tiled: Tiled
+                                  ,image: image
+                                  ,fittedImage: fittedImage
+                                  ,croppedImage: croppedImage
+                                  ,tiledImage: tiledImage
+                                  ,P: P
+                                  ,Z: Z
+                                  ,N: N
+                                  ,Absolute: Absolute
+                                  ,Relative: Relative
+                                  ,Position: Position
+                                  ,container: container
+                                  ,spacer: spacer
+                                  ,DUp: DUp
+                                  ,DDown: DDown
+                                  ,DLeft: DLeft
+                                  ,DRight: DRight
+                                  ,DIn: DIn
+                                  ,DOut: DOut
+                                  ,flow: flow
+                                  ,above: above
+                                  ,below: below
+                                  ,beside: beside
+                                  ,layers: layers
+                                  ,absolute: absolute
+                                  ,relative: relative
+                                  ,middle: middle
+                                  ,topLeft: topLeft
+                                  ,topRight: topRight
+                                  ,bottomLeft: bottomLeft
+                                  ,bottomRight: bottomRight
+                                  ,midLeft: midLeft
+                                  ,midRight: midRight
+                                  ,midTop: midTop
+                                  ,midBottom: midBottom
+                                  ,middleAt: middleAt
+                                  ,topLeftAt: topLeftAt
+                                  ,topRightAt: topRightAt
+                                  ,bottomLeftAt: bottomLeftAt
+                                  ,bottomRightAt: bottomRightAt
+                                  ,midLeftAt: midLeftAt
+                                  ,midRightAt: midRightAt
+                                  ,midTopAt: midTopAt
+                                  ,midBottomAt: midBottomAt
+                                  ,up: up
+                                  ,down: down
+                                  ,left: left
+                                  ,right: right
+                                  ,inward: inward
+                                  ,outward: outward};
+   return _elm.Graphics.Element.values;
+};
+Elm.Http = Elm.Http || {};
+Elm.Http.make = function (_elm) {
+   "use strict";
+   _elm.Http = _elm.Http || {};
+   if (_elm.Http.values)
+   return _elm.Http.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Http",
+   $Native$Http = Elm.Native.Http.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var send = $Native$Http.send;
+   var Request = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,body: c
+             ,headers: d
+             ,url: b
+             ,verb: a};
+   });
+   var request = Request;
+   var get = function (url) {
+      return A4(Request,
+      "GET",
+      url,
+      "",
+      _L.fromArray([]));
+   };
+   var sendGet = function (requestStrings) {
+      return send(A2($Signal.map,
+      get,
+      requestStrings));
+   };
+   var post = F2(function (url,
+   body) {
+      return A4(Request,
+      "POST",
+      url,
+      body,
+      _L.fromArray([]));
+   });
+   var Failure = F2(function (a,
+   b) {
+      return {ctor: "Failure"
+             ,_0: a
+             ,_1: b};
+   });
+   var Waiting = {ctor: "Waiting"};
+   var Success = function (a) {
+      return {ctor: "Success"
+             ,_0: a};
+   };
+   _elm.Http.values = {_op: _op
+                      ,send: send
+                      ,sendGet: sendGet
+                      ,get: get
+                      ,post: post
+                      ,request: request
+                      ,Request: Request
+                      ,Success: Success
+                      ,Waiting: Waiting
+                      ,Failure: Failure};
+   return _elm.Http.values;
+};
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
    "use strict";
@@ -448,6 +1874,267 @@ Elm.List.make = function (_elm) {
                       ,sortWith: sortWith};
    return _elm.List.values;
 };
+Elm.LiveColor = Elm.LiveColor || {};
+Elm.LiveColor.make = function (_elm) {
+   "use strict";
+   _elm.LiveColor = _elm.LiveColor || {};
+   if (_elm.LiveColor.values)
+   return _elm.LiveColor.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "LiveColor",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Http = Elm.Http.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Rebase = Elm.Rebase.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $Window = Elm.Window.make(_elm);
+   var rgbFromCss = function (cssColorString) {
+      return function () {
+         var rgbIndexes = _L.fromArray([{ctor: "_Tuple2"
+                                        ,_0: 0
+                                        ,_1: 2}
+                                       ,{ctor: "_Tuple2",_0: 2,_1: 4}
+                                       ,{ctor: "_Tuple2"
+                                        ,_0: 4
+                                        ,_1: 6}]);
+         var hexColor = _U.eq(A2($String.left,
+         1,
+         cssColorString),
+         "#") ? A2($String.dropLeft,
+         1,
+         cssColorString) : cssColorString;
+         var str = _U.eq($String.length(hexColor),
+         3) ? function () {
+            var dub = function (ids) {
+               return $String.concat(A2($List.map,
+               function (_v0) {
+                  return function () {
+                     switch (_v0.ctor)
+                     {case "_Tuple2":
+                        return $String.repeat(2)(A3($String.slice,
+                          _v0._0,
+                          _v0._1,
+                          hexColor));}
+                     _U.badCase($moduleName,
+                     "on line 71, column 67 to 111");
+                  }();
+               },
+               ids));
+            };
+            return dub(_L.fromArray([{ctor: "_Tuple2"
+                                     ,_0: 0
+                                     ,_1: 1}
+                                    ,{ctor: "_Tuple2",_0: 1,_1: 2}
+                                    ,{ctor: "_Tuple2"
+                                     ,_0: 2
+                                     ,_1: 3}]));
+         }() : hexColor;
+         var dfh = function (_v4) {
+            return function () {
+               switch (_v4.ctor)
+               {case "_Tuple2":
+                  return $Rebase.decimalFromHex(A3($String.slice,
+                    _v4._0,
+                    _v4._1,
+                    str));}
+               _U.badCase($moduleName,
+               "on line 74, column 21 to 66");
+            }();
+         };
+         var _ = A2($List.map,
+         dfh,
+         rgbIndexes);
+         var b = function () {
+            switch (_.ctor)
+            {case "::": switch (_._1.ctor)
+                 {case "::":
+                    switch (_._1._1.ctor)
+                      {case "::":
+                         switch (_._1._1._1.ctor)
+                           {case "[]": return _._1._1._0;}
+                           break;}
+                      break;}
+                 break;}
+            _U.badCase($moduleName,
+            "on line 76, column 19 to 42");
+         }();
+         var g = function () {
+            switch (_.ctor)
+            {case "::": switch (_._1.ctor)
+                 {case "::":
+                    switch (_._1._1.ctor)
+                      {case "::":
+                         switch (_._1._1._1.ctor)
+                           {case "[]": return _._1._0;}
+                           break;}
+                      break;}
+                 break;}
+            _U.badCase($moduleName,
+            "on line 76, column 19 to 42");
+         }();
+         var r = function () {
+            switch (_.ctor)
+            {case "::": switch (_._1.ctor)
+                 {case "::":
+                    switch (_._1._1.ctor)
+                      {case "::":
+                         switch (_._1._1._1.ctor)
+                           {case "[]": return _._0;}
+                           break;}
+                      break;}
+                 break;}
+            _U.badCase($moduleName,
+            "on line 76, column 19 to 42");
+         }();
+         return A3($Color.rgb,r,g,b);
+      }();
+   };
+   var scene = F2(function (_v29,
+   ls) {
+      return function () {
+         switch (_v29.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var clrFn = function (c) {
+                    return function () {
+                       switch (c.ctor)
+                       {case "Just":
+                          return $Color.toHsl(rgbFromCss(c._0));
+                          case "Nothing":
+                          return $Color.toHsl(rgbFromCss("ccc"));}
+                       _U.badCase($moduleName,
+                       "between lines 39 and 43");
+                    }();
+                 };
+                 var txtFn = function ($) {
+                    return $Text.centered($Text.height(18)($Text.typeface(_L.fromArray(["Lucida Console"
+                                                                                       ,"monospace"]))($Text.fromString($))));
+                 };
+                 var alphs = A2($List.map,
+                 function (_v35) {
+                    return function () {
+                       switch (_v35.ctor)
+                       {case "_Tuple2":
+                          return {ctor: "_Tuple2"
+                                 ,_0: txtFn(_v35._0)
+                                 ,_1: clrFn(_v35._1)};}
+                       _U.badCase($moduleName,
+                       "on line 43, column 38 to 54");
+                    }();
+                 },
+                 ls);
+                 var hues = A2($List.sortBy,
+                 function ($) {
+                    return function (_) {
+                       return _.hue;
+                    }($Basics.snd($));
+                 },
+                 alphs);
+                 var columnAlpha = A2($List._op["::"],
+                 {ctor: "_Tuple2"
+                 ,_0: txtFn("alphabetical")
+                 ,_1: clrFn($Maybe.Nothing)},
+                 alphs);
+                 var columnHue = A2($List._op["::"],
+                 {ctor: "_Tuple2"
+                 ,_0: txtFn("by hue")
+                 ,_1: clrFn($Maybe.Nothing)},
+                 hues);
+                 var cols = _L.fromArray([columnAlpha
+                                         ,columnHue]);
+                 var boxed = function (_v39) {
+                    return function () {
+                       switch (_v39.ctor)
+                       {case "_Tuple2":
+                          return function () {
+                               var c = A3($Color.hsl,
+                               _v39._1.hue,
+                               _v39._1.saturation,
+                               _v39._1.lightness);
+                               var mw = _v29._0 / $List.length(cols) | 0;
+                               return $Graphics$Element.width(mw)($Graphics$Element.color(c)(A4($Graphics$Element.container,
+                               mw,
+                               60,
+                               $Graphics$Element.middle,
+                               _v39._0)));
+                            }();}
+                       _U.badCase($moduleName,
+                       "between lines 49 and 51");
+                    }();
+                 };
+                 var fds = function (t) {
+                    return $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
+                    boxed,
+                    t));
+                 };
+                 var title = function ($) {
+                    return $Graphics$Element.width(_v29._0)($Text.centered($Text.typeface(_L.fromArray(["Tahoma"
+                                                                                                       ,"Geneva"
+                                                                                                       ,"sans-serif"]))($Text.height(40)($Text.fromString($)))));
+                 }("GitHub Language Colors");
+                 return A2($Graphics$Element.flow,
+                 $Graphics$Element.down,
+                 _L.fromArray([title
+                              ,$Graphics$Element.flow($Graphics$Element.right)(A2($List.map,
+                              fds,
+                              cols))]));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 36 and 53");
+      }();
+   });
+   var yamlReq = _P.portOut("yamlReq",
+   _P.outgoingSignal(function (v) {
+      return v;
+   }),
+   function () {
+      var dResponse = function (result) {
+         return function () {
+            switch (result.ctor)
+            {case "Failure": return "";
+               case "Success":
+               return result._0;
+               case "Waiting": return "";}
+            _U.badCase($moduleName,
+            "between lines 25 and 29");
+         }();
+      };
+      var url = $Signal.constant("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml");
+      var res = $Http.sendGet(url);
+      return A2($Signal.map,
+      dResponse,
+      res);
+   }());
+   var clrs = _P.portIn("clrs",
+   _P.incomingSignal(function (v) {
+      return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
+         return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                              ,_0: typeof v[0] === "string" || typeof v[0] === "object" && v[0] instanceof String ? v[0] : _U.badPort("a string",
+                                                              v[0])
+                                                              ,_1: v[1] === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v[1] === "string" || typeof v[1] === "object" && v[1] instanceof String ? v[1] : _U.badPort("a string",
+                                                              v[1]))} : _U.badPort("an array",
+         v);
+      })) : _U.badPort("an array",v);
+   }));
+   var main = A3($Signal.map2,
+   scene,
+   $Window.dimensions,
+   clrs);
+   _elm.LiveColor.values = {_op: _op
+                           ,scene: scene
+                           ,main: main
+                           ,rgbFromCss: rgbFromCss};
+   return _elm.LiveColor.values;
+};
 Elm.Maybe = Elm.Maybe || {};
 Elm.Maybe.make = function (_elm) {
    "use strict";
@@ -670,6 +2357,1039 @@ Elm.Native.Char.make = function(elm) {
         isDigit    : isDigit,
         isOctDigit : isBetween('0'.charCodeAt(0),'7'.charCodeAt(0)),
         isHexDigit : function(c) { return isDigit(c) || chk1(c) || chk2(c); }
+    };
+};
+
+Elm.Native.Color = {};
+Elm.Native.Color.make = function(elm) {
+    elm.Native = elm.Native || {};
+    elm.Native.Color = elm.Native.Color || {};
+    if (elm.Native.Color.values) return elm.Native.Color.values;
+
+    function toCss(c) {
+        var format = '';
+        var colors = '';
+        if (c.ctor === 'RGBA') {
+            format = 'rgb';
+            colors = c._0 + ', ' + c._1 + ', ' + c._2;
+        } else {
+            format = 'hsl';
+            colors = (c._0 * 180 / Math.PI) + ', ' +
+                     (c._1 * 100) + '%, ' +
+                     (c._2 * 100) + '%';
+        }
+        if (c._3 === 1) {
+            return format + '(' + colors + ')';
+        } else {
+            return format + 'a(' + colors + ', ' + c._3 + ')';
+        }
+    }
+
+    return elm.Native.Color.values = {
+        toCss:toCss
+    };
+
+};
+
+
+// setup
+Elm.Native = Elm.Native || {};
+Elm.Native.Graphics = Elm.Native.Graphics || {};
+Elm.Native.Graphics.Collage = Elm.Native.Graphics.Collage || {};
+
+// definition
+Elm.Native.Graphics.Collage.make = function(localRuntime) {
+    'use strict';
+
+    // attempt to short-circuit
+    localRuntime.Native = localRuntime.Native || {};
+    localRuntime.Native.Graphics = localRuntime.Native.Graphics || {};
+    localRuntime.Native.Graphics.Collage = localRuntime.Native.Graphics.Collage || {};
+    if ('values' in localRuntime.Native.Graphics.Collage) {
+        return localRuntime.Native.Graphics.Collage.values;
+    }
+
+    // okay, we cannot short-ciruit, so now we define everything
+    var Color = Elm.Native.Color.make(localRuntime);
+    var List = Elm.Native.List.make(localRuntime);
+    var Transform = Elm.Transform2D.make(localRuntime);
+
+    var Element = Elm.Graphics.Element.make(localRuntime);
+    var NativeElement = Elm.Native.Graphics.Element.make(localRuntime);
+
+
+    function trace(ctx, path) {
+        var points = List.toArray(path);
+        var i = points.length - 1;
+        if (i <= 0) {
+            return;
+        }
+        ctx.moveTo(points[i]._0, points[i]._1);
+        while (i--) {
+            ctx.lineTo(points[i]._0, points[i]._1);
+        }
+        if (path.closed) {
+            i = points.length - 1;
+            ctx.lineTo(points[i]._0, points[i]._1);
+        }
+    }
+
+    function line(ctx,style,path) {
+        (style.dashing.ctor === '[]')
+            ? trace(ctx, path)
+            : customLineHelp(ctx, style, path);
+        ctx.scale(1,-1);
+        ctx.stroke();
+    }
+
+    function customLineHelp(ctx, style, path) {
+        var points = List.toArray(path);
+        if (path.closed) {
+            points.push(points[0]);
+        }
+        var pattern = List.toArray(style.dashing);
+        var i = points.length - 1;
+        if (i <= 0) {
+            return;
+        }
+        var x0 = points[i]._0, y0 = points[i]._1;
+        var x1=0, y1=0, dx=0, dy=0, remaining=0, nx=0, ny=0;
+        var pindex = 0, plen = pattern.length;
+        var draw = true, segmentLength = pattern[0];
+        ctx.moveTo(x0,y0);
+        while (i--) {
+            x1 = points[i]._0; y1 = points[i]._1;
+            dx = x1 - x0; dy = y1 - y0;
+            remaining = Math.sqrt(dx * dx + dy * dy);
+            while (segmentLength <= remaining) {
+                x0 += dx * segmentLength / remaining;
+                y0 += dy * segmentLength / remaining;
+                ctx[draw ? 'lineTo' : 'moveTo'](x0, y0);
+                // update starting position
+                dx = x1 - x0; dy = y1 - y0;
+                remaining = Math.sqrt(dx * dx + dy * dy);
+                // update pattern
+                draw = !draw;
+                pindex = (pindex + 1) % plen;
+                segmentLength = pattern[pindex];
+            }
+            if (remaining > 0) {
+                ctx[draw ? 'lineTo' : 'moveTo'](x1, y1);
+                segmentLength -= remaining;
+            }
+            x0 = x1; y0 = y1;
+        }
+    }
+
+    function drawLine(ctx, style, path) {
+        ctx.lineWidth = style.width;
+
+        var cap = style.cap.ctor;
+        ctx.lineCap = cap === 'Flat'
+            ? 'butt'
+            : cap === 'Round'
+                ? 'round'
+                : 'square';
+
+        var join = style.join.ctor;
+        ctx.lineJoin = join === 'Smooth'
+            ? 'round'
+            : join === 'Sharp'
+                ? 'miter'
+                : 'bevel';
+
+        ctx.miterLimit = style.join._0 || 10;
+        ctx.strokeStyle = Color.toCss(style.color);
+
+        return line(ctx, style, path);
+    }
+
+    function texture(redo, ctx, src) {
+        var img = new Image();
+        img.src = src;
+        img.onload = redo;
+        return ctx.createPattern(img, 'repeat');
+    }
+
+    function gradient(ctx, grad) {
+        var g;
+        var stops = [];
+        if (grad.ctor === 'Linear') {
+            var p0 = grad._0, p1 = grad._1;
+            g = ctx.createLinearGradient(p0._0, -p0._1, p1._0, -p1._1);
+            stops = List.toArray(grad._2);
+        } else {
+            var p0 = grad._0, p2 = grad._2;
+            g = ctx.createRadialGradient(p0._0, -p0._1, grad._1, p2._0, -p2._1, grad._3);
+            stops = List.toArray(grad._4);
+        }
+        var len = stops.length;
+        for (var i = 0; i < len; ++i) {
+            var stop = stops[i];
+            g.addColorStop(stop._0, Color.toCss(stop._1));
+        }
+        return g;
+    }
+
+    function drawShape(redo, ctx, style, path) {
+        trace(ctx, path);
+        var sty = style.ctor;
+        ctx.fillStyle = sty === 'Solid'
+            ? Color.toCss(style._0)
+            : sty === 'Texture'
+                ? texture(redo, ctx, style._0)
+                : gradient(ctx, style._0);
+
+        ctx.scale(1,-1);
+        ctx.fill();
+    }
+
+    function drawImage(redo, ctx, form) {
+        var img = new Image();
+        img.onload = redo;
+        img.src = form._3;
+        var w = form._0,
+            h = form._1,
+            pos = form._2,
+            srcX = pos._0,
+            srcY = pos._1,
+            srcW = w,
+            srcH = h,
+            destX = -w/2,
+            destY = -h/2,
+            destW = w,
+            destH = h;
+
+        ctx.scale(1,-1);
+        ctx.drawImage(img, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
+    }
+
+    function renderForm(redo, ctx, form) {
+        ctx.save();
+        var x = form.x, y = form.y, theta = form.theta, scale = form.scale;
+        if (x !== 0 || y !== 0) ctx.translate(x, y);
+        if (theta !== 0) ctx.rotate(theta);
+        if (scale !== 1) ctx.scale(scale,scale);
+        if (form.alpha !== 1) ctx.globalAlpha = ctx.globalAlpha * form.alpha;
+        ctx.beginPath();
+        var f = form.form;
+        switch(f.ctor) {
+        case 'FPath' : drawLine(ctx, f._0, f._1); break;
+        case 'FImage': drawImage(redo, ctx, f); break;
+        case 'FShape':
+          if (f._0.ctor === 'Line') {
+            f._1.closed = true;
+            drawLine(ctx, f._0._0, f._1);
+          } else {
+            drawShape(redo, ctx, f._0._0, f._1);
+          }
+        break;
+        }
+        ctx.restore();
+    }
+
+    function formToMatrix(form) {
+       var scale = form.scale;
+       var matrix = A6( Transform.matrix, scale, 0, 0, scale, form.x, form.y );
+
+       var theta = form.theta
+       if (theta !== 0) {
+           matrix = A2( Transform.multiply, matrix, Transform.rotation(theta) );
+       }
+
+       return matrix;
+    }
+
+    function str(n) {
+        if (n < 0.00001 && n > -0.00001) return 0;
+        return n;
+    }
+
+    function makeTransform(w, h, form, matrices) {
+        var props = form.form._0.props;
+        var m = A6( Transform.matrix, 1, 0, 0, -1,
+                    (w - props.width ) / 2,
+                    (h - props.height) / 2 );
+        var len = matrices.length;
+        for (var i = 0; i < len; ++i) {
+            m = A2( Transform.multiply, m, matrices[i] );
+        }
+        m = A2( Transform.multiply, m, formToMatrix(form) );
+
+        return 'matrix(' + str( m[0]) + ', ' + str( m[3]) + ', ' +
+                           str(-m[1]) + ', ' + str(-m[4]) + ', ' +
+                           str( m[2]) + ', ' + str( m[5]) + ')';
+    }
+
+    function stepperHelp(list) {
+        var arr = List.toArray(list);
+        var i = 0;
+        function peekNext() {
+            return i < arr.length ? arr[i].form.ctor : '';
+        }
+        // assumes that there is a next element
+        function next() {
+            var out = arr[i];
+            ++i;
+            return out;
+        }
+        return {
+            peekNext:peekNext,
+            next:next
+        };
+    }
+
+    function formStepper(forms) {
+        var ps = [stepperHelp(forms)];
+        var matrices = [];
+        var alphas = [];
+        function peekNext() {
+            var len = ps.length;
+            var formType = '';
+            for (var i = 0; i < len; ++i ) {
+                if (formType = ps[i].peekNext()) return formType;
+            }
+            return '';
+        }
+        // assumes that there is a next element
+        function next(ctx) {
+            while (!ps[0].peekNext()) {
+                ps.shift();
+                matrices.pop();
+                alphas.shift();
+                if (ctx) { ctx.restore(); }
+            }
+            var out = ps[0].next();
+            var f = out.form;
+            if (f.ctor === 'FGroup') {
+                ps.unshift(stepperHelp(f._1));
+                var m = A2(Transform.multiply, f._0, formToMatrix(out));
+                ctx.save();
+                ctx.transform(m[0], m[3], m[1], m[4], m[2], m[5]);
+                matrices.push(m);
+
+                var alpha = (alphas[0] || 1) * out.alpha;
+                alphas.unshift(alpha);
+                ctx.globalAlpha = alpha;
+            }
+            return out;
+        }
+        function transforms() { return matrices; }
+        function alpha() { return alphas[0] || 1; }
+        return {
+            peekNext:peekNext,
+            next:next,
+            transforms:transforms,
+            alpha:alpha
+        };
+    }
+
+    function makeCanvas(w,h) {
+        var canvas = NativeElement.createNode('canvas');
+        canvas.style.width  = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.style.display = "block";
+        canvas.style.position = "absolute";
+        canvas.width  = w;
+        canvas.height = h;
+        return canvas;
+    }
+
+    function render(model) {
+        var div = NativeElement.createNode('div');
+        div.style.overflow = 'hidden';
+        div.style.position = 'relative';
+        update(div, model, model);
+        return div;
+    }
+
+    function nodeStepper(w,h,div) {
+        var kids = div.childNodes;
+        var i = 0;
+        function transform(transforms, ctx) {
+            ctx.translate(w/2, h/2);
+            ctx.scale(1,-1);
+            var len = transforms.length;
+            for (var i = 0; i < len; ++i) {
+                var m = transforms[i];
+                ctx.save();
+                ctx.transform(m[0], m[3], m[1], m[4], m[2], m[5]);
+            }
+            return ctx;
+        }
+        function nextContext(transforms) {
+            while (i < kids.length) {
+                var node = kids[i];
+                if (node.getContext) {
+                    node.width = w;
+                    node.height = h;
+                    node.style.width = w + 'px';
+                    node.style.height = h + 'px';
+                    ++i;
+                    return transform(transforms, node.getContext('2d'));
+                }
+                div.removeChild(node);
+            }
+            var canvas = makeCanvas(w,h);
+            div.appendChild(canvas);
+            // we have added a new node, so we must step our position
+            ++i;
+            return transform(transforms, canvas.getContext('2d'));
+        }
+        function addElement(matrices, alpha, form) {
+            var kid = kids[i];
+            var elem = form.form._0;
+
+            var node = (!kid || kid.getContext)
+                ? NativeElement.render(elem)
+                : NativeElement.update(kid, kid.oldElement, elem);
+
+            node.style.position = 'absolute';
+            node.style.opacity = alpha * form.alpha * elem.props.opacity;
+            NativeElement.addTransform(node.style, makeTransform(w, h, form, matrices));
+            node.oldElement = elem;
+            ++i;
+            if (!kid) {
+                div.appendChild(node);
+            } else {
+                div.insertBefore(node, kid);
+            }
+        }
+        function clearRest() {
+            while (i < kids.length) {
+                div.removeChild(kids[i]);
+            }
+        }
+        return { nextContext:nextContext, addElement:addElement, clearRest:clearRest };
+    }
+
+
+    function update(div, _, model) {
+        var w = model.w;
+        var h = model.h;
+
+        var forms = formStepper(model.forms);
+        var nodes = nodeStepper(w,h,div);
+        var ctx = null;
+        var formType = '';
+
+        while (formType = forms.peekNext()) {
+            // make sure we have context if we need it
+            if (ctx === null && formType !== 'FElement') {
+                ctx = nodes.nextContext(forms.transforms());
+                ctx.globalAlpha = forms.alpha();
+            }
+
+            var form = forms.next(ctx);
+            // if it is FGroup, all updates are made within formStepper when next is called.
+            if (formType === 'FElement') {
+                // update or insert an element, get a new context
+                nodes.addElement(forms.transforms(), forms.alpha(), form);
+                ctx = null;
+            } else if (formType !== 'FGroup') {
+                renderForm(function() { update(div, model, model); }, ctx, form);
+            }
+        }
+        nodes.clearRest();
+        return div;
+    }
+
+
+    function collage(w,h,forms) {
+        return A3(Element.newElement, w, h, {
+            ctor: 'Custom',
+            type: 'Collage',
+            render: render,
+            update: update,
+            model: {w:w, h:h, forms:forms}
+      	});
+    }
+
+    return localRuntime.Native.Graphics.Collage.values = {
+        collage:F3(collage)
+    };
+};
+
+
+// setup
+Elm.Native = Elm.Native || {};
+Elm.Native.Graphics = Elm.Native.Graphics || {};
+Elm.Native.Graphics.Element = Elm.Native.Graphics.Element || {};
+
+// definition
+Elm.Native.Graphics.Element.make = function(localRuntime) {
+    'use strict';
+
+    // attempt to short-circuit
+    localRuntime.Native = localRuntime.Native || {};
+    localRuntime.Native.Graphics = localRuntime.Native.Graphics || {};
+    localRuntime.Native.Graphics.Element = localRuntime.Native.Graphics.Element || {};
+    if ('values' in localRuntime.Native.Graphics.Element) {
+        return localRuntime.Native.Graphics.Element.values;
+    }
+
+    var Color = Elm.Native.Color.make(localRuntime);
+    var List = Elm.Native.List.make(localRuntime);
+    var Utils = Elm.Native.Utils.make(localRuntime);
+
+
+    function createNode(elementType) {
+        var node = document.createElement(elementType);
+        node.style.padding = "0";
+        node.style.margin = "0";
+        return node;
+    }
+
+    function setProps(elem, node) {
+        var props = elem.props;
+
+        var element = elem.element;
+        var width = props.width - (element.adjustWidth || 0);
+        var height = props.height - (element.adjustHeight || 0);
+        node.style.width  = (width |0) + 'px';
+        node.style.height = (height|0) + 'px';
+
+        if (props.opacity !== 1) {
+            node.style.opacity = props.opacity;
+        }
+
+        if (props.color.ctor === 'Just') {
+            node.style.backgroundColor = Color.toCss(props.color._0);
+        }
+
+        if (props.tag !== '') {
+            node.id = props.tag;
+        }
+
+        if (props.hover.ctor !== '_Tuple0') {
+            addHover(node, props.hover);
+        }
+
+        if (props.click.ctor !== '_Tuple0') {
+            addClick(node, props.click);
+        }
+
+        if (props.href !== '') {
+            var anchor = createNode('a');
+            anchor.href = props.href;
+            anchor.style.display = 'block';
+            anchor.style.pointerEvents = 'auto';
+            anchor.appendChild(node);
+            node = anchor;
+        }
+
+        return node;
+    }
+
+    function addClick(e, handler) {
+        e.style.pointerEvents = 'auto';
+        e.elm_click_handler = handler;
+        function trigger(ev) {
+            e.elm_click_handler(Utils.Tuple0);
+            ev.stopPropagation();
+        }
+        e.elm_click_trigger = trigger;
+        e.addEventListener('click', trigger);
+    }
+
+    function removeClick(e, handler) {
+        if (e.elm_click_trigger) {
+            e.removeEventListener('click', e.elm_click_trigger);
+            e.elm_click_trigger = null;
+            e.elm_click_handler = null;
+        }
+    }
+
+    function addHover(e, handler) {
+        e.style.pointerEvents = 'auto';
+        e.elm_hover_handler = handler;
+        e.elm_hover_count = 0;
+
+        function over(evt) {
+            if (e.elm_hover_count++ > 0) return;
+            e.elm_hover_handler(true);
+            evt.stopPropagation();
+        }
+        function out(evt) {
+            if (e.contains(evt.toElement || evt.relatedTarget)) return;
+            e.elm_hover_count = 0;
+            e.elm_hover_handler(false);
+            evt.stopPropagation();
+        }
+        e.elm_hover_over = over;
+        e.elm_hover_out = out;
+        e.addEventListener('mouseover', over);
+        e.addEventListener('mouseout', out);
+    }
+
+    function removeHover(e) {
+        e.elm_hover_handler = null;
+        if (e.elm_hover_over) {
+            e.removeEventListener('mouseover', e.elm_hover_over);
+            e.elm_hover_over = null;
+        }
+        if (e.elm_hover_out) {
+            e.removeEventListener('mouseout', e.elm_hover_out);
+            e.elm_hover_out = null;
+        }
+    }
+
+    function image(props, img) {
+        switch (img._0.ctor) {
+        case 'Plain':   return plainImage(img._3);
+        case 'Fitted':  return fittedImage(props.width, props.height, img._3);
+        case 'Cropped': return croppedImage(img,props.width,props.height,img._3);
+        case 'Tiled':   return tiledImage(img._3);
+        }
+    }
+
+    function plainImage(src) {
+        var img = createNode('img');
+        img.src = src;
+        img.name = src;
+        img.style.display = "block";
+        return img;
+    }
+
+    function tiledImage(src) {
+        var div = createNode('div');
+        div.style.backgroundImage = 'url(' + src + ')';
+        return div;
+    }
+
+    function fittedImage(w, h, src) {
+        var div = createNode('div');
+        div.style.background = 'url(' + src + ') no-repeat center';
+        div.style.webkitBackgroundSize = 'cover';
+        div.style.MozBackgroundSize = 'cover';
+        div.style.OBackgroundSize = 'cover';
+        div.style.backgroundSize = 'cover';
+        return div;
+    }
+
+    function croppedImage(elem, w, h, src) {
+        var pos = elem._0._0;
+        var e = createNode('div');
+        e.style.overflow = "hidden";
+
+        var img = createNode('img');
+        img.onload = function() {
+            var sw = w / elem._1, sh = h / elem._2;
+            img.style.width = ((this.width * sw)|0) + 'px';
+            img.style.height = ((this.height * sh)|0) + 'px';
+            img.style.marginLeft = ((- pos._0 * sw)|0) + 'px';
+            img.style.marginTop = ((- pos._1 * sh)|0) + 'px';
+        };
+        img.src = src;
+        img.name = src;
+        e.appendChild(img);
+        return e;
+    }
+
+    function goOut(node) {
+        node.style.position = 'absolute';
+        return node;
+    }
+    function goDown(node) {
+        return node;
+    }
+    function goRight(node) {
+        node.style.styleFloat = 'left';
+        node.style.cssFloat = 'left';
+        return node;
+    }
+
+    var directionTable = {
+        DUp    : goDown,
+        DDown  : goDown,
+        DLeft  : goRight,
+        DRight : goRight,
+        DIn    : goOut,
+        DOut   : goOut
+    };
+    function needsReversal(dir) {
+        return dir == 'DUp' || dir == 'DLeft' || dir == 'DIn';
+    }
+
+    function flow(dir,elist) {
+        var array = List.toArray(elist);
+        var container = createNode('div');
+        var goDir = directionTable[dir];
+        if (goDir == goOut) {
+            container.style.pointerEvents = 'none';
+        }
+        if (needsReversal(dir)) {
+            array.reverse();
+        }
+        var len = array.length;
+        for (var i = 0; i < len; ++i) {
+            container.appendChild(goDir(render(array[i])));
+        }
+        return container;
+    }
+
+    function toPos(pos) {
+        switch(pos.ctor) {
+        case "Absolute": return  pos._0 + "px";
+        case "Relative": return (pos._0 * 100) + "%";
+        }
+    }
+
+    // must clear right, left, top, bottom, and transform
+    // before calling this function
+    function setPos(pos,elem,e) {
+        var element = elem.element;
+        var props = elem.props;
+        var w = props.width + (element.adjustWidth ? element.adjustWidth : 0);
+        var h = props.height + (element.adjustHeight ? element.adjustHeight : 0);
+
+        e.style.position = 'absolute';
+        e.style.margin = 'auto';
+        var transform = '';
+        switch(pos.horizontal.ctor) {
+        case 'P': e.style.right = toPos(pos.x); e.style.removeProperty('left'); break;
+        case 'Z': transform = 'translateX(' + ((-w/2)|0) + 'px) ';
+        case 'N': e.style.left = toPos(pos.x); e.style.removeProperty('right'); break;
+        }
+        switch(pos.vertical.ctor) {
+        case 'N': e.style.bottom = toPos(pos.y); e.style.removeProperty('top'); break;
+        case 'Z': transform += 'translateY(' + ((-h/2)|0) + 'px)';
+        case 'P': e.style.top = toPos(pos.y); e.style.removeProperty('bottom'); break;
+        }
+        if (transform !== '') {
+            addTransform(e.style, transform);
+        }
+        return e;
+    }
+
+    function addTransform(style, transform) {
+        style.transform       = transform;
+        style.msTransform     = transform;
+        style.MozTransform    = transform;
+        style.webkitTransform = transform;
+        style.OTransform      = transform;
+    }
+
+    function container(pos,elem) {
+        var e = render(elem);
+        setPos(pos, elem, e);
+        var div = createNode('div');
+        div.style.position = 'relative';
+        div.style.overflow = 'hidden';
+        div.appendChild(e);
+        return div;
+    }
+
+    function rawHtml(elem) {
+        var html = elem.html;
+        var guid = elem.guid;
+        var align = elem.align;
+
+        var div = createNode('div');
+        div.innerHTML = html;
+        div.style.visibility = "hidden";
+        if (align) {
+            div.style.textAlign = align;
+        }
+        div.style.visibility = 'visible';
+        div.style.pointerEvents = 'auto';
+        return div;
+    }
+
+    function render(elem) {
+        return setProps(elem, makeElement(elem));
+    }
+    function makeElement(e) {
+        var elem = e.element;
+        switch(elem.ctor) {
+        case 'Image':     return image(e.props, elem);
+        case 'Flow':      return flow(elem._0.ctor, elem._1);
+        case 'Container': return container(elem._0, elem._1);
+        case 'Spacer':    return createNode('div');
+        case 'RawHtml':   return rawHtml(elem);
+        case 'Custom':    return elem.render(elem.model);
+        }
+    }
+
+    function updateAndReplace(node, curr, next) {
+        var newNode = update(node, curr, next);
+        if (newNode !== node) {
+            node.parentNode.replaceChild(newNode, node);
+        }
+        return newNode;
+    }
+
+    function update(node, curr, next) {
+        var rootNode = node;
+        if (node.tagName === 'A') {
+            node = node.firstChild;
+        }
+        if (curr.props.id === next.props.id) {
+            updateProps(node, curr, next);
+            return rootNode;
+        }
+        if (curr.element.ctor !== next.element.ctor) {
+            return render(next);
+        }
+        var nextE = next.element;
+        var currE = curr.element;
+        switch(nextE.ctor) {
+        case "Spacer":
+            updateProps(node, curr, next);
+            return rootNode;
+
+        case "RawHtml":
+            if(currE.html.valueOf() !== nextE.html.valueOf()) {
+                node.innerHTML = nextE.html;
+            }
+            updateProps(node, curr, next);
+            return rootNode;
+
+        case "Image":
+            if (nextE._0.ctor === 'Plain') {
+                if (nextE._3 !== currE._3) {
+                    node.src = nextE._3;
+                }
+            } else if (!Utils.eq(nextE,currE) ||
+                       next.props.width !== curr.props.width ||
+                       next.props.height !== curr.props.height) {
+                return render(next);
+            }
+            updateProps(node, curr, next);
+            return rootNode;
+
+        case "Flow":
+            var arr = List.toArray(nextE._1);
+            for (var i = arr.length; i--; ) {
+                arr[i] = arr[i].element.ctor;
+            }
+            if (nextE._0.ctor !== currE._0.ctor) {
+                return render(next);
+            }
+            var nexts = List.toArray(nextE._1);
+            var kids = node.childNodes;
+            if (nexts.length !== kids.length) {
+                return render(next);
+            }
+            var currs = List.toArray(currE._1);
+            var dir = nextE._0.ctor;
+            var goDir = directionTable[dir];
+            var toReverse = needsReversal(dir);
+            var len = kids.length;
+            for (var i = len; i-- ;) {
+                var subNode = kids[toReverse ? len - i - 1 : i];
+                goDir(updateAndReplace(subNode, currs[i], nexts[i]));
+            }
+            updateProps(node, curr, next);
+            return rootNode;
+
+        case "Container":
+            var subNode = node.firstChild;
+            var newSubNode = updateAndReplace(subNode, currE._1, nextE._1);
+            setPos(nextE._0, nextE._1, newSubNode);
+            updateProps(node, curr, next);
+            return rootNode;
+
+        case "Custom":
+            if (currE.type === nextE.type) {
+                var updatedNode = nextE.update(node, currE.model, nextE.model);
+                updateProps(updatedNode, curr, next);
+                return updatedNode;
+            } else {
+                return render(next);
+            }
+        }
+    }
+
+    function updateProps(node, curr, next) {
+        var nextProps = next.props;
+        var currProps = curr.props;
+
+        var element = next.element;
+        var width = nextProps.width - (element.adjustWidth || 0);
+        var height = nextProps.height - (element.adjustHeight || 0);
+        if (width !== currProps.width) {
+            node.style.width = (width|0) + 'px';
+        }
+        if (height !== currProps.height) {
+            node.style.height = (height|0) + 'px';
+        }
+
+        if (nextProps.opacity !== currProps.opacity) {
+            node.style.opacity = nextProps.opacity;
+        }
+
+        var nextColor = nextProps.color.ctor === 'Just'
+            ? Color.toCss(nextProps.color._0)
+            : '';
+        if (node.style.backgroundColor !== nextColor) {
+            node.style.backgroundColor = nextColor;
+        }
+
+        if (nextProps.tag !== currProps.tag) {
+            node.id = nextProps.tag;
+        }
+
+        if (nextProps.href !== currProps.href) {
+            if (currProps.href === '') {
+                // add a surrounding href
+                var anchor = createNode('a');
+                anchor.href = nextProps.href;
+                anchor.style.display = 'block';
+                anchor.style.pointerEvents = 'auto';
+
+                node.parentNode.replaceChild(anchor, node);
+                anchor.appendChild(node);
+            } else if (nextProps.href === '') {
+                // remove the surrounding href
+                var anchor = node.parentNode;
+                anchor.parentNode.replaceChild(node, anchor);
+            } else {
+                // just update the link
+                node.parentNode.href = nextProps.href;
+            }
+        }
+
+        // update click and hover handlers
+        var removed = false;
+
+        // update hover handlers
+        if (currProps.hover.ctor === '_Tuple0') {
+            if (nextProps.hover.ctor !== '_Tuple0') {
+                addHover(node, nextProps.hover);
+            }
+        }
+        else {
+            if (nextProps.hover.ctor === '_Tuple0') {
+                removed = true;
+                removeHover(node);
+            }
+            else {
+                node.elm_hover_handler = nextProps.hover;
+            }
+        }
+
+        // update click handlers
+        if (currProps.click.ctor === '_Tuple0') {
+            if (nextProps.click.ctor !== '_Tuple0') {
+                addClick(node, nextProps.click);
+            }
+        }
+        else {
+            if (nextProps.click.ctor === '_Tuple0') {
+                removed = true;
+                removeClick(node);
+            } else {
+                node.elm_click_handler = nextProps.click;
+            }
+        }
+
+        // stop capturing clicks if 
+        if (removed
+            && nextProps.hover.ctor === '_Tuple0'
+            && nextProps.click.ctor === '_Tuple0')
+        {
+            node.style.pointerEvents = 'none';
+        }
+    }
+
+
+    function htmlHeight(width, rawHtml) {
+        // create dummy node
+        var temp = document.createElement('div');
+        temp.innerHTML = rawHtml.html;
+        if (width > 0) {
+            temp.style.width = width + "px";
+        }
+        temp.style.visibility = "hidden";
+        temp.style.styleFloat = "left";
+        temp.style.cssFloat   = "left";
+
+        document.body.appendChild(temp);
+
+        // get dimensions
+        var style = window.getComputedStyle(temp, null);
+        var w = Math.ceil(style.getPropertyValue("width").slice(0,-2) - 0);
+        var h = Math.ceil(style.getPropertyValue("height").slice(0,-2) - 0);
+        document.body.removeChild(temp);
+        return Utils.Tuple2(w,h);
+    }
+
+
+    return localRuntime.Native.Graphics.Element.values = {
+        render: render,
+        update: update,
+        updateAndReplace: updateAndReplace,
+
+        createNode: createNode,
+        addTransform: addTransform,
+        htmlHeight: F2(htmlHeight),
+        guid: Utils.guid
+    };
+
+};
+
+Elm.Native.Http = {};
+Elm.Native.Http.make = function(elm) {
+
+    elm.Native = elm.Native || {};
+    elm.Native.Http = elm.Native.Http || {};
+    if (elm.Native.Http.values) return elm.Native.Http.values;
+
+    var List = Elm.List.make(elm);
+    var Signal = Elm.Signal.make(elm);
+
+    function registerReq(queue,responses) {
+        return function(req) {
+            if (req.url.length > 0) {
+                sendReq(queue,responses,req);
+            }
+        };
+    }
+
+    function updateQueue(queue,responses) {
+        if (queue.length > 0) {
+            elm.notify(responses.id, queue[0].value);
+            if (queue[0].value.ctor !== 'Waiting') {
+                queue.shift();
+                setTimeout(function() { updateQueue(queue,responses); }, 0);
+            }
+        }
+    }
+
+    function sendReq(queue,responses,req) {
+        var response = { value: { ctor:'Waiting' } };
+        queue.push(response);
+
+        var request = (window.ActiveXObject
+                       ? new ActiveXObject("Microsoft.XMLHTTP")
+                       : new XMLHttpRequest());
+
+        request.onreadystatechange = function(e) {
+            if (request.readyState === 4) {
+                response.value = (request.status >= 200 && request.status < 300 ?
+                                  { ctor:'Success', _0:request.responseText } :
+                                  { ctor:'Failure', _0:request.status, _1:request.statusText });
+                setTimeout(function() { updateQueue(queue,responses); }, 0);
+            }
+        };
+        request.open(req.verb, req.url, true);
+        function setHeader(pair) {
+            request.setRequestHeader( pair._0, pair._1 );
+        }
+        A2( List.map, setHeader, req.headers );
+        request.send(req.body);
+    }
+
+    function send(requests) {
+        var responses = Signal.constant(elm.Http.values.Waiting);
+        var sender = A2( Signal.map, registerReq([],responses), requests );
+        function f(x) { return function(y) { return x; } }
+        return A3( Signal.map2, f, responses, sender );
+    }
+
+    return elm.Native.Http.values = {
+        send:send
     };
 };
 
@@ -2305,6 +5025,278 @@ Elm.Native.String.make = function(elm) {
     };
 };
 
+Elm.Native.Text = {};
+Elm.Native.Text.make = function(elm) {
+    elm.Native = elm.Native || {};
+    elm.Native.Text = elm.Native.Text || {};
+    if (elm.Native.Text.values) return elm.Native.Text.values;
+
+    var toCss = Elm.Native.Color.make(elm).toCss;
+    var Element = Elm.Graphics.Element.make(elm);
+    var NativeElement = Elm.Native.Graphics.Element.make(elm);
+    var List = Elm.Native.List.make(elm);
+    var Utils = Elm.Native.Utils.make(elm);
+
+    function makeSpaces(s) {
+        if (s.length == 0) { return s; }
+        var arr = s.split('');
+        if (arr[0] == ' ') { arr[0] = "&nbsp;" }      
+        for (var i = arr.length; --i; ) {
+            if (arr[i][0] == ' ' && arr[i-1] == ' ') {
+                arr[i-1] = arr[i-1] + arr[i];
+                arr[i] = '';
+            }
+        }
+        for (var i = arr.length; i--; ) {
+            if (arr[i].length > 1 && arr[i][0] == ' ') {
+                var spaces = arr[i].split('');
+                for (var j = spaces.length - 2; j >= 0; j -= 2) {
+                    spaces[j] = '&nbsp;';
+                }
+                arr[i] = spaces.join('');
+            }
+        }
+        arr = arr.join('');
+        if (arr[arr.length-1] === " ") {
+            return arr.slice(0,-1) + '&nbsp;';
+        }
+        return arr;
+    }
+
+    function properEscape(str) {
+        if (str.length == 0) return str;
+        str = str //.replace(/&/g,  "&#38;")
+            .replace(/"/g,  '&#34;')
+            .replace(/'/g,  "&#39;")
+            .replace(/</g,  "&#60;")
+            .replace(/>/g,  "&#62;")
+            .replace(/\n/g, "<br/>");
+        var arr = str.split('<br/>');
+        for (var i = arr.length; i--; ) {
+            arr[i] = makeSpaces(arr[i]);
+        }
+        return arr.join('<br/>');
+    }
+
+    function fromString(str) {
+        return Utils.txt(properEscape(str));
+    }
+
+    function append(xs, ys) {
+        return Utils.txt(Utils.makeText(xs) + Utils.makeText(ys));
+    }
+
+    // conversions from Elm values to CSS
+    function toTypefaces(list) {
+        var typefaces = List.toArray(list);
+        for (var i = typefaces.length; i--; ) {
+            var typeface = typefaces[i];
+            if (typeface.indexOf(' ') > -1) {
+                typefaces[i] = "'" + typeface + "'";
+            }
+        }
+        return typefaces.join(',');
+    }
+    function toLine(line) {
+        var ctor = line.ctor;
+        return ctor === 'Under' ? 'underline' :
+               ctor === 'Over'  ? 'overline'  : 'line-through';
+    }
+
+    // setting styles of Text
+    function style(style, text) {
+        var newText = '<span style="color:' + toCss(style.color) + ';'
+        if (style.typeface.ctor !== '[]') {
+            newText += 'font-family:' + toTypefaces(style.typeface) + ';'
+        }
+        if (style.height.ctor !== "Nothing") {
+            newText += 'font-size:' + style.height._0 + 'px;';
+        }
+        if (style.bold) {
+            newText += 'font-weight:bold;';
+        }
+        if (style.italic) {
+            newText += 'font-style:italic;';
+        }
+        if (style.line.ctor !== 'Nothing') {
+            newText += 'text-decoration:' + toLine(style.line._0) + ';';
+        }
+        newText += '">' + Utils.makeText(text) + '</span>'
+        return Utils.txt(newText);
+    }
+    function height(px, text) {
+        return { style: 'font-size:' + px + 'px;', text:text }
+    }
+    function typeface(names, text) {
+        return { style: 'font-family:' + toTypefaces(names) + ';', text:text }
+    }
+    function monospace(text) {
+        return { style: 'font-family:monospace;', text:text }
+    }
+    function italic(text) {
+        return { style: 'font-style:italic;', text:text }
+    }
+    function bold(text) {
+        return { style: 'font-weight:bold;', text:text }
+    }
+    function link(href, text) {
+        return { href: fromString(href), text:text };
+    }
+    function line(line, text) {
+        return { style: 'text-decoration:' + toLine(line) + ';', text:text };
+    }
+
+    function color(color, text) {
+        return { style: 'color:' + toCss(color) + ';', text:text };
+    }
+
+    function block(align) {
+        return function(text) {
+            var raw = {
+                ctor :'RawHtml',
+                html : Utils.makeText(text),
+                align: align
+            };
+            var pos = A2(NativeElement.htmlHeight, 0, raw);
+            return A3(Element.newElement, pos._0, pos._1, raw);
+        }
+    }
+
+    function markdown(text) {
+        var raw = {
+            ctor:'RawHtml',
+            html: text,
+            align: null
+        };
+        var pos = A2(NativeElement.htmlHeight, 0, raw);
+        return A3(Element.newElement, pos._0, pos._1, raw);
+    }
+
+    return elm.Native.Text.values = {
+        fromString: fromString,
+        append: F2(append),
+
+        height : F2(height),
+        italic : italic,
+        bold : bold,
+        line : F2(line),
+        monospace : monospace,
+        typeface : F2(typeface),
+        color : F2(color),
+        link : F2(link),
+        style : F2(style),
+
+        leftAligned  : block('left'),
+        rightAligned : block('right'),
+        centered     : block('center'),
+        justified    : block('justify'),
+        markdown     : markdown,
+
+        toTypefaces:toTypefaces,
+        toLine:toLine
+    };
+};
+
+Elm.Native.Transform2D = {};
+Elm.Native.Transform2D.make = function(elm) {
+
+ elm.Native = elm.Native || {};
+ elm.Native.Transform2D = elm.Native.Transform2D || {};
+ if (elm.Native.Transform2D.values) return elm.Native.Transform2D.values;
+
+ var A;
+ if (typeof Float32Array === 'undefined') {
+     A = function(arr) {
+         this.length = arr.length;
+         this[0] = arr[0];
+         this[1] = arr[1];
+         this[2] = arr[2];
+         this[3] = arr[3];
+         this[4] = arr[4];
+         this[5] = arr[5];
+     };
+ } else {
+     A = Float32Array;
+ }
+
+ // layout of matrix in an array is
+ //
+ //   | m11 m12 dx |
+ //   | m21 m22 dy |
+ //   |  0   0   1 |
+ //
+ //  new A([ m11, m12, dx, m21, m22, dy ])
+
+ var identity = new A([1,0,0,0,1,0]);
+ function matrix(m11, m12, m21, m22, dx, dy) {
+     return new A([m11, m12, dx, m21, m22, dy]);
+ }
+ function rotation(t) {
+     var c = Math.cos(t);
+     var s = Math.sin(t);
+     return new A([c, -s, 0, s, c, 0]);
+ }
+ function rotate(t,m) {
+     var c = Math.cos(t);
+     var s = Math.sin(t);
+     var m11 = m[0], m12 = m[1], m21 = m[3], m22 = m[4];
+     return new A([m11*c + m12*s, -m11*s + m12*c, m[2],
+                   m21*c + m22*s, -m21*s + m22*c, m[5]]);
+ }
+ /*
+ function move(xy,m) {
+     var x = xy._0;
+     var y = xy._1;
+     var m11 = m[0], m12 = m[1], m21 = m[3], m22 = m[4];
+     return new A([m11, m12, m11*x + m12*y + m[2],
+                   m21, m22, m21*x + m22*y + m[5]]);
+ }
+ function scale(s,m) { return new A([m[0]*s, m[1]*s, m[2], m[3]*s, m[4]*s, m[5]]); }
+ function scaleX(x,m) { return new A([m[0]*x, m[1], m[2], m[3]*x, m[4], m[5]]); }
+ function scaleY(y,m) { return new A([m[0], m[1]*y, m[2], m[3], m[4]*y, m[5]]); }
+ function reflectX(m) { return new A([-m[0], m[1], m[2], -m[3], m[4], m[5]]); }
+ function reflectY(m) { return new A([m[0], -m[1], m[2], m[3], -m[4], m[5]]); }
+
+ function transform(m11, m21, m12, m22, mdx, mdy, n) {
+     var n11 = n[0], n12 = n[1], n21 = n[3], n22 = n[4], ndx = n[2], ndy = n[5];
+     return new A([m11*n11 + m12*n21,
+                   m11*n12 + m12*n22,
+                   m11*ndx + m12*ndy + mdx,
+                   m21*n11 + m22*n21,
+                   m21*n12 + m22*n22,
+                   m21*ndx + m22*ndy + mdy]);
+ }
+ */
+ function multiply(m, n) {
+     var m11 = m[0], m12 = m[1], m21 = m[3], m22 = m[4], mdx = m[2], mdy = m[5];
+     var n11 = n[0], n12 = n[1], n21 = n[3], n22 = n[4], ndx = n[2], ndy = n[5];
+     return new A([m11*n11 + m12*n21,
+                   m11*n12 + m12*n22,
+                   m11*ndx + m12*ndy + mdx,
+                   m21*n11 + m22*n21,
+                   m21*n12 + m22*n22,
+                   m21*ndx + m22*ndy + mdy]);
+ }
+
+ return elm.Native.Transform2D.values = {
+     identity:identity,
+     matrix:F6(matrix),
+     rotation:rotation,
+     multiply:F2(multiply)
+     /*
+     transform:F7(transform),
+     rotate:F2(rotate),
+     move:F2(move),
+     scale:F2(scale),
+     scaleX:F2(scaleX),
+     scaleY:F2(scaleY),
+     reflectX:reflectX,
+     reflectY:reflectY
+     */
+ };
+
+};
+
 Elm.Native = Elm.Native || {};
 Elm.Native.Utils = {};
 Elm.Native.Utils.make = function(localRuntime) {
@@ -2609,6 +5601,69 @@ Elm.Native.Utils.make = function(localRuntime) {
         badIf: badIf,
         badPort: badPort
     };
+};
+
+Elm.Native = Elm.Native || {};
+Elm.Native.Window = {};
+Elm.Native.Window.make = function(localRuntime) {
+
+    localRuntime.Native = localRuntime.Native || {};
+    localRuntime.Native.Window = localRuntime.Native.Window || {};
+    if (localRuntime.Native.Window.values) {
+        return localRuntime.Native.Window.values;
+    }
+
+    var Signal = Elm.Signal.make(localRuntime);
+    var NS = Elm.Native.Signal.make(localRuntime);
+    var Tuple2 = Elm.Native.Utils.make(localRuntime).Tuple2;
+
+    function getWidth() {
+        return localRuntime.node.clientWidth;
+    }
+    function getHeight() {
+        if (localRuntime.isFullscreen()) {
+            return window.innerHeight;
+        }
+        return localRuntime.node.clientHeight;
+    }
+
+    var dimensions = NS.input(Tuple2(getWidth(), getHeight()));
+    dimensions.defaultNumberOfKids = 2;
+
+    // Do not move width and height into Elm. By setting the default number of kids,
+    // the resize listener can be detached.
+    var width  = A2(Signal.map, function(p){return p._0;}, dimensions);
+    width.defaultNumberOfKids = 0;
+
+    var height = A2(Signal.map, function(p){return p._1;}, dimensions);
+    height.defaultNumberOfKids = 0;
+
+    function resizeIfNeeded() {
+        // Do not trigger event if the dimensions have not changed.
+        // This should be most of the time.
+        var w = getWidth();
+        var h = getHeight();
+        if (dimensions.value._0 === w && dimensions.value._1 === h) return;
+
+        setTimeout(function () {
+            // Check again to see if the dimensions have changed.
+            // It is conceivable that the dimensions have changed
+            // again while some other event was being processed.
+            var w = getWidth();
+            var h = getHeight();
+            if (dimensions.value._0 === w && dimensions.value._1 === h) return;
+            localRuntime.notify(dimensions.id, Tuple2(w,h));
+        }, 0);
+    }
+    localRuntime.addListener([dimensions.id], window, 'resize', resizeIfNeeded);
+
+    return localRuntime.Native.Window.values = {
+        dimensions: dimensions,
+        width: width,
+        height: height,
+        resizeIfNeeded: resizeIfNeeded
+    };
+
 };
 
 Elm.Rebase = Elm.Rebase || {};
@@ -3102,4 +6157,201 @@ Elm.String.make = function (_elm) {
                         ,toList: toList
                         ,fromList: fromList};
    return _elm.String.values;
+};
+Elm.Text = Elm.Text || {};
+Elm.Text.make = function (_elm) {
+   "use strict";
+   _elm.Text = _elm.Text || {};
+   if (_elm.Text.values)
+   return _elm.Text.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Text",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Text = Elm.Native.Text.make(_elm);
+   var markdown = $Native$Text.markdown;
+   var justified = $Native$Text.justified;
+   var centered = $Native$Text.centered;
+   var rightAligned = $Native$Text.rightAligned;
+   var leftAligned = $Native$Text.leftAligned;
+   var line = $Native$Text.line;
+   var italic = $Native$Text.italic;
+   var bold = $Native$Text.bold;
+   var color = $Native$Text.color;
+   var height = $Native$Text.height;
+   var link = $Native$Text.link;
+   var monospace = $Native$Text.monospace;
+   var typeface = $Native$Text.typeface;
+   var style = $Native$Text.style;
+   var append = $Native$Text.append;
+   var fromString = $Native$Text.fromString;
+   var empty = fromString("");
+   var concat = function (texts) {
+      return A3($List.foldr,
+      append,
+      empty,
+      texts);
+   };
+   var join = F2(function (seperator,
+   texts) {
+      return concat(A2($List.intersperse,
+      seperator,
+      texts));
+   });
+   var plainText = function (str) {
+      return leftAligned(fromString(str));
+   };
+   var asText = function (value) {
+      return leftAligned(monospace(fromString($Basics.toString(value))));
+   };
+   var defaultStyle = {_: {}
+                      ,bold: false
+                      ,color: $Color.black
+                      ,height: $Maybe.Nothing
+                      ,italic: false
+                      ,line: $Maybe.Nothing
+                      ,typeface: _L.fromArray([])};
+   var Style = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,bold: d
+             ,color: c
+             ,height: b
+             ,italic: e
+             ,line: f
+             ,typeface: a};
+   });
+   var Through = {ctor: "Through"};
+   var Over = {ctor: "Over"};
+   var Under = {ctor: "Under"};
+   var Text = {ctor: "Text"};
+   _elm.Text.values = {_op: _op
+                      ,Text: Text
+                      ,Under: Under
+                      ,Over: Over
+                      ,Through: Through
+                      ,Style: Style
+                      ,defaultStyle: defaultStyle
+                      ,fromString: fromString
+                      ,empty: empty
+                      ,append: append
+                      ,concat: concat
+                      ,join: join
+                      ,style: style
+                      ,typeface: typeface
+                      ,monospace: monospace
+                      ,link: link
+                      ,height: height
+                      ,color: color
+                      ,bold: bold
+                      ,italic: italic
+                      ,line: line
+                      ,leftAligned: leftAligned
+                      ,rightAligned: rightAligned
+                      ,centered: centered
+                      ,justified: justified
+                      ,plainText: plainText
+                      ,markdown: markdown
+                      ,asText: asText};
+   return _elm.Text.values;
+};
+Elm.Transform2D = Elm.Transform2D || {};
+Elm.Transform2D.make = function (_elm) {
+   "use strict";
+   _elm.Transform2D = _elm.Transform2D || {};
+   if (_elm.Transform2D.values)
+   return _elm.Transform2D.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Transform2D",
+   $Native$Transform2D = Elm.Native.Transform2D.make(_elm);
+   var multiply = $Native$Transform2D.multiply;
+   var rotation = $Native$Transform2D.rotation;
+   var matrix = $Native$Transform2D.matrix;
+   var translation = F2(function (x,
+   y) {
+      return A6(matrix,
+      1,
+      0,
+      0,
+      1,
+      x,
+      y);
+   });
+   var scale = function (s) {
+      return A6(matrix,
+      s,
+      0,
+      0,
+      s,
+      0,
+      0);
+   };
+   var scaleX = function (x) {
+      return A6(matrix,
+      x,
+      0,
+      0,
+      1,
+      0,
+      0);
+   };
+   var scaleY = function (y) {
+      return A6(matrix,
+      1,
+      0,
+      0,
+      y,
+      0,
+      0);
+   };
+   var identity = $Native$Transform2D.identity;
+   var Transform2D = {ctor: "Transform2D"};
+   _elm.Transform2D.values = {_op: _op
+                             ,identity: identity
+                             ,matrix: matrix
+                             ,multiply: multiply
+                             ,rotation: rotation
+                             ,translation: translation
+                             ,scale: scale
+                             ,scaleX: scaleX
+                             ,scaleY: scaleY};
+   return _elm.Transform2D.values;
+};
+Elm.Window = Elm.Window || {};
+Elm.Window.make = function (_elm) {
+   "use strict";
+   _elm.Window = _elm.Window || {};
+   if (_elm.Window.values)
+   return _elm.Window.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Window",
+   $Native$Window = Elm.Native.Window.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var height = $Native$Window.height;
+   var width = $Native$Window.width;
+   var dimensions = $Native$Window.dimensions;
+   _elm.Window.values = {_op: _op
+                        ,dimensions: dimensions
+                        ,width: width
+                        ,height: height};
+   return _elm.Window.values;
 };

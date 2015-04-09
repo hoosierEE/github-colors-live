@@ -1,6 +1,5 @@
 module LiveColor where
 
-import Math.Vector3 as Vec
 import Color
 import Graphics.Element (..)
 import Graphics.Collage (..)
@@ -35,24 +34,22 @@ port yamlReq =
 scene : (Int,Int) -> List (String, Maybe String) -> Element
 scene (w,h) ls =
     let
-        title = (width w << T.centered << T.typeface ["helvetica neue","helvetica","serif"] << T.height 40 << T.fromString) "Github Language Colors, Sorted"
-        byAlp : List (Element, { alpha : Float, hue : Float, lightness : Float, saturation : Float })
-        byAlp = List.map (\(a,b) -> (txtFn a, clrFn b)) ls
-        txtFn = T.centered << T.height 18 << T.fromString
+        title = (width w << T.centered << T.typeface ["Tahoma","Geneva","sans-serif"] << T.height 40 << T.fromString) "GitHub Language Colors"
+        txtFn = T.centered << T.height 18 << T.typeface ["Lucida Console","monospace"] << T.fromString
         clrFn c = case c of
             Just c -> Color.toHsl <| rgbFromCss c
-            Nothing -> Color.toHsl <| rgbFromCss "#fff"
-        stylize lst = List.map boxed lst
-        fds (h,t) = flow down [txtFn h, flow down <| stylize t]
-        -- dHue (a,b) = Vec.distance (Vec.vec3 a.hue a.saturation a.lightness) (Vec.fromTuple b)
-        byHue = List.sortBy (.hue << snd) byAlp
-        bySat = List.sortBy (.saturation << snd) byAlp
-        byLig = List.sortBy (.lightness << snd) byAlp
-        cols = [("alphabetical",byAlp),("by hue",byHue),("saturation",bySat),("lightness",byLig)]
+            Nothing -> Color.toHsl <| rgbFromCss "ccc"
+        -- sorted lists
+        alphs = List.map (\(a,b) -> (txtFn a, clrFn b)) ls
+        hues = List.sortBy (.hue << snd) alphs
+        columnAlpha = (txtFn "alphabetical", clrFn (Nothing)) :: alphs
+        columnHue = (txtFn "by hue", clrFn (Nothing)) :: hues
+        cols = [columnAlpha,columnHue]
         boxed (txt,clr) =
             let mw = w // List.length cols
                 c = Color.hsl clr.hue clr.saturation clr.lightness
-            in color c <| container mw 60 middle (width mw <| txt)
+            in width mw <| color c <| container mw 60 middle txt
+        fds t = flow down <| List.map boxed t
     in flow down [title, flow right <| List.map fds cols]
 
 ------------
@@ -63,8 +60,7 @@ main = Signal.map2 scene Window.dimensions clrs
 ---------------
 -- UTILITIES --
 ---------------
-
--- converts #rgb or #rrggbb (hexColor) into (r,g,b) (integers)
+-- converts "#rgb" or "#rrggbb" hex color string into {r,g,b} integers
 rgbFromCss : String -> Color.Color
 rgbFromCss cssColorString =
     let hexColor = if String.left 1 cssColorString == "#"

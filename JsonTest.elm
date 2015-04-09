@@ -1,3 +1,5 @@
+module TestJson where
+
 import Text (asText,plainText)
 import Json.Decode (..)
 

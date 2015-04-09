@@ -10,7 +10,7 @@ lc.ports.yamlReq.subscribe(function(s) {
             var thisEntry = [language, payload[language].color];
             filt.push(thisEntry);
         }
-        console.log(filt);
+        // console.log(filt);
         lc.ports.clrs.send(JSON.parse(JSON.stringify(filt)));
     }
 });
