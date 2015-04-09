@@ -18,7 +18,8 @@ port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->fil
 port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
 port yamlReq =
     let
-        url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
+        url = Signal.constant "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
+        -- url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
         res : Signal (Http.Response String)
         res = Http.sendGet url
         dResponse : Http.Response String -> String

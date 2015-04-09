@@ -1925,7 +1925,7 @@ Elm.LiveColor.make = function (_elm) {
                           _v0._1,
                           hexColor));}
                      _U.badCase($moduleName,
-                     "on line 82, column 67 to 111");
+                     "on line 83, column 67 to 111");
                   }();
                },
                ids));
@@ -1947,7 +1947,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v4._1,
                     str));}
                _U.badCase($moduleName,
-               "on line 85, column 21 to 66");
+               "on line 86, column 21 to 66");
             }();
          };
          var _ = A2($List.map,
@@ -1965,7 +1965,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 87, column 19 to 42");
+            "on line 88, column 19 to 42");
          }();
          var g = function () {
             switch (_.ctor)
@@ -1979,7 +1979,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 87, column 19 to 42");
+            "on line 88, column 19 to 42");
          }();
          var r = function () {
             switch (_.ctor)
@@ -1993,7 +1993,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 87, column 19 to 42");
+            "on line 88, column 19 to 42");
          }();
          return A3($Color.rgb,r,g,b);
       }();
@@ -2022,7 +2022,7 @@ Elm.LiveColor.make = function (_elm) {
                                  ,_0: txtFn(_v33._0)
                                  ,_1: clrFn(_v33._1)};}
                        _U.badCase($moduleName,
-                       "on line 51, column 38 to 54");
+                       "on line 52, column 38 to 54");
                     }();
                  },
                  ls);
@@ -2077,7 +2077,7 @@ Elm.LiveColor.make = function (_elm) {
                                             ,txtTiny($Basics.toString(rc$))])))));
                             }();}
                        _U.badCase($moduleName,
-                       "between lines 57 and 62");
+                       "between lines 58 and 63");
                     }();
                  };
                  var fds = function (t) {
@@ -2105,7 +2105,7 @@ Elm.LiveColor.make = function (_elm) {
                               cols))]));
               }();}
          _U.badCase($moduleName,
-         "between lines 36 and 64");
+         "between lines 37 and 65");
       }();
    });
    var yamlReq = _P.portOut("yamlReq",
@@ -2121,10 +2121,10 @@ Elm.LiveColor.make = function (_elm) {
                return result._0;
                case "Waiting": return "";}
             _U.badCase($moduleName,
-            "between lines 25 and 29");
+            "between lines 26 and 30");
          }();
       };
-      var url = $Signal.constant("https://rawgit.com/github/linguist/master/lib/linguist/languages.yml");
+      var url = $Signal.constant("https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml");
       var res = $Http.sendGet(url);
       return A2($Signal.map,
       dResponse,
