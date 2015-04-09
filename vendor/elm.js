@@ -2628,7 +2628,7 @@ Elm.Rebase.make = function (_elm) {
    $String = Elm.String.make(_elm);
    var decimalFromHex = function (hexString) {
       return function () {
-         var xs = $String.toList(hexString);
+         var xs = $List.reverse($String.toList(hexString));
          var vals = A2($List.map,
          function ($) {
             return $List.head(A2($Basics.flip,
