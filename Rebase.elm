@@ -6,11 +6,11 @@ import List (map,head,reverse,indexedMap,foldr)
 -- import Text (asText)
 -- main = asText <| decimalFromHex "010"
 
--- decimalFromHex : String -> Int
+decimalFromHex : String -> Int
 decimalFromHex hexString =
-    let xs = reverse <| toList hexString
-        vals = map (\c-> (head <| indexes (fromChar c) "0123456789ABCDEF0123456789abcdef")) xs
-        powered = indexedMap (\idx val -> 16 ^ idx * (val % 16)) vals
+    let xs = toList hexString
+        vals = map (head << flip indexes "0123456789ABCDEF0123456789abcdef" << fromChar) xs
+        powered = indexedMap (\idx val -> (16 ^ idx) * (val % 16)) vals
      in foldr (+) 0 powered
 
 -- hexFromDecimal : Int -> String
