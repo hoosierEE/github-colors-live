@@ -3518,7 +3518,7 @@ Elm.LiveColor.make = function (_elm) {
                  alphs);
                  var columnAlpha = A2($List._op["::"],
                  {ctor: "_Tuple2"
-                 ,_0: txtFn("alphabetical")
+                 ,_0: txtFn("sorted alphabetically...")
                  ,_1: A3($Color.rgb,
                  244,
                  244,
@@ -3526,7 +3526,7 @@ Elm.LiveColor.make = function (_elm) {
                  alphs);
                  var columnHue = A2($List._op["::"],
                  {ctor: "_Tuple2"
-                 ,_0: txtFn("by hue")
+                 ,_0: txtFn("...and by hue")
                  ,_1: A3($Color.rgb,
                  244,
                  244,

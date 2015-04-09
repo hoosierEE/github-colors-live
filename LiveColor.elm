@@ -39,8 +39,8 @@ and [open-sourced](https://github.com/hoosierEE/github-colors-live)."""
         -- sorted lists
         alphs = List.map (\(a,b) -> (txtFn a, clrFn b)) ls
         hues = List.sortBy (.hue << Color.toHsl << snd) alphs
-        columnAlpha = (txtFn "alphabetical", Color.rgb 244 244 244) :: alphs
-        columnHue = (txtFn "by hue", Color.rgb 244 244 244) :: hues
+        columnAlpha = (txtFn "sorted alphabetically...", Color.rgb 244 244 244) :: alphs
+        columnHue = (txtFn "...and by hue", Color.rgb 244 244 244) :: hues
         cols = [columnAlpha,columnHue]
         boxed (txt,clr) =
             let mw = w // List.length cols
