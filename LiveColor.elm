@@ -1,23 +1,25 @@
 module LiveColor where
 
-import Char
 import Color
 import Graphics.Element (..)
 import Graphics.Collage (..)
+import Rebase
 import Http
 import List
 import Maybe
 import Signal
 import String
-import Text (asText,plainText)
+import Text as T
+import Window
 
 ------------
 -- PORTS --
 ------------
-port clrs : Signal (List(String,Maybe String)) -- (INPUT) result from YAML->JSON->filtering
+port clrs : Signal (List (String, Maybe String)) -- (INPUT) result from YAML->JSON->filtering
 port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
 port yamlReq =
-    let url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
+    let
+        url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
         res : Signal (Http.Response String)
         res = Http.sendGet url
         dResponse : Http.Response String -> String
@@ -30,49 +32,41 @@ port yamlReq =
 ------------
 -- RENDER --
 ------------
-scene : List(String,Maybe String) -> Element
-scene ls =
+scene : (Int,Int) -> List (String, Maybe String) -> Element
+scene (w,h) ls =
     let
-        txtFn a b = color Color.white <| plainText <| a
-        clrFn a = case a of
-            Just a -> rgbFromCss a
+        txtFn t = T.justified <| T.fromString t
+        clrFn c = case c of
+            Just c -> rgbFromCss c
             Nothing -> rgbFromCss "#ccc"
         boxed (txt,clr) =
-            container 300 30 middle (txtFn txt clr) |> color (clrFn clr)
-        --doBoth tpl = (txtFn tpl) `beside` (clrFn tpl)
-        doAll lst = List.map (\tpl -> boxed tpl) lst
+            let mw = max 250 (w//3)
+            in container mw 30 middle (width mw <| txtFn txt) |> color (clrFn clr)
+        doAll lst = List.map boxed lst
     in flow down <| doAll ls
 
 ------------
 -- WIRING --
 ------------
-main = Signal.map scene clrs
+main = Signal.map2 scene Window.dimensions clrs
 
 ---------------
 -- UTILITIES --
 ---------------
--- hex to decimal
-fromHex : String -> Int
-fromHex x =
-    let cs = String.toList <| String.toLower x
-        vals = List.map (\c -> (String.indexes (String.fromChar c) "0123456789abcdef")) cs
-        valList = List.concat <| List.reverse vals
-        indexedVals = List.reverse <| List.indexedMap (\idx val -> 16^idx * val) valList
-    in List.foldr (+) 0 indexedVals
 
-{- CSS colors typically come in one of two formats, #rrggbb or #rgb
- - browsers do this: #123 becomes #112233
- - Let's convert that mess into a lovely (rr,gg,bb) color!  -}
+-- converts #rgb or #rrggbb (hexColor) into (r,g,b) (integers)
 rgbFromCss : String -> Color.Color
 rgbFromCss cssColorString =
-    let noHastag = String.dropLeft 1 cssColorString -- drop the "#"
-        str = if String.length noHastag == 3 then -- (r,g,b) -> (rr,gg,bb)
-                String.concat <| List.map (\n-> (String.repeat 2 n))
-                [ String.left 1 noHastag -- red
-                , String.left 1 <| String.right 2 noHastag -- green
-                , String.right 1 noHastag -- blue
-                ]
-             else noHastag
-        (r,g,b) = (fromHex <| String.slice 0 2 str, fromHex <| String.slice 2 4 str, fromHex <| String.slice 4 6 str)
+    let hexColor = if String.left 1 cssColorString == "#"
+                   then String.dropLeft 1 cssColorString -- drop the "#"
+                   else cssColorString
+        str =
+            if String.length hexColor == 3 then -- (r,g,b) -> (rr,gg,bb)
+               let dub ids = String.concat <| List.map (\(a,b) -> String.repeat 2 <| String.slice a b hexColor) ids
+               in dub [(0,1),(1,2),(2,3)]
+            else hexColor
+        dfh (a,b) = Rebase.decimalFromHex <| String.slice a b str
+        rgbIndexes = [(0,2),(2,4),(4,6)]
+        [r,g,b] = List.map dfh rgbIndexes
     in Color.rgb r g b
 
