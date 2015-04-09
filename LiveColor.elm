@@ -1,41 +1,23 @@
 module LiveColor where
 
 import Color
-import Graphics.Element (..)
 import Graphics.Collage (..)
-import Rebase
+import Graphics.Element (..)
 import Http
 import List
+import Markdown
+import Rebase (decimalFromHex)
 import Signal
 import String
 import Text as T
 import Window
 
 ------------
--- PORTS --
-------------
-port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
-port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
-port yamlReq =
-    let
-        url = Signal.constant "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
-        -- url = Signal.constant "https://rawgit.com/github/linguist/master/lib/linguist/languages.yml"
-        res : Signal (Http.Response String)
-        res = Http.sendGet url
-        dResponse : Http.Response String -> String
-        dResponse result = case result of
-            Http.Success msg -> msg
-            Http.Waiting -> ""
-            Http.Failure _ _ -> ""
-    in Signal.map dResponse res
-
-------------
--- RENDER --
+-- LAYOUT --
 ------------
 scene : (Int,Int) -> List (String, String) -> Element
 scene (w,h) ls =
     let
-        -- titleStyle : T.Style
         ds = T.defaultStyle
         titleStyle = T.style { typeface = ["BentonSansBold","sans"]
                              , height = Just 80
@@ -45,6 +27,12 @@ scene (w,h) ls =
                              , line = Nothing
                              }
         title = (width w << T.centered << titleStyle << T.fromString) "GitHub Language Colors"
+        footer = color Color.lightGray <| container w 200 middle <| Markdown.toElement """
+Built with [Elm](http://elm-lang.org/) for the fun of it,
+
+heavily inspired by GitHub's own [version](http://github.github.io/linguist/),
+
+and [open-sourced](https://github.com/hoosierEE/github-colors-live)."""
         txtFn = T.centered << T.height 26 << T.typeface ["BentonSansRegular","sans"] << T.fromString
         txtTiny = T.centered << T.height 12 << T.typeface ["BentonSansRegular","sans"] << T.fromString
         clrFn = rgbFromCss -- Color.toHsl << rgbFromCss
@@ -62,12 +50,29 @@ scene (w,h) ls =
                 rc' = Color.rgb rc.red rc.green rc.blue
             in width mw <| color rc' <| container mw 60 middle (flow down [txt, txtTiny <| toString rc'])
         fds t = flow down <| List.map boxed t
-    in flow down [title, flow right <| List.map fds cols]
+    in flow down [title, flow right <| List.map fds cols, footer]
 
 ------------
 -- WIRING --
 ------------
 main = Signal.map2 scene Window.dimensions clrs
+
+------------
+-- PORTS --
+------------
+port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
+port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
+port yamlReq =
+    let
+        url = Signal.constant "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
+        res : Signal (Http.Response String)
+        res = Http.sendGet url
+        dResponse : Http.Response String -> String
+        dResponse result = case result of
+            Http.Success msg -> msg
+            Http.Waiting -> ""
+            Http.Failure _ _ -> ""
+    in Signal.map dResponse res
 
 ---------------
 -- UTILITIES --
@@ -83,7 +88,7 @@ rgbFromCss cssColorString =
                let dub ids = String.concat <| List.map (\(a,b) -> String.repeat 2 <| String.slice a b hexColor) ids
                in dub [(0,1),(1,2),(2,3)]
             else hexColor
-        dfh (a,b) = Rebase.decimalFromHex <| String.slice a b str
+        dfh (a,b) = decimalFromHex <| String.slice a b str
         rgbIndexes = [(0,2),(2,4),(4,6)]
         [r,g,b] = List.map dfh rgbIndexes
     in Color.rgb r g b
