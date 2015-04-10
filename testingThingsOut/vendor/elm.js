@@ -1,4 +1,94 @@
 var Elm = Elm || { Native: {} };
+Elm.Array = Elm.Array || {};
+Elm.Array.make = function (_elm) {
+   "use strict";
+   _elm.Array = _elm.Array || {};
+   if (_elm.Array.values)
+   return _elm.Array.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Array",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Array = Elm.Native.Array.make(_elm);
+   var append = $Native$Array.append;
+   var length = $Native$Array.length;
+   var slice = $Native$Array.slice;
+   var set = $Native$Array.set;
+   var get = F2(function (i,
+   array) {
+      return _U.cmp(0,
+      i) < 1 && _U.cmp(i,
+      $Native$Array.length(array)) < 0 ? $Maybe.Just(A2($Native$Array.get,
+      i,
+      array)) : $Maybe.Nothing;
+   });
+   var push = $Native$Array.push;
+   var empty = $Native$Array.empty;
+   var filter = F2(function (isOkay,
+   arr) {
+      return function () {
+         var update = F2(function (x,
+         xs) {
+            return isOkay(x) ? A2($Native$Array.push,
+            x,
+            xs) : xs;
+         });
+         return A3($Native$Array.foldl,
+         update,
+         $Native$Array.empty,
+         arr);
+      }();
+   });
+   var foldr = $Native$Array.foldr;
+   var foldl = $Native$Array.foldl;
+   var indexedMap = $Native$Array.indexedMap;
+   var map = $Native$Array.map;
+   var toIndexedList = function (array) {
+      return A3($List.map2,
+      F2(function (v0,v1) {
+         return {ctor: "_Tuple2"
+                ,_0: v0
+                ,_1: v1};
+      }),
+      _L.range(0,
+      $Native$Array.length(array) - 1),
+      $Native$Array.toList(array));
+   };
+   var toList = $Native$Array.toList;
+   var fromList = $Native$Array.fromList;
+   var initialize = $Native$Array.initialize;
+   var repeat = F2(function (n,e) {
+      return A2(initialize,
+      n,
+      $Basics.always(e));
+   });
+   var Array = {ctor: "Array"};
+   _elm.Array.values = {_op: _op
+                       ,Array: Array
+                       ,initialize: initialize
+                       ,repeat: repeat
+                       ,fromList: fromList
+                       ,toList: toList
+                       ,toIndexedList: toIndexedList
+                       ,map: map
+                       ,indexedMap: indexedMap
+                       ,foldl: foldl
+                       ,foldr: foldr
+                       ,filter: filter
+                       ,empty: empty
+                       ,push: push
+                       ,get: get
+                       ,set: set
+                       ,slice: slice
+                       ,length: length
+                       ,append: append};
+   return _elm.Array.values;
+};
 Elm.Basics = Elm.Basics || {};
 Elm.Basics.make = function (_elm) {
    "use strict";
@@ -675,6 +765,992 @@ Elm.Color.make = function (_elm) {
                        ,darkCharcoal: darkCharcoal};
    return _elm.Color.values;
 };
+Elm.Dict = Elm.Dict || {};
+Elm.Dict.make = function (_elm) {
+   "use strict";
+   _elm.Dict = _elm.Dict || {};
+   if (_elm.Dict.values)
+   return _elm.Dict.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Dict",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Debug = Elm.Native.Debug.make(_elm),
+   $String = Elm.String.make(_elm);
+   var foldr = F3(function (f,
+   acc,
+   t) {
+      return function () {
+         switch (t.ctor)
+         {case "RBEmpty":
+            switch (t._0.ctor)
+              {case "LBlack": return acc;}
+              break;
+            case "RBNode": return A3(foldr,
+              f,
+              A3(f,
+              t._1,
+              t._2,
+              A3(foldr,f,acc,t._4)),
+              t._3);}
+         _U.badCase($moduleName,
+         "between lines 409 and 417");
+      }();
+   });
+   var keys = function (dict) {
+      return A3(foldr,
+      F3(function (key,
+      value,
+      keyList) {
+         return A2($List._op["::"],
+         key,
+         keyList);
+      }),
+      _L.fromArray([]),
+      dict);
+   };
+   var values = function (dict) {
+      return A3(foldr,
+      F3(function (key,
+      value,
+      valueList) {
+         return A2($List._op["::"],
+         value,
+         valueList);
+      }),
+      _L.fromArray([]),
+      dict);
+   };
+   var toList = function (dict) {
+      return A3(foldr,
+      F3(function (key,value,list) {
+         return A2($List._op["::"],
+         {ctor: "_Tuple2"
+         ,_0: key
+         ,_1: value},
+         list);
+      }),
+      _L.fromArray([]),
+      dict);
+   };
+   var foldl = F3(function (f,
+   acc,
+   dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBlack": return acc;}
+              break;
+            case "RBNode": return A3(foldl,
+              f,
+              A3(f,
+              dict._1,
+              dict._2,
+              A3(foldl,f,acc,dict._3)),
+              dict._4);}
+         _U.badCase($moduleName,
+         "between lines 398 and 406");
+      }();
+   });
+   var isBBlack = function (dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBBlack": return true;}
+              break;
+            case "RBNode":
+            switch (dict._0.ctor)
+              {case "BBlack": return true;}
+              break;}
+         return false;
+      }();
+   };
+   var showFlag = function (f) {
+      return function () {
+         switch (f.ctor)
+         {case "Insert": return "Insert";
+            case "Remove": return "Remove";
+            case "Same": return "Same";}
+         _U.badCase($moduleName,
+         "between lines 174 and 180");
+      }();
+   };
+   var Same = {ctor: "Same"};
+   var Remove = {ctor: "Remove"};
+   var Insert = {ctor: "Insert"};
+   var get = F2(function (targetKey,
+   dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBlack":
+                 return $Maybe.Nothing;}
+              break;
+            case "RBNode":
+            return function () {
+                 var _v29 = A2($Basics.compare,
+                 targetKey,
+                 dict._1);
+                 switch (_v29.ctor)
+                 {case "EQ":
+                    return $Maybe.Just(dict._2);
+                    case "GT": return A2(get,
+                      targetKey,
+                      dict._4);
+                    case "LT": return A2(get,
+                      targetKey,
+                      dict._3);}
+                 _U.badCase($moduleName,
+                 "between lines 130 and 136");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 125 and 136");
+      }();
+   });
+   var member = F2(function (key,
+   dict) {
+      return function () {
+         var _v30 = A2(get,key,dict);
+         switch (_v30.ctor)
+         {case "Just": return true;
+            case "Nothing": return false;}
+         _U.badCase($moduleName,
+         "between lines 139 and 141");
+      }();
+   });
+   var max = function (dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            return $Native$Debug.crash("(max Empty) is not defined");
+            case "RBNode":
+            switch (dict._4.ctor)
+              {case "RBEmpty":
+                 return {ctor: "_Tuple2"
+                        ,_0: dict._1
+                        ,_1: dict._2};}
+              return max(dict._4);}
+         _U.badCase($moduleName,
+         "between lines 101 and 122");
+      }();
+   };
+   var min = function (dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBlack":
+                 return $Native$Debug.crash("(min Empty) is not defined");}
+              break;
+            case "RBNode":
+            switch (dict._3.ctor)
+              {case "RBEmpty":
+                 switch (dict._3._0.ctor)
+                   {case "LBlack":
+                      return {ctor: "_Tuple2"
+                             ,_0: dict._1
+                             ,_1: dict._2};}
+                   break;}
+              return min(dict._3);}
+         _U.badCase($moduleName,
+         "between lines 88 and 96");
+      }();
+   };
+   var RBEmpty = function (a) {
+      return {ctor: "RBEmpty"
+             ,_0: a};
+   };
+   var RBNode = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {ctor: "RBNode"
+             ,_0: a
+             ,_1: b
+             ,_2: c
+             ,_3: d
+             ,_4: e};
+   });
+   var showLColor = function (color) {
+      return function () {
+         switch (color.ctor)
+         {case "LBBlack":
+            return "LBBlack";
+            case "LBlack": return "LBlack";}
+         _U.badCase($moduleName,
+         "between lines 71 and 73");
+      }();
+   };
+   var LBBlack = {ctor: "LBBlack"};
+   var LBlack = {ctor: "LBlack"};
+   var empty = RBEmpty(LBlack);
+   var map = F2(function (f,dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBlack":
+                 return RBEmpty(LBlack);}
+              break;
+            case "RBNode": return A5(RBNode,
+              dict._0,
+              dict._1,
+              A2(f,dict._1,dict._2),
+              A2(map,f,dict._3),
+              A2(map,f,dict._4));}
+         _U.badCase($moduleName,
+         "between lines 386 and 395");
+      }();
+   });
+   var showNColor = function (c) {
+      return function () {
+         switch (c.ctor)
+         {case "BBlack": return "BBlack";
+            case "Black": return "Black";
+            case "NBlack": return "NBlack";
+            case "Red": return "Red";}
+         _U.badCase($moduleName,
+         "between lines 57 and 61");
+      }();
+   };
+   var reportRemBug = F4(function (msg,
+   c,
+   lgot,
+   rgot) {
+      return $Native$Debug.crash($String.concat(_L.fromArray(["Internal red-black tree invariant violated, expected "
+                                                             ,msg
+                                                             ," and got "
+                                                             ,showNColor(c)
+                                                             ,"/"
+                                                             ,lgot
+                                                             ,"/"
+                                                             ,rgot
+                                                             ,"\nPlease report this bug to <https://github.com/elm-lang/Elm/issues>"])));
+   });
+   var NBlack = {ctor: "NBlack"};
+   var BBlack = {ctor: "BBlack"};
+   var Black = {ctor: "Black"};
+   var ensureBlackRoot = function (dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBlack": return dict;}
+              break;
+            case "RBNode":
+            switch (dict._0.ctor)
+              {case "Black": return dict;
+                 case "Red": return A5(RBNode,
+                   Black,
+                   dict._1,
+                   dict._2,
+                   dict._3,
+                   dict._4);}
+              break;}
+         _U.badCase($moduleName,
+         "between lines 146 and 158");
+      }();
+   };
+   var blackish = function (t) {
+      return function () {
+         switch (t.ctor)
+         {case "RBEmpty": return true;
+            case "RBNode":
+            return _U.eq(t._0,
+              Black) || _U.eq(t._0,BBlack);}
+         _U.badCase($moduleName,
+         "between lines 331 and 333");
+      }();
+   };
+   var blacken = function (t) {
+      return function () {
+         switch (t.ctor)
+         {case "RBEmpty":
+            return RBEmpty(LBlack);
+            case "RBNode": return A5(RBNode,
+              Black,
+              t._1,
+              t._2,
+              t._3,
+              t._4);}
+         _U.badCase($moduleName,
+         "between lines 370 and 372");
+      }();
+   };
+   var Red = {ctor: "Red"};
+   var moreBlack = function (color) {
+      return function () {
+         switch (color.ctor)
+         {case "BBlack":
+            return $Native$Debug.crash("Can\'t make a double black node more black!");
+            case "Black": return BBlack;
+            case "NBlack": return Red;
+            case "Red": return Black;}
+         _U.badCase($moduleName,
+         "between lines 236 and 240");
+      }();
+   };
+   var lessBlack = function (color) {
+      return function () {
+         switch (color.ctor)
+         {case "BBlack": return Black;
+            case "Black": return Red;
+            case "NBlack":
+            return $Native$Debug.crash("Can\'t make a negative black node less black!");
+            case "Red": return NBlack;}
+         _U.badCase($moduleName,
+         "between lines 245 and 249");
+      }();
+   };
+   var lessBlackTree = function (dict) {
+      return function () {
+         switch (dict.ctor)
+         {case "RBEmpty":
+            switch (dict._0.ctor)
+              {case "LBBlack":
+                 return RBEmpty(LBlack);}
+              break;
+            case "RBNode": return A5(RBNode,
+              lessBlack(dict._0),
+              dict._1,
+              dict._2,
+              dict._3,
+              dict._4);}
+         _U.badCase($moduleName,
+         "between lines 254 and 256");
+      }();
+   };
+   var redden = function (t) {
+      return function () {
+         switch (t.ctor)
+         {case "RBEmpty":
+            return $Native$Debug.crash("can\'t make a Leaf red");
+            case "RBNode": return A5(RBNode,
+              Red,
+              t._1,
+              t._2,
+              t._3,
+              t._4);}
+         _U.badCase($moduleName,
+         "between lines 378 and 383");
+      }();
+   };
+   var balance_node = function (t) {
+      return function () {
+         var assemble = function (col) {
+            return function (xk) {
+               return function (xv) {
+                  return function (yk) {
+                     return function (yv) {
+                        return function (zk) {
+                           return function (zv) {
+                              return function (a) {
+                                 return function (b) {
+                                    return function (c) {
+                                       return function (d) {
+                                          return A5(RBNode,
+                                          lessBlack(col),
+                                          yk,
+                                          yv,
+                                          A5(RBNode,Black,xk,xv,a,b),
+                                          A5(RBNode,Black,zk,zv,c,d));
+                                       };
+                                    };
+                                 };
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+         return blackish(t) ? function () {
+            switch (t.ctor)
+            {case "RBNode":
+               switch (t._3.ctor)
+                 {case "RBNode":
+                    switch (t._3._0.ctor)
+                      {case "Red":
+                         switch (t._3._3.ctor)
+                           {case "RBNode":
+                              switch (t._3._3._0.ctor)
+                                {case "Red":
+                                   return assemble(t._0)(t._3._3._1)(t._3._3._2)(t._3._1)(t._3._2)(t._1)(t._2)(t._3._3._3)(t._3._3._4)(t._3._4)(t._4);}
+                                break;}
+                           switch (t._3._4.ctor)
+                           {case "RBNode":
+                              switch (t._3._4._0.ctor)
+                                {case "Red":
+                                   return assemble(t._0)(t._3._1)(t._3._2)(t._3._4._1)(t._3._4._2)(t._1)(t._2)(t._3._3)(t._3._4._3)(t._3._4._4)(t._4);}
+                                break;}
+                           break;}
+                      break;}
+                 switch (t._4.ctor)
+                 {case "RBNode":
+                    switch (t._4._0.ctor)
+                      {case "Red":
+                         switch (t._4._3.ctor)
+                           {case "RBNode":
+                              switch (t._4._3._0.ctor)
+                                {case "Red":
+                                   return assemble(t._0)(t._1)(t._2)(t._4._3._1)(t._4._3._2)(t._4._1)(t._4._2)(t._3)(t._4._3._3)(t._4._3._4)(t._4._4);}
+                                break;}
+                           switch (t._4._4.ctor)
+                           {case "RBNode":
+                              switch (t._4._4._0.ctor)
+                                {case "Red":
+                                   return assemble(t._0)(t._1)(t._2)(t._4._1)(t._4._2)(t._4._4._1)(t._4._4._2)(t._3)(t._4._3)(t._4._4._3)(t._4._4._4);}
+                                break;}
+                           break;}
+                      break;}
+                 switch (t._0.ctor)
+                 {case "BBlack":
+                    switch (t._4.ctor)
+                      {case "RBNode":
+                         switch (t._4._0.ctor)
+                           {case "NBlack":
+                              switch (t._4._3.ctor)
+                                {case "RBNode":
+                                   switch (t._4._3._0.ctor)
+                                     {case "Black":
+                                        return function () {
+                                             switch (t._4._4.ctor)
+                                             {case "RBNode":
+                                                switch (t._4._4._0.ctor)
+                                                  {case "Black":
+                                                     return A5(RBNode,
+                                                       Black,
+                                                       t._4._3._1,
+                                                       t._4._3._2,
+                                                       A5(RBNode,
+                                                       Black,
+                                                       t._1,
+                                                       t._2,
+                                                       t._3,
+                                                       t._4._3._3),
+                                                       A5(balance,
+                                                       Black,
+                                                       t._4._1,
+                                                       t._4._2,
+                                                       t._4._3._4,
+                                                       redden(t._4._4)));}
+                                                  break;}
+                                             return t;
+                                          }();}
+                                     break;}
+                                break;}
+                           break;}
+                      switch (t._3.ctor)
+                      {case "RBNode":
+                         switch (t._3._0.ctor)
+                           {case "NBlack":
+                              switch (t._3._4.ctor)
+                                {case "RBNode":
+                                   switch (t._3._4._0.ctor)
+                                     {case "Black":
+                                        return function () {
+                                             switch (t._3._3.ctor)
+                                             {case "RBNode":
+                                                switch (t._3._3._0.ctor)
+                                                  {case "Black":
+                                                     return A5(RBNode,
+                                                       Black,
+                                                       t._3._4._1,
+                                                       t._3._4._2,
+                                                       A5(balance,
+                                                       Black,
+                                                       t._3._1,
+                                                       t._3._2,
+                                                       redden(t._3._3),
+                                                       t._3._4._3),
+                                                       A5(RBNode,
+                                                       Black,
+                                                       t._1,
+                                                       t._2,
+                                                       t._3._4._4,
+                                                       t._4));}
+                                                  break;}
+                                             return t;
+                                          }();}
+                                     break;}
+                                break;}
+                           break;}
+                      break;}
+                 break;}
+            return t;
+         }() : t;
+      }();
+   };
+   var balance = F5(function (c,
+   k,
+   v,
+   l,
+   r) {
+      return balance_node(A5(RBNode,
+      c,
+      k,
+      v,
+      l,
+      r));
+   });
+   var bubble = F5(function (c,
+   k,
+   v,
+   l,
+   r) {
+      return isBBlack(l) || isBBlack(r) ? A5(balance,
+      moreBlack(c),
+      k,
+      v,
+      lessBlackTree(l),
+      lessBlackTree(r)) : A5(RBNode,
+      c,
+      k,
+      v,
+      l,
+      r);
+   });
+   var remove_max = F5(function (c,
+   k,
+   v,
+   l,
+   r) {
+      return function () {
+         switch (r.ctor)
+         {case "RBEmpty": return A3(rem,
+              c,
+              l,
+              r);
+            case "RBNode": return A5(bubble,
+              c,
+              k,
+              v,
+              l,
+              A5(remove_max,
+              r._0,
+              r._1,
+              r._2,
+              r._3,
+              r._4));}
+         _U.badCase($moduleName,
+         "between lines 315 and 320");
+      }();
+   });
+   var rem = F3(function (c,l,r) {
+      return function () {
+         var _v169 = {ctor: "_Tuple2"
+                     ,_0: l
+                     ,_1: r};
+         switch (_v169.ctor)
+         {case "_Tuple2":
+            switch (_v169._0.ctor)
+              {case "RBEmpty":
+                 switch (_v169._1.ctor)
+                   {case "RBEmpty":
+                      return function () {
+                           switch (c.ctor)
+                           {case "Black":
+                              return RBEmpty(LBBlack);
+                              case "Red":
+                              return RBEmpty(LBlack);}
+                           _U.badCase($moduleName,
+                           "between lines 274 and 278");
+                        }();
+                      case "RBNode":
+                      return function () {
+                           var _v191 = {ctor: "_Tuple3"
+                                       ,_0: c
+                                       ,_1: _v169._0._0
+                                       ,_2: _v169._1._0};
+                           switch (_v191.ctor)
+                           {case "_Tuple3":
+                              switch (_v191._0.ctor)
+                                {case "Black":
+                                   switch (_v191._1.ctor)
+                                     {case "LBlack":
+                                        switch (_v191._2.ctor)
+                                          {case "Red": return A5(RBNode,
+                                               Black,
+                                               _v169._1._1,
+                                               _v169._1._2,
+                                               _v169._1._3,
+                                               _v169._1._4);}
+                                          break;}
+                                     break;}
+                                break;}
+                           return A4(reportRemBug,
+                           "Black/LBlack/Red",
+                           c,
+                           showLColor(_v169._0._0),
+                           showNColor(_v169._1._0));
+                        }();}
+                   break;
+                 case "RBNode":
+                 switch (_v169._1.ctor)
+                   {case "RBEmpty":
+                      return function () {
+                           var _v195 = {ctor: "_Tuple3"
+                                       ,_0: c
+                                       ,_1: _v169._0._0
+                                       ,_2: _v169._1._0};
+                           switch (_v195.ctor)
+                           {case "_Tuple3":
+                              switch (_v195._0.ctor)
+                                {case "Black":
+                                   switch (_v195._1.ctor)
+                                     {case "Red":
+                                        switch (_v195._2.ctor)
+                                          {case "LBlack":
+                                             return A5(RBNode,
+                                               Black,
+                                               _v169._0._1,
+                                               _v169._0._2,
+                                               _v169._0._3,
+                                               _v169._0._4);}
+                                          break;}
+                                     break;}
+                                break;}
+                           return A4(reportRemBug,
+                           "Black/Red/LBlack",
+                           c,
+                           showNColor(_v169._0._0),
+                           showLColor(_v169._1._0));
+                        }();
+                      case "RBNode":
+                      return function () {
+                           var l$ = A5(remove_max,
+                           _v169._0._0,
+                           _v169._0._1,
+                           _v169._0._2,
+                           _v169._0._3,
+                           _v169._0._4);
+                           var r = A5(RBNode,
+                           _v169._1._0,
+                           _v169._1._1,
+                           _v169._1._2,
+                           _v169._1._3,
+                           _v169._1._4);
+                           var l = A5(RBNode,
+                           _v169._0._0,
+                           _v169._0._1,
+                           _v169._0._2,
+                           _v169._0._3,
+                           _v169._0._4);
+                           var $ = max(l),
+                           k = $._0,
+                           v = $._1;
+                           return A5(bubble,c,k,v,l$,r);
+                        }();}
+                   break;}
+              break;}
+         _U.badCase($moduleName,
+         "between lines 272 and 301");
+      }();
+   });
+   var update = F3(function (k,
+   alter,
+   dict) {
+      return function () {
+         var up = function (dict) {
+            return function () {
+               switch (dict.ctor)
+               {case "RBEmpty":
+                  switch (dict._0.ctor)
+                    {case "LBlack":
+                       return function () {
+                            var _v206 = alter($Maybe.Nothing);
+                            switch (_v206.ctor)
+                            {case "Just":
+                               return {ctor: "_Tuple2"
+                                      ,_0: Insert
+                                      ,_1: A5(RBNode,
+                                      Red,
+                                      k,
+                                      _v206._0,
+                                      empty,
+                                      empty)};
+                               case "Nothing":
+                               return {ctor: "_Tuple2"
+                                      ,_0: Same
+                                      ,_1: empty};}
+                            _U.badCase($moduleName,
+                            "between lines 186 and 190");
+                         }();}
+                    break;
+                  case "RBNode":
+                  return function () {
+                       var _v208 = A2($Basics.compare,
+                       k,
+                       dict._1);
+                       switch (_v208.ctor)
+                       {case "EQ": return function () {
+                               var _v209 = alter($Maybe.Just(dict._2));
+                               switch (_v209.ctor)
+                               {case "Just":
+                                  return {ctor: "_Tuple2"
+                                         ,_0: Same
+                                         ,_1: A5(RBNode,
+                                         dict._0,
+                                         dict._1,
+                                         _v209._0,
+                                         dict._3,
+                                         dict._4)};
+                                  case "Nothing":
+                                  return {ctor: "_Tuple2"
+                                         ,_0: Remove
+                                         ,_1: A3(rem,
+                                         dict._0,
+                                         dict._3,
+                                         dict._4)};}
+                               _U.badCase($moduleName,
+                               "between lines 193 and 198");
+                            }();
+                          case "GT": return function () {
+                               var $ = up(dict._4),
+                               flag = $._0,
+                               newRight = $._1;
+                               return function () {
+                                  switch (flag.ctor)
+                                  {case "Insert":
+                                     return {ctor: "_Tuple2"
+                                            ,_0: Insert
+                                            ,_1: A5(balance,
+                                            dict._0,
+                                            dict._1,
+                                            dict._2,
+                                            dict._3,
+                                            newRight)};
+                                     case "Remove":
+                                     return {ctor: "_Tuple2"
+                                            ,_0: Remove
+                                            ,_1: A5(bubble,
+                                            dict._0,
+                                            dict._1,
+                                            dict._2,
+                                            dict._3,
+                                            newRight)};
+                                     case "Same":
+                                     return {ctor: "_Tuple2"
+                                            ,_0: Same
+                                            ,_1: A5(RBNode,
+                                            dict._0,
+                                            dict._1,
+                                            dict._2,
+                                            dict._3,
+                                            newRight)};}
+                                  _U.badCase($moduleName,
+                                  "between lines 207 and 212");
+                               }();
+                            }();
+                          case "LT": return function () {
+                               var $ = up(dict._3),
+                               flag = $._0,
+                               newLeft = $._1;
+                               return function () {
+                                  switch (flag.ctor)
+                                  {case "Insert":
+                                     return {ctor: "_Tuple2"
+                                            ,_0: Insert
+                                            ,_1: A5(balance,
+                                            dict._0,
+                                            dict._1,
+                                            dict._2,
+                                            newLeft,
+                                            dict._4)};
+                                     case "Remove":
+                                     return {ctor: "_Tuple2"
+                                            ,_0: Remove
+                                            ,_1: A5(bubble,
+                                            dict._0,
+                                            dict._1,
+                                            dict._2,
+                                            newLeft,
+                                            dict._4)};
+                                     case "Same":
+                                     return {ctor: "_Tuple2"
+                                            ,_0: Same
+                                            ,_1: A5(RBNode,
+                                            dict._0,
+                                            dict._1,
+                                            dict._2,
+                                            newLeft,
+                                            dict._4)};}
+                                  _U.badCase($moduleName,
+                                  "between lines 200 and 205");
+                               }();
+                            }();}
+                       _U.badCase($moduleName,
+                       "between lines 191 and 212");
+                    }();}
+               _U.badCase($moduleName,
+               "between lines 184 and 212");
+            }();
+         };
+         var $ = up(dict),
+         flag = $._0,
+         updatedDict = $._1;
+         return function () {
+            switch (flag.ctor)
+            {case "Insert":
+               return ensureBlackRoot(updatedDict);
+               case "Remove":
+               return blacken(updatedDict);
+               case "Same":
+               return updatedDict;}
+            _U.badCase($moduleName,
+            "between lines 214 and 220");
+         }();
+      }();
+   });
+   var insert = F3(function (key,
+   value,
+   dict) {
+      return A3(update,
+      key,
+      $Basics.always($Maybe.Just(value)),
+      dict);
+   });
+   var singleton = F2(function (key,
+   value) {
+      return A3(insert,
+      key,
+      value,
+      RBEmpty(LBlack));
+   });
+   var union = F2(function (t1,
+   t2) {
+      return A3(foldl,
+      insert,
+      t2,
+      t1);
+   });
+   var fromList = function (assocs) {
+      return A3($List.foldl,
+      F2(function (_v214,dict) {
+         return function () {
+            switch (_v214.ctor)
+            {case "_Tuple2":
+               return A3(insert,
+                 _v214._0,
+                 _v214._1,
+                 dict);}
+            _U.badCase($moduleName,
+            "on line 458, column 38 to 59");
+         }();
+      }),
+      empty,
+      assocs);
+   };
+   var filter = F2(function (predicate,
+   dictionary) {
+      return function () {
+         var add = F3(function (key,
+         value,
+         dict) {
+            return A2(predicate,
+            key,
+            value) ? A3(insert,
+            key,
+            value,
+            dict) : dict;
+         });
+         return A3(foldl,
+         add,
+         empty,
+         dictionary);
+      }();
+   });
+   var intersect = F2(function (t1,
+   t2) {
+      return A2(filter,
+      F2(function (k,_v218) {
+         return function () {
+            return A2(member,k,t2);
+         }();
+      }),
+      t1);
+   });
+   var partition = F2(function (predicate,
+   dict) {
+      return function () {
+         var add = F3(function (key,
+         value,
+         _v220) {
+            return function () {
+               switch (_v220.ctor)
+               {case "_Tuple2":
+                  return A2(predicate,
+                    key,
+                    value) ? {ctor: "_Tuple2"
+                             ,_0: A3(insert,
+                             key,
+                             value,
+                             _v220._0)
+                             ,_1: _v220._1} : {ctor: "_Tuple2"
+                                              ,_0: _v220._0
+                                              ,_1: A3(insert,
+                                              key,
+                                              value,
+                                              _v220._1)};}
+               _U.badCase($moduleName,
+               "between lines 479 and 481");
+            }();
+         });
+         return A3(foldl,
+         add,
+         {ctor: "_Tuple2"
+         ,_0: empty
+         ,_1: empty},
+         dict);
+      }();
+   });
+   var remove = F2(function (key,
+   dict) {
+      return A3(update,
+      key,
+      $Basics.always($Maybe.Nothing),
+      dict);
+   });
+   var diff = F2(function (t1,t2) {
+      return A3(foldl,
+      F3(function (k,v,t) {
+         return A2(remove,k,t);
+      }),
+      t1,
+      t2);
+   });
+   _elm.Dict.values = {_op: _op
+                      ,empty: empty
+                      ,singleton: singleton
+                      ,insert: insert
+                      ,update: update
+                      ,get: get
+                      ,remove: remove
+                      ,member: member
+                      ,filter: filter
+                      ,partition: partition
+                      ,foldl: foldl
+                      ,foldr: foldr
+                      ,map: map
+                      ,union: union
+                      ,intersect: intersect
+                      ,diff: diff
+                      ,keys: keys
+                      ,values: values
+                      ,toList: toList
+                      ,fromList: fromList};
+   return _elm.Dict.values;
+};
 Elm.Graphics = Elm.Graphics || {};
 Elm.Graphics.Element = Elm.Graphics.Element || {};
 Elm.Graphics.Element.make = function (_elm) {
@@ -1226,6 +2302,156 @@ Elm.Graphics.Element.make = function (_elm) {
                                   ,outward: outward};
    return _elm.Graphics.Element.values;
 };
+Elm.Json = Elm.Json || {};
+Elm.Json.Decode = Elm.Json.Decode || {};
+Elm.Json.Decode.make = function (_elm) {
+   "use strict";
+   _elm.Json = _elm.Json || {};
+   _elm.Json.Decode = _elm.Json.Decode || {};
+   if (_elm.Json.Decode.values)
+   return _elm.Json.Decode.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Json.Decode",
+   $Array = Elm.Array.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Json = Elm.Native.Json.make(_elm),
+   $Result = Elm.Result.make(_elm);
+   var tuple8 = $Native$Json.decodeTuple8;
+   var tuple7 = $Native$Json.decodeTuple7;
+   var tuple6 = $Native$Json.decodeTuple6;
+   var tuple5 = $Native$Json.decodeTuple5;
+   var tuple4 = $Native$Json.decodeTuple4;
+   var tuple3 = $Native$Json.decodeTuple3;
+   var tuple2 = $Native$Json.decodeTuple2;
+   var tuple1 = $Native$Json.decodeTuple1;
+   var succeed = $Native$Json.succeed;
+   var fail = $Native$Json.fail;
+   var andThen = $Native$Json.andThen;
+   var customDecoder = $Native$Json.customDecoder;
+   var decodeValue = $Native$Json.runDecoderValue;
+   var value = $Native$Json.decodeValue;
+   var maybe = $Native$Json.decodeMaybe;
+   var $null = $Native$Json.decodeNull;
+   var array = $Native$Json.decodeArray;
+   var list = $Native$Json.decodeList;
+   var bool = $Native$Json.decodeBool;
+   var $int = $Native$Json.decodeInt;
+   var $float = $Native$Json.decodeFloat;
+   var string = $Native$Json.decodeString;
+   var oneOf = $Native$Json.oneOf;
+   var keyValuePairs = $Native$Json.decodeKeyValuePairs;
+   var object8 = $Native$Json.decodeObject8;
+   var object7 = $Native$Json.decodeObject7;
+   var object6 = $Native$Json.decodeObject6;
+   var object5 = $Native$Json.decodeObject5;
+   var object4 = $Native$Json.decodeObject4;
+   var object3 = $Native$Json.decodeObject3;
+   var object2 = $Native$Json.decodeObject2;
+   var object1 = $Native$Json.decodeObject1;
+   _op[":="] = $Native$Json.decodeField;
+   var at = F2(function (fields,
+   decoder) {
+      return A3($List.foldr,
+      F2(function (x,y) {
+         return A2(_op[":="],x,y);
+      }),
+      decoder,
+      fields);
+   });
+   var decodeString = $Native$Json.runDecoderString;
+   var map = $Native$Json.decodeObject1;
+   var dict = function (decoder) {
+      return A2(map,
+      $Dict.fromList,
+      keyValuePairs(decoder));
+   };
+   var Decoder = {ctor: "Decoder"};
+   _elm.Json.Decode.values = {_op: _op
+                             ,Decoder: Decoder
+                             ,map: map
+                             ,decodeString: decodeString
+                             ,at: at
+                             ,object1: object1
+                             ,object2: object2
+                             ,object3: object3
+                             ,object4: object4
+                             ,object5: object5
+                             ,object6: object6
+                             ,object7: object7
+                             ,object8: object8
+                             ,keyValuePairs: keyValuePairs
+                             ,dict: dict
+                             ,oneOf: oneOf
+                             ,string: string
+                             ,$float: $float
+                             ,$int: $int
+                             ,bool: bool
+                             ,list: list
+                             ,array: array
+                             ,$null: $null
+                             ,maybe: maybe
+                             ,value: value
+                             ,decodeValue: decodeValue
+                             ,customDecoder: customDecoder
+                             ,andThen: andThen
+                             ,fail: fail
+                             ,succeed: succeed
+                             ,tuple1: tuple1
+                             ,tuple2: tuple2
+                             ,tuple3: tuple3
+                             ,tuple4: tuple4
+                             ,tuple5: tuple5
+                             ,tuple6: tuple6
+                             ,tuple7: tuple7
+                             ,tuple8: tuple8};
+   return _elm.Json.Decode.values;
+};
+Elm.Json = Elm.Json || {};
+Elm.Json.Encode = Elm.Json.Encode || {};
+Elm.Json.Encode.make = function (_elm) {
+   "use strict";
+   _elm.Json = _elm.Json || {};
+   _elm.Json.Encode = _elm.Json.Encode || {};
+   if (_elm.Json.Encode.values)
+   return _elm.Json.Encode.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Json.Encode",
+   $Array = Elm.Array.make(_elm),
+   $Native$Json = Elm.Native.Json.make(_elm);
+   var list = $Native$Json.encodeList;
+   var array = $Native$Json.encodeArray;
+   var object = $Native$Json.encodeObject;
+   var $null = $Native$Json.encodeNull;
+   var bool = $Native$Json.identity;
+   var $float = $Native$Json.identity;
+   var $int = $Native$Json.identity;
+   var string = $Native$Json.identity;
+   var encode = $Native$Json.encode;
+   var Value = {ctor: "Value"};
+   _elm.Json.Encode.values = {_op: _op
+                             ,Value: Value
+                             ,encode: encode
+                             ,string: string
+                             ,$int: $int
+                             ,$float: $float
+                             ,bool: bool
+                             ,$null: $null
+                             ,object: object
+                             ,array: array
+                             ,list: list};
+   return _elm.Json.Encode.values;
+};
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
    "use strict";
@@ -1470,73 +2696,26 @@ Elm.Main.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Main",
-   $Basics = Elm.Basics.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $String = Elm.String.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var strFold = function (str) {
-      return function () {
-         var _v0 = $String.toList(str);
-         switch (_v0.ctor)
-         {case "[]": return "empty";}
-         return "";
-      }();
-   };
-   var base = function (num) {
-      return function () {
-         var aA = $String.toList("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-         var aa = $String.toList("abcdefghijklmnopqrstuvwxyz");
-         var ii = $String.toList("0123456789");
-         return _U.cmp(num,
-         10) < 0 ? ii : ii;
-      }();
-   };
-   var decimalFromHex = function (hexString) {
-      return function () {
-         var xs = $List.reverse($String.toList(hexString));
-         var vals = A2($List.map,
-         function ($) {
-            return $List.head(A2($Basics.flip,
-            $String.indexes,
-            "0123456789ABCDEF0123456789abcdef")($String.fromChar($)));
-         },
-         xs);
-         var powered = A2($List.indexedMap,
-         F2(function (idx,val) {
-            return Math.pow(16,
-            idx) * A2($Basics._op["%"],
-            val,
-            16);
-         }),
-         vals);
-         return A3($List.foldr,
-         F2(function (x,y) {
-            return x + y;
-         }),
-         0,
-         powered);
-      }();
-   };
-   var dfhs = function () {
-      var tests = _L.fromArray(["ff"
-                               ,"01"
-                               ,"10"
-                               ,"100"]);
-      return A2($List.map,
-      function ($) {
-         return $Text.asText(decimalFromHex($));
-      },
-      tests);
-   }();
-   var main = A2($Graphics$Element.flow,
-   $Graphics$Element.down,
-   dfhs);
+   var ghLangListDec = $Json$Decode.keyValuePairs($Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "color",
+   $Json$Decode.string)));
+   var jsonString = "{ \"AGDA\": { \"property1\":\"value\", \"property2\":1, \"color\":\"#abcabc\" },\n    \"APL\": { \"property1\": \"value\", \"property2\":\"value\",\"color\":\"#123123\"},\n    \"Colorless-Language-X\": {\"property1\":\"value\",\"property2\":\"value\"},\n    \"Zephyr\": { \"property1\": \"value\", \"property2\": \"value\", \"color\": \"#495969\" }\n    }";
+   var main = $Text.asText(A2($Json$Decode.decodeString,
+   ghLangListDec,
+   jsonString));
+   var GHLang = F2(function (a,b) {
+      return {_: {}
+             ,color: b
+             ,language: a};
+   });
    _elm.Main.values = {_op: _op
-                      ,decimalFromHex: decimalFromHex
-                      ,base: base
-                      ,strFold: strFold
-                      ,dfhs: dfhs
+                      ,GHLang: GHLang
+                      ,jsonString: jsonString
+                      ,ghLangListDec: ghLangListDec
                       ,main: main};
    return _elm.Main.values;
 };
@@ -1614,6 +2793,718 @@ Elm.Maybe.make = function (_elm) {
                        ,Nothing: Nothing};
    return _elm.Maybe.values;
 };
+Elm.Native.Array = {};
+Elm.Native.Array.make = function(elm) {
+    elm.Native = elm.Native || {};
+    elm.Native.Array = elm.Native.Array || {};
+    if (elm.Native.Array.values) return elm.Native.Array.values;
+    if ('values' in Elm.Native.Array)
+      return elm.Native.Array.values = Elm.Native.Array.values;
+
+    var List = Elm.Native.List.make(elm);
+
+    // A RRB-Tree has two distinct data types.
+    // Leaf -> "height"  is always 0
+    //         "table"   is an array of elements
+    // Node -> "height"  is always greater than 0
+    //         "table"   is an array of child nodes
+    //         "lengths" is an array of accumulated lengths of the child nodes
+
+    // M is the maximal table size. 32 seems fast. E is the allowed increase
+    // of search steps when concatting to find an index. Lower values will 
+    // decrease balancing, but will increase search steps.
+    var M = 32;
+    var E = 2;
+
+    // An empty array.
+    var empty = { ctor:"_Array", height:0, table:new Array() };
+
+    function get(i, array) {
+        if (i < 0 || i >= length(array)) {
+            throw new Error("Index " + i + " is out of range. Check the length of " +
+                            "your array first or use getMaybe or getWithDefault.");
+        }
+        return unsafeGet(i, array);
+    }
+
+    function unsafeGet(i, array) {
+      for (var x = array.height; x > 0; x--) {
+        var slot = i >> (x * 5);
+        while (array.lengths[slot] <= i) {
+          slot++;
+        }
+        if (slot > 0) {
+          i -= array.lengths[slot - 1];
+        }
+        array = array.table[slot];
+      }
+      return array.table[i];
+    }
+
+    // Sets the value at the index i. Only the nodes leading to i will get
+    // copied and updated.
+    function set(i, item, array) {
+      if (i < 0 || length(array) <= i) {
+        return array;
+      }
+      return unsafeSet(i, item, array);
+    }
+
+    function unsafeSet(i, item, array) {
+      array = nodeCopy(array);
+
+      if (array.height == 0) {
+        array.table[i] = item;
+      } else {
+        var slot = getSlot(i, array);
+        if (slot > 0) {
+          i -= array.lengths[slot - 1];
+        }
+        array.table[slot] = unsafeSet(i, item, array.table[slot]);
+      }
+      return array;
+    }
+
+    function initialize(len, f) {
+      if (len == 0) { return empty; }
+      var h = Math.floor(Math.log(len)/Math.log(M));
+      return initialize_(f, h, 0, len);
+    }
+
+    function initialize_(f, h, from, to) {
+      if (h == 0) {
+        var table = new Array((to - from) % (M + 1));
+        for (var i = 0; i < table.length; i++) {
+          table[i] = f(from + i);
+        }
+        return { ctor:"_Array", height:0, table:table };
+      }
+
+      var step = Math.pow(M, h);
+      var table = new Array(Math.ceil((to - from) / step));
+      var lengths = new Array(table.length);
+      for (var i = 0; i < table.length; i++) {
+        table[i] = initialize_( f, h - 1, from + (i * step)
+                              , Math.min(from + ((i + 1) * step), to));
+        lengths[i] = length(table[i]) + (i > 0 ? lengths[i-1] : 0);
+      }
+      return { ctor:"_Array", height:h, table:table, lengths:lengths };
+    }
+
+    function fromList(list) {
+      if (list == List.Nil) { return empty; }
+
+      // Allocate M sized blocks (table) and write list elements to it.
+      var table = new Array(M);
+      var nodes = new Array();
+      var i = 0;
+
+      while (list.ctor !== '[]') {
+        table[i] = list._0;
+        list = list._1;
+        i++;
+
+        // table is full, so we can push a leaf containing it into the
+        // next node.
+        if (i == M) {
+          fromListPush({ ctor:"_Array", height:0, table:table }
+                      , nodes);
+          table = new Array(M);
+          i = 0;
+        }
+      }
+
+      // Maybe there is something left on the table.
+      if (i > 0) {
+        fromListPush({ ctor:"_Array", height:0, table:table.splice(0,i) }
+                    , nodes);
+      }
+
+      // Go through all of the nodes and eventually push them into higher nodes.
+      for (var h = 0; h < nodes.length - 1; h++) {
+        if (nodes[h].table.length > 0) {
+          fromListPush(nodes[h], nodes);
+        }
+      }
+
+      var head = nodes[nodes.length - 1];
+      if (head.height > 0 && head.table.length == 1) {
+        return head.table[0];
+      } else {
+        return head;
+      }
+    }
+
+    // Push a node into a higher node as a child.
+    function fromListPush(toPush, nodes) {
+      var h = toPush.height;
+
+      // Maybe the node on this height does not exist.
+      if (nodes.length == h) {
+        nodes.push({ ctor:"_Array", height:h + 1
+                                  , table:new Array()
+                                  , lengths:new Array() });
+      }
+
+      nodes[h].table.push(toPush);
+      var len = length(toPush);
+      if (nodes[h].lengths.length > 0) {
+        len += nodes[h].lengths[nodes[h].lengths.length - 1];
+      }
+      nodes[h].lengths.push(len);
+
+      if (nodes[h].table.length == M) {
+        fromListPush(nodes[h], nodes);
+        nodes[h] = { ctor:"_Array", height:h + 1
+                                  , table:new Array()
+                                  , lengths:new Array() };
+      }
+    }
+
+    // Pushes an item via push_ to the bottom right of a tree.
+    function push(item, a) {
+      var pushed = push_(item, a);
+      if (pushed !== null) {
+        return pushed;
+      }
+
+      var newTree = create(item, a.height);
+      return siblise(a, newTree);
+    }
+
+    // Recursively tries to push an item to the bottom-right most
+    // tree possible. If there is no space left for the item,
+    // null will be returned.
+    function push_(item, a) {
+      // Handle resursion stop at leaf level.
+      if (a.height == 0) {
+        if (a.table.length < M) {
+          var newA = { ctor:"_Array", height:0, table:a.table.slice() };
+          newA.table.push(item);
+          return newA;
+        } else {
+          return null;
+        }
+      }
+
+      // Recursively push
+      var pushed = push_(item, botRight(a));
+
+      // There was space in the bottom right tree, so the slot will
+      // be updated.
+      if (pushed != null) {
+        var newA = nodeCopy(a);
+        newA.table[newA.table.length - 1] = pushed;
+        newA.lengths[newA.lengths.length - 1]++;
+        return newA
+      }
+
+      // When there was no space left, check if there is space left
+      // for a new slot with a tree which contains only the item
+      // at the bottom.
+      if (a.table.length < M) {
+        var newSlot = create(item, a.height - 1);
+        var newA = nodeCopy(a);
+        newA.table.push(newSlot);
+        newA.lengths.push(newA.lengths[newA.lengths.length - 1] + length(newSlot));
+        return newA
+      } else {
+        return null;
+      }
+    }
+
+    // Converts an array into a list of elements.
+    function toList(a) {
+      return toList_(List.Nil, a);
+    }
+
+    function toList_(list, a) {
+      for (var i = a.table.length - 1; i >= 0; i--) {
+        list = a.height == 0 ? List.Cons(a.table[i], list) : toList_(list, a.table[i]);
+      }
+      return list;
+    }
+
+    // Maps a function over the elements of an array.
+    function map(f, a) {
+      var newA = { ctor:"_Array", height:a.height, table:new Array(a.table) };
+      if (a.height > 0) { newA.lengths = a.lengths; }
+      for (var i = 0; i < a.table.length; i++) {
+        newA.table[i] = a.height == 0 ? f(a.table[i]) : map(f, a.table[i]);
+      }
+      return newA;
+    }
+
+    // Maps a function over the elements with their index as first argument.
+    function indexedMap(f, a) {
+      return indexedMap_(f, a, 0);
+    }
+
+    function indexedMap_(f, a, from) {
+      var newA = { ctor:"_Array", height:a.height, table:new Array(a.table) };
+      if (a.height > 0) { newA.lengths = a.lengths; }
+      for (var i = 0; i < a.table.length; i++) {
+        newA.table[i] = a.height == 0 ? A2(f, from + i, a.table[i])
+                                      : indexedMap_( f, a.table[i]
+                                                   , i == 0 ? 0 : a.lengths[i - 1]);
+      }
+      return newA;
+    }
+
+    function foldl(f, b, a) {
+      if (a.height == 0) {
+        for (var i = 0; i < a.table.length; i++) {
+          b = A2(f, a.table[i], b);
+        }
+      } else {
+        for (var i = 0; i < a.table.length; i++) {
+          b = foldl(f, b, a.table[i]);
+        }
+      }
+      return b;
+    }
+
+    function foldr(f, b, a) {
+      if (a.height == 0) {
+        for (var i = a.table.length; i--; ) {
+          b = A2(f, a.table[i], b);
+        }
+      } else {
+        for (var i = a.table.length; i--; ) {
+          b = foldr(f, b, a.table[i]);
+        }
+      }
+      return b;
+    }
+
+    // TODO: currently, it slices the right, then the left. This can be
+    // optimized.
+    function slice(from, to, a) {
+      if (from < 0) { from += length(a); }
+      if (to < 0)   { to += length(a); }
+      return sliceLeft(from, sliceRight(to, a));
+    }
+
+    function sliceRight(to, a) {
+      if (to == length(a)) {
+        return a;
+      }
+
+      // Handle leaf level.
+      if (a.height == 0) {
+        var newA = { ctor:"_Array", height:0 };
+        newA.table = a.table.slice(0, to);
+        return newA;
+      }
+
+      // Slice the right recursively.
+      var right = getSlot(to, a);
+      var sliced = sliceRight(to - (right > 0 ? a.lengths[right - 1] : 0), a.table[right]);
+
+      // Maybe the a node is not even needed, as sliced contains the whole slice.
+      if (right == 0) {
+        return sliced;
+      }
+
+      // Create new node.
+      var newA = { ctor:"_Array", height:a.height
+                                , table:a.table.slice(0, right)
+                                , lengths:a.lengths.slice(0, right) };
+      if (sliced.table.length > 0) {
+        newA.table[right] = sliced;
+        newA.lengths[right] = length(sliced) + (right > 0 ? newA.lengths[right - 1] : 0);
+      }
+      return newA;
+    }
+
+    function sliceLeft(from, a) {
+      if (from == 0) {
+        return a;
+      }
+
+      // Handle leaf level.
+      if (a.height == 0) {
+        var newA = { ctor:"_Array", height:0 };
+        newA.table = a.table.slice(from, a.table.length + 1);
+        return newA;
+      }
+
+      // Slice the left recursively.
+      var left = getSlot(from, a);
+      var sliced = sliceLeft(from - (left > 0 ? a.lengths[left - 1] : 0), a.table[left]);
+
+      // Maybe the a node is not even needed, as sliced contains the whole slice.
+      if (left == a.table.length - 1) {
+        return sliced;
+      }
+
+      // Create new node.
+      var newA = { ctor:"_Array", height:a.height
+                                , table:a.table.slice(left, a.table.length + 1)
+                                , lengths:new Array(a.table.length - left) };
+      newA.table[0] = sliced;
+      var len = 0;
+      for (var i = 0; i < newA.table.length; i++) {
+        len += length(newA.table[i]);
+        newA.lengths[i] = len;
+      }
+
+      return newA;
+    }
+
+    // Appends two trees.
+    function append(a,b) {
+      if (a.table.length === 0) {
+        return b;
+      }
+      if (b.table.length === 0) {
+        return a;
+      }
+
+      var c = append_(a, b);
+
+      // Check if both nodes can be crunshed together.
+      if (c[0].table.length + c[1].table.length <= M) {
+        if (c[0].table.length === 0) {
+          return c[1];
+        }
+        if (c[1].table.length === 0) {
+          return c[0];
+        }
+
+        // Adjust .table and .lengths
+        c[0].table = c[0].table.concat(c[1].table);
+        if (c[0].height > 0) {
+          var len = length(c[0]);
+          for (var i = 0; i < c[1].lengths.length; i++) {
+            c[1].lengths[i] += len;
+          }
+          c[0].lengths = c[0].lengths.concat(c[1].lengths);
+        }
+
+        return c[0];
+      }
+
+      if (c[0].height > 0) {
+        var toRemove = calcToRemove(a, b);
+        if (toRemove > E) {
+          c = shuffle(c[0], c[1], toRemove);
+        }
+      }
+
+      return siblise(c[0], c[1]);
+    }
+
+    // Returns an array of two nodes; right and left. One node _may_ be empty.
+    function append_(a, b) {
+      if (a.height === 0 && b.height === 0) {
+        return [a, b];
+      }
+
+      if (a.height !== 1 || b.height !== 1) {
+        if (a.height === b.height) {
+          a = nodeCopy(a);
+          b = nodeCopy(b);
+          var appended = append_(botRight(a), botLeft(b));
+
+          insertRight(a, appended[1]);
+          insertLeft(b, appended[0]);
+        } else if (a.height > b.height) {
+          a = nodeCopy(a);
+          var appended = append_(botRight(a), b);
+
+          insertRight(a, appended[0]);
+          b = parentise(appended[1], appended[1].height + 1);
+        } else {
+          b = nodeCopy(b);
+          var appended = append_(a, botLeft(b));
+
+          var left = appended[0].table.length === 0 ? 0 : 1;
+          var right = left === 0 ? 1 : 0;
+          insertLeft(b, appended[left]);
+          a = parentise(appended[right], appended[right].height + 1);
+        }
+      }
+
+      // Check if balancing is needed and return based on that.
+      if (a.table.length === 0 || b.table.length === 0) {
+        return [a,b];
+      }
+
+      var toRemove = calcToRemove(a, b);
+      if (toRemove <= E) {
+        return [a,b];
+      }
+      return shuffle(a, b, toRemove);
+    }
+
+    // Helperfunctions for append_. Replaces a child node at the side of the parent.
+    function insertRight(parent, node) {
+      var index = parent.table.length - 1;
+      parent.table[index] = node;
+      parent.lengths[index] = length(node)
+      parent.lengths[index] += index > 0 ? parent.lengths[index - 1] : 0;
+    }
+
+    function insertLeft(parent, node) {
+      if (node.table.length > 0) {
+        parent.table[0] = node;
+        parent.lengths[0] = length(node);
+
+        var len = length(parent.table[0]);
+        for (var i = 1; i < parent.lengths.length; i++) {
+          len += length(parent.table[i]);
+          parent.lengths[i] = len;
+        }
+      } else {
+        parent.table.shift();
+        for (var i = 1; i < parent.lengths.length; i++) {
+          parent.lengths[i] = parent.lengths[i] - parent.lengths[0];
+        }
+        parent.lengths.shift();
+      }
+    }
+
+    // Returns the extra search steps for E. Refer to the paper.
+    function calcToRemove(a, b) {
+      var subLengths = 0;
+      for (var i = 0; i < a.table.length; i++) {
+        subLengths += a.table[i].table.length;
+      }
+      for (var i = 0; i < b.table.length; i++) {
+        subLengths += b.table[i].table.length;
+      }
+
+      var toRemove = a.table.length + b.table.length
+      return toRemove - (Math.floor((subLengths - 1) / M) + 1);
+    }
+
+    // get2, set2 and saveSlot are helpers for accessing elements over two arrays.
+    function get2(a, b, index) {
+      return index < a.length ? a[index] : b[index - a.length];
+    }
+
+    function set2(a, b, index, value) {
+      if (index < a.length) {
+        a[index] = value;
+      } else {
+        b[index - a.length] = value;
+      }
+    }
+
+    function saveSlot(a, b, index, slot) {
+      set2(a.table, b.table, index, slot);
+
+      var l = (index == 0 || index == a.lengths.length) ?
+                0 : get2(a.lengths, a.lengths, index - 1);
+      set2(a.lengths, b.lengths, index, l + length(slot));
+    }
+
+    // Creates a node or leaf with a given length at their arrays for perfomance.
+    // Is only used by shuffle.
+    function createNode(h, length) {
+      if (length < 0) { length = 0; }
+      var a = { ctor:"_Array", height:h, table:new Array(length) };
+      if (h > 0) {
+        a.lengths = new Array(length);
+      }
+      return a;
+    }
+
+    // Returns an array of two balanced nodes.
+    function shuffle(a, b, toRemove) {
+      var newA = createNode(a.height, Math.min(M, a.table.length + b.table.length - toRemove));
+      var newB = createNode(a.height, newA.table.length - (a.table.length + b.table.length - toRemove));
+
+      // Skip the slots with size M. More precise: copy the slot references
+      // to the new node
+      var read = 0;
+      while (get2(a.table, b.table, read).table.length % M == 0) {
+        set2(newA.table, newB.table, read, get2(a.table, b.table, read));
+        set2(newA.lengths, newB.lengths, read, get2(a.lengths, b.lengths, read));
+        read++;
+      }
+
+      // Pulling items from left to right, caching in a slot before writing
+      // it into the new nodes.
+      var write = read;
+      var slot = new createNode(a.height - 1, 0);
+      var from = 0;
+
+      // If the current slot is still containing data, then there will be at
+      // least one more write, so we do not break this loop yet.
+      while (read - write - (slot.table.length > 0 ? 1 : 0) < toRemove) {
+        // Find out the max possible items for copying.
+        var source = get2(a.table, b.table, read);
+        var to = Math.min(M - slot.table.length, source.table.length)
+
+        // Copy and adjust size table.
+        slot.table = slot.table.concat(source.table.slice(from, to));
+        if (slot.height > 0) {
+          var len = slot.lengths.length;
+          for (var i = len; i < len + to - from; i++) {
+            slot.lengths[i] = length(slot.table[i]);
+            slot.lengths[i] += (i > 0 ? slot.lengths[i - 1] : 0);
+          }
+        }
+
+        from += to;
+
+        // Only proceed to next slots[i] if the current one was
+        // fully copied.
+        if (source.table.length <= to) {
+          read++; from = 0;
+        }
+
+        // Only create a new slot if the current one is filled up.
+        if (slot.table.length == M) {
+          saveSlot(newA, newB, write, slot);
+          slot = createNode(a.height - 1,0);
+          write++;
+        }
+      }
+
+      // Cleanup after the loop. Copy the last slot into the new nodes.
+      if (slot.table.length > 0) {
+        saveSlot(newA, newB, write, slot);
+        write++;
+      }
+
+      // Shift the untouched slots to the left
+      while (read < a.table.length + b.table.length ) {
+        saveSlot(newA, newB, write, get2(a.table, b.table, read));
+        read++; write++;
+      }
+
+      return [newA, newB];
+    }
+
+    // Navigation functions
+    function botRight(a) { return a.table[a.table.length - 1]; }
+    function botLeft(a)  { return a.table[0]; }
+
+    // Copies a node for updating. Note that you should not use this if
+    // only updating only one of "table" or "lengths" for performance reasons.
+    function nodeCopy(a) {
+      var newA = { ctor:"_Array", height:a.height
+                                , table:a.table.slice() };
+      if (a.height > 0) { newA.lengths = a.lengths.slice(); }
+      return newA;
+    }
+
+    // Returns how many items are in the tree.
+    function length(array) {
+      if (array.height == 0) {
+        return array.table.length;
+      } else {
+        return array.lengths[array.lengths.length - 1];
+      }
+    }
+
+    // Calculates in which slot of "table" the item probably is, then
+    // find the exact slot via forward searching in  "lengths". Returns the index.
+    function getSlot(i, a) {
+      var slot = i >> (5 * a.height);
+      while (a.lengths[slot] <= i) {
+        slot++;
+      }
+      return slot;
+    }
+
+    // Recursively creates a tree with a given height containing
+    // only the given item.
+    function create(item, h) {
+      if (h == 0) {
+        return { ctor:"_Array", height:0
+                              , table:[item] };
+      } else {
+        return { ctor:"_Array", height:h
+                              , table:[create(item, h - 1)]
+                              , lengths:[1] };
+      }
+    }
+
+    // Recursively creates a tree that contains the given tree.
+    function parentise(tree, h) {
+      if (h == tree.height) {
+        return tree;
+      } else {
+        return { ctor:"_Array", height:h
+                              , table:[parentise(tree, h - 1)]
+                              , lengths:[length(tree)] };
+      }
+    }
+
+    // Emphasizes blood brotherhood beneath two trees.
+    function siblise(a, b) {
+      return { ctor:"_Array", height:a.height + 1
+                            , table:[a, b]
+                            , lengths:[length(a), length(a) + length(b)] };
+    }
+
+    function toJSArray(a) {
+      var jsArray = new Array(length(a));
+      toJSArray_(jsArray, 0, a);
+      return jsArray;
+    }
+
+    function toJSArray_(jsArray, i, a) {
+      for (var t = 0; t < a.table.length; t++) {
+        if (a.height == 0) {
+          jsArray[i + t] = a.table[t];
+        } else {
+          var inc = t == 0 ? 0 : a.lengths[t - 1];
+          toJSArray_(jsArray, i + inc, a.table[t]);
+        }
+      }
+    }
+
+    function fromJSArray(jsArray) {
+      if (jsArray.length == 0) { return empty; }
+      var h = Math.floor(Math.log(jsArray.length) / Math.log(M));
+      return fromJSArray_(jsArray, h, 0, jsArray.length);
+    }
+
+    function fromJSArray_(jsArray, h, from, to) {
+      if (h == 0) {
+        return { ctor:"_Array", height:0
+                              , table:jsArray.slice(from, to) };
+      }
+
+      var step = Math.pow(M, h);
+      var table = new Array(Math.ceil((to - from) / step));
+      var lengths = new Array(table.length);
+      for (var i = 0; i < table.length; i++) {
+        table[i] = fromJSArray_( jsArray, h - 1, from + (i * step)
+                               , Math.min(from + ((i + 1) * step), to));
+        lengths[i] = length(table[i]) + (i > 0 ? lengths[i-1] : 0);
+      }
+      return { ctor:"_Array", height:h, table:table, lengths:lengths };
+    }
+
+    Elm.Native.Array.values = {
+      empty:empty,
+      fromList:fromList,
+      toList:toList,
+      initialize:F2(initialize),
+      append:F2(append),
+      push:F2(push),
+      slice:F3(slice),
+      get:F2(get),
+      set:F3(set),
+      map:F2(map),
+      indexedMap:F2(indexedMap),
+      foldl:F3(foldl),
+      foldr:F3(foldr),
+      length:length,
+
+      toJSArray:toJSArray,
+      fromJSArray:fromJSArray
+    };
+
+    return elm.Native.Array.values = Elm.Native.Array.values;
+}
+
 
 Elm.Native.Basics = {};
 Elm.Native.Basics.make = function(elm) {
@@ -1794,6 +3685,70 @@ Elm.Native.Color.make = function(elm) {
         toCss:toCss
     };
 
+};
+
+Elm.Native.Debug = {};
+Elm.Native.Debug.make = function(elm) {
+    elm.Native = elm.Native || {};
+    elm.Native.Debug = elm.Native.Debug || {};
+    if (elm.Native.Debug.values)
+    {
+        return elm.Native.Debug.values;
+    }
+
+    var toString = Elm.Native.Show.make(elm).toString;
+
+    function log(tag, value)
+    {
+        var msg = tag + ': ' + toString(value);
+        var process = process || {};
+        if (process.stdout) {
+            process.stdout.write(msg);
+        } else {
+            console.log(msg);
+        }
+        return value;
+    }
+
+    function crash(message)
+    {
+        throw new Error(message);
+    }
+
+    function tracePath(tag, form)
+    {
+        if (elm.debug)
+        {
+            return elm.debug.trace(tag, form);
+        }
+        return form;
+    }
+
+    function watch(tag, value)
+    {
+        if (elm.debug)
+        {
+            elm.debug.watch(tag, value);
+        }
+        return value;
+    }
+
+    function watchSummary(tag, summarize, value)
+    {
+        if (elm.debug)
+        {
+            elm.debug.watch(tag, summarize(value));
+        }
+        return value;
+    }
+
+    return elm.Native.Debug.values = {
+        crash: crash,
+        tracePath: F2(tracePath),
+        log: F2(log),
+        watch: F2(watch),
+        watchSummary:F3(watchSummary),
+    };
 };
 
 
@@ -2311,6 +4266,492 @@ Elm.Native.Graphics.Element.make = function(localRuntime) {
         addTransform: addTransform,
         htmlHeight: F2(htmlHeight),
         guid: Utils.guid
+    };
+
+};
+
+Elm.Native.Json = {};
+Elm.Native.Json.make = function(localRuntime) {
+    localRuntime.Native = localRuntime.Native || {};
+    localRuntime.Native.Json = localRuntime.Native.Json || {};
+    if (localRuntime.Native.Json.values) {
+        return localRuntime.Native.Json.values;
+    }
+
+    var ElmArray = Elm.Native.Array.make(localRuntime);
+    var List = Elm.Native.List.make(localRuntime);
+    var Maybe = Elm.Maybe.make(localRuntime);
+    var Result = Elm.Result.make(localRuntime);
+    var Utils = Elm.Native.Utils.make(localRuntime);
+
+
+    function crash(expected, actual) {
+        throw new Error(
+            'expecting ' + expected + ' but got ' + JSON.stringify(actual)
+        );
+    }
+
+
+    // PRIMITIVE VALUES
+
+    function decodeNull(successValue) {
+        return function(value) {
+            if (value === null) {
+                return successValue;
+            }
+            crash('null', value);
+        };
+    }
+
+
+    function decodeString(value) {
+        if (typeof value === 'string' || value instanceof String) {
+            return value;
+        }
+        crash('a String', value);
+    }
+
+
+    function decodeFloat(value) {
+        if (typeof value === 'number') {
+            return value;
+        }
+        crash('a Float', value);
+    }
+
+
+    function decodeInt(value) {
+        if (typeof value === 'number' && (value|0) === value) {
+            return value;
+        }
+        crash('an Int', value);
+    }
+
+
+    function decodeBool(value) {
+        if (typeof value === 'boolean') {
+            return value;
+        }
+        crash('a Bool', value);
+    }
+
+
+    // ARRAY
+
+    function decodeArray(decoder) {
+        return function(value) {
+            if (value instanceof Array) {
+                var len = value.length;
+                var array = new Array(len);
+                for (var i = len; i-- ; ) {
+                    array[i] = decoder(value[i]);
+                }
+                return ElmArray.fromJSArray(array);
+            }
+            crash('an Array', value);
+        };
+    }
+
+
+    // LIST
+
+    function decodeList(decoder) {
+        return function(value) {
+            if (value instanceof Array) {
+                var len = value.length;
+                var list = List.Nil;
+                for (var i = len; i-- ; ) {
+                    list = List.Cons( decoder(value[i]), list );
+                }
+                return list;
+            }
+            crash('a List', value);
+        };
+    }
+
+
+    // MAYBE
+
+    function decodeMaybe(decoder) {
+        return function(value) {
+            try {
+                return Maybe.Just(decoder(value));
+            } catch(e) {
+                return Maybe.Nothing;
+            }
+        };
+    }
+
+
+    // FIELDS
+
+    function decodeField(field, decoder) {
+        return function(value) {
+            var subValue = value[field];
+            if (subValue !== undefined) {
+                return decoder(subValue);
+            }
+            crash("an object with field '" + field + "'", value);
+        };
+    }
+
+
+    // OBJECTS
+
+    function decodeKeyValuePairs(decoder) {
+        return function(value) {
+            var isObject =
+                typeof value === 'object'
+                    && value !== null
+                    && !(value instanceof Array);
+
+            if (isObject) {
+                var keyValuePairs = List.Nil;
+                for (var key in value) {
+                    var elmValue = decoder(value[key]);
+                    var pair = Utils.Tuple2(key, elmValue);
+                    keyValuePairs = List.Cons(pair, keyValuePairs);
+                }
+                return keyValuePairs;
+            }
+
+            crash("an object", value);
+        };
+    }
+
+    function decodeObject1(f, d1) {
+        return function(value) {
+            return f(d1(value));
+        };
+    }
+
+    function decodeObject2(f, d1, d2) {
+        return function(value) {
+            return A2( f, d1(value), d2(value) );
+        };
+    }
+
+    function decodeObject3(f, d1, d2, d3) {
+        return function(value) {
+            return A3( f, d1(value), d2(value), d3(value) );
+        };
+    }
+
+    function decodeObject4(f, d1, d2, d3, d4) {
+        return function(value) {
+            return A4( f, d1(value), d2(value), d3(value), d4(value) );
+        };
+    }
+
+    function decodeObject5(f, d1, d2, d3, d4, d5) {
+        return function(value) {
+            return A5( f, d1(value), d2(value), d3(value), d4(value), d5(value) );
+        };
+    }
+
+    function decodeObject6(f, d1, d2, d3, d4, d5, d6) {
+        return function(value) {
+            return A6( f,
+                d1(value),
+                d2(value),
+                d3(value),
+                d4(value),
+                d5(value),
+                d6(value)
+            );
+        };
+    }
+
+    function decodeObject7(f, d1, d2, d3, d4, d5, d6, d7) {
+        return function(value) {
+            return A7( f,
+                d1(value),
+                d2(value),
+                d3(value),
+                d4(value),
+                d5(value),
+                d6(value),
+                d7(value)
+            );
+        };
+    }
+
+    function decodeObject8(f, d1, d2, d3, d4, d5, d6, d7, d8) {
+        return function(value) {
+            return A8( f,
+                d1(value),
+                d2(value),
+                d3(value),
+                d4(value),
+                d5(value),
+                d6(value),
+                d7(value),
+                d8(value)
+            );
+        };
+    }
+
+
+    // TUPLES
+
+    function decodeTuple1(f, d1) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 1 ) {
+                crash('a Tuple of length 1', value);
+            }
+            return f( d1(value[0]) );
+        };
+    }
+
+    function decodeTuple2(f, d1, d2) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 2 ) {
+                crash('a Tuple of length 2', value);
+            }
+            return A2( f, d1(value[0]), d2(value[1]) );
+        };
+    }
+
+    function decodeTuple3(f, d1, d2, d3) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 3 ) {
+                crash('a Tuple of length 3', value);
+            }
+            return A3( f, d1(value[0]), d2(value[1]), d3(value[2]) );
+        };
+    }
+
+
+    function decodeTuple4(f, d1, d2, d3, d4) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 4 ) {
+                crash('a Tuple of length 4', value);
+            }
+            return A4( f, d1(value[0]), d2(value[1]), d3(value[2]), d4(value[3]) );
+        };
+    }
+
+
+    function decodeTuple5(f, d1, d2, d3, d4, d5) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 5 ) {
+                crash('a Tuple of length 5', value);
+            }
+            return A5( f,
+                d1(value[0]),
+                d2(value[1]),
+                d3(value[2]),
+                d4(value[3]),
+                d5(value[4])
+            );
+        };
+    }
+
+
+    function decodeTuple6(f, d1, d2, d3, d4, d5, d6) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 6 ) {
+                crash('a Tuple of length 6', value);
+            }
+            return A6( f,
+                d1(value[0]),
+                d2(value[1]),
+                d3(value[2]),
+                d4(value[3]),
+                d5(value[4]),
+                d6(value[5])
+            );
+        };
+    }
+
+    function decodeTuple7(f, d1, d2, d3, d4, d5, d6, d7) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 7 ) {
+                crash('a Tuple of length 7', value);
+            }
+            return A7( f,
+                d1(value[0]),
+                d2(value[1]),
+                d3(value[2]),
+                d4(value[3]),
+                d5(value[4]),
+                d6(value[5]),
+                d7(value[6])
+            );
+        };
+    }
+
+
+    function decodeTuple8(f, d1, d2, d3, d4, d5, d6, d7, d8) {
+        return function(value) {
+            if ( !(value instanceof Array) || value.length !== 8 ) {
+                crash('a Tuple of length 8', value);
+            }
+            return A8( f,
+                d1(value[0]),
+                d2(value[1]),
+                d3(value[2]),
+                d4(value[3]),
+                d5(value[4]),
+                d6(value[5]),
+                d7(value[6]),
+                d8(value[7])
+            );
+        };
+    }
+
+
+    // CUSTOM DECODERS
+
+    function decodeValue(value) {
+        return value;
+    }
+
+    function runDecoderValue(decoder, value) {
+        try {
+            return Result.Ok(decoder(value));
+        } catch(e) {
+            return Result.Err(e.message);
+        }
+    }
+
+    function customDecoder(decoder, callback) {
+        return function(value) {
+            var result = callback(decoder(value));
+            if (result.ctor === 'Err') {
+                throw new Error('custom decoder failed: ' + result._0);
+            }
+            return result._0;
+        }
+    }
+
+    function andThen(decode, callback) {
+        return function(value) {
+            var result = decode(value);
+            return callback(result)(value);
+        }
+    }
+
+    function fail(msg) {
+        return function(value) {
+            throw new Error(msg);
+        }
+    }
+
+    function succeed(successValue) {
+        return function(value) {
+            return successValue;
+        }
+    }
+
+
+    // ONE OF MANY
+
+    function oneOf(decoders) {
+        return function(value) {
+            var errors = [];
+            var temp = decoders;
+            while (temp.ctor !== '[]') {
+                try {
+                    return temp._0(value);
+                } catch(e) {
+                    errors.push(e.message);
+                }
+                temp = temp._1;
+            }
+            throw new Error('expecting one of the following:\n    ' + errors.join('\n    '));
+        }
+    }
+
+    function get(decoder, value) {
+        try {
+            return Result.Ok(decoder(value));
+        } catch(e) {
+            return Result.Err(e.message);
+        }
+    }
+
+
+    // ENCODE / DECODE
+
+    function runDecoderString(decoder, string) {
+        try {
+            return Result.Ok(decoder(JSON.parse(string)));
+        } catch(e) {
+            return Result.Err(e.message);
+        }
+    }
+
+    function encode(indentLevel, value) {
+        return JSON.stringify(value, null, indentLevel);
+    }
+
+    function identity(value) {
+        return value;
+    }
+
+    function encodeObject(keyValuePairs) {
+        var obj = {};
+        while (keyValuePairs.ctor !== '[]') {
+            var pair = keyValuePairs._0;
+            obj[pair._0] = pair._1;
+            keyValuePairs = keyValuePairs._1;
+        }
+        return obj;
+    }
+
+    return localRuntime.Native.Json.values = {
+        encode: F2(encode),
+        runDecoderString: F2(runDecoderString),
+        runDecoderValue: F2(runDecoderValue),
+
+        get: F2(get),
+        oneOf: oneOf,
+
+        decodeNull: decodeNull,
+        decodeInt: decodeInt,
+        decodeFloat: decodeFloat,
+        decodeString: decodeString,
+        decodeBool: decodeBool,
+
+        decodeMaybe: decodeMaybe,
+
+        decodeList: decodeList,
+        decodeArray: decodeArray,
+
+        decodeField: F2(decodeField),
+
+        decodeObject1: F2(decodeObject1),
+        decodeObject2: F3(decodeObject2),
+        decodeObject3: F4(decodeObject3),
+        decodeObject4: F5(decodeObject4),
+        decodeObject5: F6(decodeObject5),
+        decodeObject6: F7(decodeObject6),
+        decodeObject7: F8(decodeObject7),
+        decodeObject8: F9(decodeObject8),
+        decodeKeyValuePairs: decodeKeyValuePairs,
+
+        decodeTuple1: F2(decodeTuple1),
+        decodeTuple2: F3(decodeTuple2),
+        decodeTuple3: F4(decodeTuple3),
+        decodeTuple4: F5(decodeTuple4),
+        decodeTuple5: F6(decodeTuple5),
+        decodeTuple6: F7(decodeTuple6),
+        decodeTuple7: F8(decodeTuple7),
+        decodeTuple8: F9(decodeTuple8),
+
+        andThen: F2(andThen),
+        decodeValue: decodeValue,
+        customDecoder: F2(customDecoder),
+        fail: fail,
+        succeed: succeed,
+
+        identity: identity,
+        encodeNull: null,
+        encodeArray: ElmArray.toJSArray,
+        encodeList: List.toArray,
+        encodeObject: encodeObject
+
     };
 
 };
