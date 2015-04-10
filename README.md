@@ -1,6 +1,4 @@
-# github-colors-live
-
-[demo](http://hoosieree.github.io/github-colors-live)
+# [github-colors-live](http://hoosieree.github.io/github-colors-live)
 
 the current github language colors, sorted alphabetically and by [hue](https://en.wikipedia.org/wiki/HSL_and_HSV)
 
