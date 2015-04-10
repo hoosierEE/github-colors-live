@@ -15,7 +15,7 @@ Build
 
 3. compile and put the resulting js where our `index.html` knows to look for it
 
-        elm-make LiveColors.elm --output vendor/elm.js
+        elm-make LiveColor.elm --output vendor/elm.js
 
 4. start the elm server
 
