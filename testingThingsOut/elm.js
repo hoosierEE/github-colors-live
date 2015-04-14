@@ -1961,6 +1961,70 @@ Elm.List.make = function (_elm) {
                       ,sortWith: sortWith};
    return _elm.List.values;
 };
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Main",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $String = Elm.String.make(_elm);
+   var intList = $String.toList("0123456789");
+   var charList = $String.toList("azAZ");
+   var charset_hex = "0123456789ABCDEF0123456789abcdef";
+   var dfh = function (hexString) {
+      return function () {
+         var ss = $List.reverse($String.toList(hexString));
+         var vals = A2($List.filterMap,
+         function ($) {
+            return $List.head(A2($Basics.flip,
+            $String.indexes,
+            charset_hex)($String.fromChar($)));
+         },
+         ss);
+         var pwrd = A2($List.indexedMap,
+         F2(function (x,v) {
+            return Math.pow(16,
+            x) * A2($Basics._op["%"],v,16);
+         }),
+         vals);
+         return A3($List.foldr,
+         F2(function (x,y) {
+            return x + y;
+         }),
+         0,
+         pwrd);
+      }();
+   };
+   var a = dfh("1a");
+   var b = dfh("hi");
+   var c = dfh("0");
+   var main = $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
+   function ($) {
+      return $Graphics$Element.show(dfh($));
+   },
+   _L.fromArray(["10"
+                ,"11"
+                ,"ff"
+                ,"hello"])));
+   _elm.Main.values = {_op: _op
+                      ,charset_hex: charset_hex
+                      ,dfh: dfh
+                      ,charList: charList
+                      ,intList: intList
+                      ,a: a
+                      ,b: b
+                      ,c: c
+                      ,main: main};
+   return _elm.Main.values;
+};
 Elm.Maybe = Elm.Maybe || {};
 Elm.Maybe.make = function (_elm) {
    "use strict";
@@ -6645,49 +6709,6 @@ Elm.Native.Utils.make = function(localRuntime) {
 	};
 };
 
-Elm.Rebase = Elm.Rebase || {};
-Elm.Rebase.make = function (_elm) {
-   "use strict";
-   _elm.Rebase = _elm.Rebase || {};
-   if (_elm.Rebase.values)
-   return _elm.Rebase.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Rebase",
-   $Basics = Elm.Basics.make(_elm),
-   $List = Elm.List.make(_elm),
-   $String = Elm.String.make(_elm);
-   var charset_hex = "0123456789ABCDEF0123456789abcdef";
-   var dfh = function (hexString) {
-      return function () {
-         var ss = $List.reverse($String.toList(hexString));
-         var vals = A2($List.filterMap,
-         function ($) {
-            return $List.head(A2($Basics.flip,
-            $String.indexes,
-            charset_hex)($String.fromChar($)));
-         },
-         ss);
-         var pwrd = A2($List.indexedMap,
-         F2(function (x,v) {
-            return Math.pow(16,
-            x) * A2($Basics._op["%"],v,16);
-         }),
-         vals);
-         return A3($List.foldr,
-         F2(function (x,y) {
-            return x + y;
-         }),
-         0,
-         pwrd);
-      }();
-   };
-   _elm.Rebase.values = {_op: _op
-                        ,dfh: dfh};
-   return _elm.Rebase.values;
-};
 Elm.Result = Elm.Result || {};
 Elm.Result.make = function (_elm) {
    "use strict";

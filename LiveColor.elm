@@ -1,14 +1,16 @@
 module LiveColor where
 
+-- built with Elm 0.14.1
 import Color
-import Graphics.Collage (..)
-import Graphics.Element (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element exposing (..)
 import Http
 import List
 import Markdown
-import Rebase (decimalFromHex)
+import Rebase exposing (decFromHex)
 import Signal
 import String
+import Task exposing (..)
 import Text as T
 import Window
 
@@ -26,15 +28,15 @@ scene (w,h) ls =
                              , italic = False
                              , line = Nothing
                              }
-        title = (width w << T.centered << titleStyle << T.fromString) "GitHub Language Colors"
+        title = (width w << centered << titleStyle << T.fromString) "GitHub Language Colors"
         footer = color Color.lightGray <| container w 200 middle <| Markdown.toElement """
 Built with [Elm](http://elm-lang.org/) for the fun of it,
 
 heavily inspired by GitHub's own [version](http://github.github.io/linguist/),
 
 and [open-sourced](https://github.com/hoosierEE/github-colors-live)."""
-        txtFn = T.centered << T.height 26 << T.typeface ["BentonSansRegular","sans"] << T.fromString
-        txtTiny = T.centered << T.height 12 << T.typeface ["BentonSansRegular","sans"] << T.fromString
+        txtFn = centered << T.height 26 << T.typeface ["BentonSansRegular","sans"] << T.fromString
+        txtTiny = centered << T.height 12 << T.typeface ["BentonSansRegular","sans"] << T.fromString
         clrFn = rgbFromCss -- Color.toHsl << rgbFromCss
         -- sorted lists
         alphs = List.map (\(a,b) -> (txtFn a, clrFn b)) ls
@@ -61,18 +63,16 @@ main = Signal.map2 scene Window.dimensions clrs
 -- PORTS --
 ------------
 port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
-port yamlReq : Signal String -- (OUTPUT) Http SEND GET the yaml string
-port yamlReq =
-    let
-        url = Signal.constant "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
-        res : Signal (Http.Response String)
-        res = Http.sendGet url
-        dResponse : Http.Response String -> String
-        dResponse result = case result of
-            Http.Success msg -> msg
-            Http.Waiting -> ""
-            Http.Failure _ _ -> ""
-    in Signal.map dResponse res
+port yamlReq : Task Http.Error String -- (OUTPUT) Http SEND GET the yaml string
+port yamlReq = Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
+--         res : Signal (Http.Response String)
+--         res = Http.sendGet url
+--         dResponse : Http.Response String -> String
+--         dResponse result = case result of
+--             Http.Success msg -> msg
+--             Http.Waiting -> ""
+--             Http.Failure _ _ -> ""
+--     in Signal.map dResponse res
 
 ---------------
 -- UTILITIES --
@@ -88,7 +88,7 @@ rgbFromCss cssColorString =
                let dub ids = String.concat <| List.map (\(a,b) -> String.repeat 2 <| String.slice a b hexColor) ids
                in dub [(0,1),(1,2),(2,3)]
             else hexColor
-        dfh (a,b) = decimalFromHex <| String.slice a b str
+        dfh (a,b) = decFromHex <| String.slice a b str
         rgbIndexes = [(0,2),(2,4),(4,6)]
         [r,g,b] = List.map dfh rgbIndexes
     in Color.rgb r g b
