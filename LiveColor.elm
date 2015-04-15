@@ -1,6 +1,8 @@
 module LiveColor where
 
 -- built with Elm 0.14.1
+-- Currently rebuilding to use Elm 0.15
+-- TODO : port `colr` complains about not having a default value
 import Color
 import Graphics.Collage exposing (..)
 import Graphics.Element exposing (..)
@@ -37,9 +39,8 @@ heavily inspired by GitHub's own [version](http://github.github.io/linguist/),
 and [open-sourced](https://github.com/hoosierEE/github-colors-live)."""
         txtFn = centered << T.height 26 << T.typeface ["BentonSansRegular","sans"] << T.fromString
         txtTiny = centered << T.height 12 << T.typeface ["BentonSansRegular","sans"] << T.fromString
-        clrFn = rgbFromCss -- Color.toHsl << rgbFromCss
         -- sorted lists
-        alphs = List.map (\(a,b) -> (txtFn a, clrFn b)) ls
+        alphs = List.map (\(a,b) -> (txtFn a, rgbFromCss b)) ls
         hues = List.sortBy (.hue << Color.toHsl << snd) alphs
         columnAlpha = (txtFn "sorted alphabetically...", Color.rgb 244 244 244) :: alphs
         columnHue = (txtFn "...and by hue", Color.rgb 244 244 244) :: hues
@@ -63,16 +64,15 @@ main = Signal.map2 scene Window.dimensions clrs
 -- PORTS --
 ------------
 port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
-port yamlReq : Task Http.Error String -- (OUTPUT) Http SEND GET the yaml string
+port yamlReq : Task Http.Error String -- (OUTPUT) get the Http response (a String) and send it to JavaScript)
 port yamlReq = Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
---         res : Signal (Http.Response String)
---         res = Http.sendGet url
---         dResponse : Http.Response String -> String
---         dResponse result = case result of
---             Http.Success msg -> msg
---             Http.Waiting -> ""
---             Http.Failure _ _ -> ""
---     in Signal.map dResponse res
+-- port yamlReq : Task x () -- (OUTPUT) get the Http response (a String) and send it to JavaScript)
+-- port yamlReq =
+--     Task.toMaybe (Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml")
+--         `andThen` Signal.send yamlFile.address
+yamlFile : Signal.Mailbox (Maybe String)
+yamlFile = Signal.mailbox Nothing
+
 
 ---------------
 -- UTILITIES --
@@ -85,8 +85,7 @@ rgbFromCss cssColorString =
                    else cssColorString
         str =
             if (String.length hexColor == 3) then -- (r,g,b) -> (rr,gg,bb)
-               let dub ids = String.concat <| List.map (\(a,b) -> String.repeat 2 <| String.slice a b hexColor) ids
-               in dub [(0,1),(1,2),(2,3)]
+               String.concat <| List.map (\(a,b) -> String.repeat 2 <| String.slice a b hexColor) [(0,1),(1,2),(2,3)]
             else hexColor
         dfh (a,b) = decFromHex <| String.slice a b str
         rgbIndexes = [(0,2),(2,4),(4,6)]

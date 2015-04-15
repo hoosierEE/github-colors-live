@@ -177,70 +177,6 @@ Elm.Basics.make = function (_elm) {
                         ,GT: GT};
    return _elm.Basics.values;
 };
-Elm.Char = Elm.Char || {};
-Elm.Char.make = function (_elm) {
-   "use strict";
-   _elm.Char = _elm.Char || {};
-   if (_elm.Char.values)
-   return _elm.Char.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Char",
-   $Basics = Elm.Basics.make(_elm),
-   $Native$Char = Elm.Native.Char.make(_elm);
-   var fromCode = $Native$Char.fromCode;
-   var toCode = $Native$Char.toCode;
-   var toLocaleLower = $Native$Char.toLocaleLower;
-   var toLocaleUpper = $Native$Char.toLocaleUpper;
-   var toLower = $Native$Char.toLower;
-   var toUpper = $Native$Char.toUpper;
-   var isBetween = F3(function (low,
-   high,
-   $char) {
-      return function () {
-         var code = toCode($char);
-         return _U.cmp(code,
-         toCode(low)) > -1 && _U.cmp(code,
-         toCode(high)) < 1;
-      }();
-   });
-   var isUpper = A2(isBetween,
-   _U.chr("A"),
-   _U.chr("Z"));
-   var isLower = A2(isBetween,
-   _U.chr("a"),
-   _U.chr("z"));
-   var isDigit = A2(isBetween,
-   _U.chr("0"),
-   _U.chr("9"));
-   var isOctDigit = A2(isBetween,
-   _U.chr("0"),
-   _U.chr("7"));
-   var isHexDigit = function ($char) {
-      return isDigit($char) || (A3(isBetween,
-      _U.chr("a"),
-      _U.chr("f"),
-      $char) || A3(isBetween,
-      _U.chr("A"),
-      _U.chr("F"),
-      $char));
-   };
-   _elm.Char.values = {_op: _op
-                      ,isUpper: isUpper
-                      ,isLower: isLower
-                      ,isDigit: isDigit
-                      ,isOctDigit: isOctDigit
-                      ,isHexDigit: isHexDigit
-                      ,toUpper: toUpper
-                      ,toLower: toLower
-                      ,toLocaleUpper: toLocaleUpper
-                      ,toLocaleLower: toLocaleLower
-                      ,toCode: toCode
-                      ,fromCode: fromCode};
-   return _elm.Char.values;
-};
 Elm.Color = Elm.Color || {};
 Elm.Color.make = function (_elm) {
    "use strict";
@@ -1961,6 +1897,32 @@ Elm.List.make = function (_elm) {
                       ,sortWith: sortWith};
    return _elm.List.values;
 };
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Main",
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var hello = $Signal.mailbox("loading");
+   var main = A2($Signal.map,
+   $Graphics$Element.show,
+   hello.signal);
+   var runHello = Elm.Native.Task.make(_elm).perform(A2($Task.andThen,
+   $Task.succeed("Hello world"),
+   $Signal.send(hello.address)));
+   _elm.Main.values = {_op: _op
+                      ,hello: hello
+                      ,main: main};
+   return _elm.Main.values;
+};
 Elm.Maybe = Elm.Maybe || {};
 Elm.Maybe.make = function (_elm) {
    "use strict";
@@ -2169,27 +2131,6 @@ Elm.Native.Basics.make = function(localRuntime) {
 		toFloat: function(x) { return x; },
 		isNaN: isNaN,
 		isInfinite: isInfinite
-	};
-};
-
-Elm.Native.Char = {};
-Elm.Native.Char.make = function(localRuntime) {
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Char = localRuntime.Native.Char || {};
-	if (localRuntime.Native.Char.values)
-	{
-		return localRuntime.Native.Char.values;
-	}
-
-	var Utils = Elm.Native.Utils.make(localRuntime);
-
-	return localRuntime.Native.Char.values = {
-		fromCode : function(c) { return Utils.chr(String.fromCharCode(c)); },
-		toCode   : function(c) { return c.charCodeAt(0); },
-		toUpper  : function(c) { return Utils.chr(c.toUpperCase()); },
-		toLower  : function(c) { return Utils.chr(c.toLowerCase()); },
-		toLocaleUpper : function(c) { return Utils.chr(c.toLocaleUpperCase()); },
-		toLocaleLower : function(c) { return Utils.chr(c.toLocaleLowerCase()); },
 	};
 };
 
@@ -5316,349 +5257,6 @@ Elm.Native.Signal.make = function(localRuntime) {
 	};
 };
 
-Elm.Native.String = {};
-Elm.Native.String.make = function(localRuntime) {
-
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.String = localRuntime.Native.String || {};
-	if (localRuntime.Native.String.values)
-	{
-		return localRuntime.Native.String.values;
-	}
-	if ('values' in Elm.Native.String)
-	{
-		return localRuntime.Native.String.values = Elm.Native.String.values;
-	}
-
-
-	var Char = Elm.Char.make(localRuntime);
-	var List = Elm.Native.List.make(localRuntime);
-	var Maybe = Elm.Maybe.make(localRuntime);
-	var Result = Elm.Result.make(localRuntime);
-	var Utils = Elm.Native.Utils.make(localRuntime);
-
-	function isEmpty(str)
-	{
-		return str.length === 0;
-	}
-	function cons(chr,str)
-	{
-		return chr + str;
-	}
-	function uncons(str)
-	{
-		var hd;
-		return (hd = str[0])
-			? Maybe.Just(Utils.Tuple2(Utils.chr(hd), str.slice(1)))
-			: Maybe.Nothing;
-	}
-	function append(a,b)
-	{
-		return a + b;
-	}
-	function concat(strs)
-	{
-		return List.toArray(strs).join('');
-	}
-	function length(str)
-	{
-		return str.length;
-	}
-	function map(f,str)
-	{
-		var out = str.split('');
-		for (var i = out.length; i--; )
-		{
-			out[i] = f(Utils.chr(out[i]));
-		}
-		return out.join('');
-	}
-	function filter(pred,str)
-	{
-		return str.split('').map(Utils.chr).filter(pred).join('');
-	}
-	function reverse(str)
-	{
-		return str.split('').reverse().join('');
-	}
-	function foldl(f,b,str)
-	{
-		var len = str.length;
-		for (var i = 0; i < len; ++i)
-		{
-			b = A2(f, Utils.chr(str[i]), b);
-		}
-		return b;
-	}
-	function foldr(f,b,str)
-	{
-		for (var i = str.length; i--; )
-		{
-			b = A2(f, Utils.chr(str[i]), b);
-		}
-		return b;
-	}
-
-	function split(sep, str)
-	{
-		return List.fromArray(str.split(sep));
-	}
-	function join(sep, strs)
-	{
-		return List.toArray(strs).join(sep);
-	}
-	function repeat(n, str)
-	{
-		var result = '';
-		while (n > 0)
-		{
-			if (n & 1)
-			{
-				result += str;
-			}
-			n >>= 1, str += str;
-		}
-		return result;
-	}
-
-	function slice(start, end, str)
-	{
-		return str.slice(start,end);
-	}
-	function left(n, str)
-	{
-		return n < 1 ? "" : str.slice(0,n);
-	}
-	function right(n, str)
-	{
-		return n < 1 ? "" : str.slice(-n);
-	}
-	function dropLeft(n, str)
-	{
-		return n < 1 ? str : str.slice(n);
-	}
-	function dropRight(n, str)
-	{
-		return n < 1 ? str : str.slice(0,-n);
-	}
-
-	function pad(n,chr,str)
-	{
-		var half = (n - str.length) / 2;
-		return repeat(Math.ceil(half),chr) + str + repeat(half|0,chr);
-	}
-	function padRight(n,chr,str)
-	{
-		return str + repeat(n - str.length, chr);
-	}
-	function padLeft(n,chr,str)
-	{
-		return repeat(n - str.length, chr) + str;
-	}
-
-	function trim(str)
-	{
-		return str.trim();
-	}
-	function trimLeft(str)
-	{
-		return str.trimLeft();
-	}
-	function trimRight(str)
-	{
-		return str.trimRight();
-	}
-
-	function words(str)
-	{
-		return List.fromArray(str.trim().split(/\s+/g));
-	}
-	function lines(str)
-	{
-		return List.fromArray(str.split(/\r\n|\r|\n/g));
-	}
-
-	function toUpper(str)
-	{
-		return str.toUpperCase();
-	}
-	function toLower(str)
-	{
-		return str.toLowerCase();
-	}
-
-	function any(pred, str)
-	{
-		for (var i = str.length; i--; )
-		{
-			if (pred(Utils.chr(str[i])))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	function all(pred, str)
-	{
-		for (var i = str.length; i--; )
-		{
-			if (!pred(Utils.chr(str[i])))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	function contains(sub, str)
-	{
-		return str.indexOf(sub) > -1;
-	}
-	function startsWith(sub, str)
-	{
-		return str.indexOf(sub) === 0;
-	}
-	function endsWith(sub, str)
-	{
-		return str.length >= sub.length &&
-			str.lastIndexOf(sub) === str.length - sub.length;
-	}
-	function indexes(sub, str)
-	{
-		var subLen = sub.length;
-		var i = 0;
-		var is = [];
-		while ((i = str.indexOf(sub, i)) > -1)
-		{
-			is.push(i);
-			i = i + subLen;
-		}
-		return List.fromArray(is);
-	}
-
-	function toInt(s)
-	{
-		var len = s.length;
-		if (len === 0)
-		{
-			return Result.Err("could not convert string '" + s + "' to an Int" );
-		}
-		var start = 0;
-		if (s[0] == '-')
-		{
-			if (len === 1)
-			{
-				return Result.Err("could not convert string '" + s + "' to an Int" );
-			}
-			start = 1;
-		}
-		for (var i = start; i < len; ++i)
-		{
-			if (!Char.isDigit(s[i]))
-			{
-				return Result.Err("could not convert string '" + s + "' to an Int" );
-			}
-		}
-		return Result.Ok(parseInt(s, 10));
-	}
-
-	function toFloat(s)
-	{
-		var len = s.length;
-		if (len === 0)
-		{
-			return Result.Err("could not convert string '" + s + "' to a Float" );
-		}
-		var start = 0;
-		if (s[0] == '-')
-		{
-			if (len === 1)
-			{
-				return Result.Err("could not convert string '" + s + "' to a Float" );
-			}
-			start = 1;
-		}
-		var dotCount = 0;
-		for (var i = start; i < len; ++i)
-		{
-			if (Char.isDigit(s[i]))
-			{
-				continue;
-			}
-			if (s[i] === '.')
-			{
-				dotCount += 1;
-				if (dotCount <= 1)
-				{
-					continue;
-				}
-			}
-			return Result.Err("could not convert string '" + s + "' to a Float" );
-		}
-		return Result.Ok(parseFloat(s));
-	}
-
-	function toList(str)
-	{
-		return List.fromArray(str.split('').map(Utils.chr));
-	}
-	function fromList(chars)
-	{
-		return List.toArray(chars).join('');
-	}
-
-	return Elm.Native.String.values = {
-		isEmpty: isEmpty,
-		cons: F2(cons),
-		uncons: uncons,
-		append: F2(append),
-		concat: concat,
-		length: length,
-		map: F2(map),
-		filter: F2(filter),
-		reverse: reverse,
-		foldl: F3(foldl),
-		foldr: F3(foldr),
-
-		split: F2(split),
-		join: F2(join),
-		repeat: F2(repeat),
-
-		slice: F3(slice),
-		left: F2(left),
-		right: F2(right),
-		dropLeft: F2(dropLeft),
-		dropRight: F2(dropRight),
-
-		pad: F3(pad),
-		padLeft: F3(padLeft),
-		padRight: F3(padRight),
-
-		trim: trim,
-		trimLeft: trimLeft,
-		trimRight: trimRight,
-
-		words: words,
-		lines: lines,
-
-		toUpper: toUpper,
-		toLower: toLower,
-
-		any: F2(any),
-		all: F2(all),
-
-		contains: F2(contains),
-		startsWith: F2(startsWith),
-		endsWith: F2(endsWith),
-		indexes: F2(indexes),
-
-		toInt: toInt,
-		toFloat: toFloat,
-		toList: toList,
-		fromList: fromList
-	};
-};
-
 Elm.Native.Task = {};
 Elm.Native.Task.make = function(localRuntime) {
 
@@ -6645,49 +6243,6 @@ Elm.Native.Utils.make = function(localRuntime) {
 	};
 };
 
-Elm.Rebase = Elm.Rebase || {};
-Elm.Rebase.make = function (_elm) {
-   "use strict";
-   _elm.Rebase = _elm.Rebase || {};
-   if (_elm.Rebase.values)
-   return _elm.Rebase.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Rebase",
-   $Basics = Elm.Basics.make(_elm),
-   $List = Elm.List.make(_elm),
-   $String = Elm.String.make(_elm);
-   var charset_hex = "0123456789ABCDEF0123456789abcdef";
-   var dfh = function (hexString) {
-      return function () {
-         var ss = $List.reverse($String.toList(hexString));
-         var vals = A2($List.filterMap,
-         function ($) {
-            return $List.head(A2($Basics.flip,
-            $String.indexes,
-            charset_hex)($String.fromChar($)));
-         },
-         ss);
-         var pwrd = A2($List.indexedMap,
-         F2(function (x,v) {
-            return Math.pow(16,
-            x) * A2($Basics._op["%"],v,16);
-         }),
-         vals);
-         return A3($List.foldr,
-         F2(function (x,y) {
-            return x + y;
-         }),
-         0,
-         pwrd);
-      }();
-   };
-   _elm.Rebase.values = {_op: _op
-                        ,dfh: dfh};
-   return _elm.Rebase.values;
-};
 Elm.Result = Elm.Result || {};
 Elm.Result.make = function (_elm) {
    "use strict";
@@ -7075,107 +6630,6 @@ Elm.Signal.make = function (_elm) {
                         ,forwardTo: forwardTo
                         ,Mailbox: Mailbox};
    return _elm.Signal.values;
-};
-Elm.String = Elm.String || {};
-Elm.String.make = function (_elm) {
-   "use strict";
-   _elm.String = _elm.String || {};
-   if (_elm.String.values)
-   return _elm.String.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "String",
-   $Maybe = Elm.Maybe.make(_elm),
-   $Native$String = Elm.Native.String.make(_elm),
-   $Result = Elm.Result.make(_elm);
-   var fromList = $Native$String.fromList;
-   var toList = $Native$String.toList;
-   var toFloat = $Native$String.toFloat;
-   var toInt = $Native$String.toInt;
-   var indices = $Native$String.indexes;
-   var indexes = $Native$String.indexes;
-   var endsWith = $Native$String.endsWith;
-   var startsWith = $Native$String.startsWith;
-   var contains = $Native$String.contains;
-   var all = $Native$String.all;
-   var any = $Native$String.any;
-   var toLower = $Native$String.toLower;
-   var toUpper = $Native$String.toUpper;
-   var lines = $Native$String.lines;
-   var words = $Native$String.words;
-   var trimRight = $Native$String.trimRight;
-   var trimLeft = $Native$String.trimLeft;
-   var trim = $Native$String.trim;
-   var padRight = $Native$String.padRight;
-   var padLeft = $Native$String.padLeft;
-   var pad = $Native$String.pad;
-   var dropRight = $Native$String.dropRight;
-   var dropLeft = $Native$String.dropLeft;
-   var right = $Native$String.right;
-   var left = $Native$String.left;
-   var slice = $Native$String.slice;
-   var repeat = $Native$String.repeat;
-   var join = $Native$String.join;
-   var split = $Native$String.split;
-   var foldr = $Native$String.foldr;
-   var foldl = $Native$String.foldl;
-   var reverse = $Native$String.reverse;
-   var filter = $Native$String.filter;
-   var map = $Native$String.map;
-   var length = $Native$String.length;
-   var concat = $Native$String.concat;
-   var append = $Native$String.append;
-   var uncons = $Native$String.uncons;
-   var cons = $Native$String.cons;
-   var fromChar = function ($char) {
-      return A2(cons,$char,"");
-   };
-   var isEmpty = $Native$String.isEmpty;
-   _elm.String.values = {_op: _op
-                        ,isEmpty: isEmpty
-                        ,length: length
-                        ,reverse: reverse
-                        ,repeat: repeat
-                        ,cons: cons
-                        ,uncons: uncons
-                        ,fromChar: fromChar
-                        ,append: append
-                        ,concat: concat
-                        ,split: split
-                        ,join: join
-                        ,words: words
-                        ,lines: lines
-                        ,slice: slice
-                        ,left: left
-                        ,right: right
-                        ,dropLeft: dropLeft
-                        ,dropRight: dropRight
-                        ,contains: contains
-                        ,startsWith: startsWith
-                        ,endsWith: endsWith
-                        ,indexes: indexes
-                        ,indices: indices
-                        ,toInt: toInt
-                        ,toFloat: toFloat
-                        ,toList: toList
-                        ,fromList: fromList
-                        ,toUpper: toUpper
-                        ,toLower: toLower
-                        ,pad: pad
-                        ,padLeft: padLeft
-                        ,padRight: padRight
-                        ,trim: trim
-                        ,trimLeft: trimLeft
-                        ,trimRight: trimRight
-                        ,map: map
-                        ,filter: filter
-                        ,foldl: foldl
-                        ,foldr: foldr
-                        ,any: any
-                        ,all: all};
-   return _elm.String.values;
 };
 Elm.Task = Elm.Task || {};
 Elm.Task.make = function (_elm) {
