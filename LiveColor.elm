@@ -63,10 +63,10 @@ main = Signal.map2 scene Window.dimensions clrs
 ------------
 port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
 
-port yamlTrig : Signal String
+port yamlTrig : Signal String -- (OUTPUT) to corresponding port in JavaScript
 port yamlTrig = yamlFile.signal
 
-port yamlTask : Task x () -- (OUTPUT) get the Http response (a String) and send it to JavaScript)
+port yamlTask : Task x () -- (INTERNAL) get the Http response (a String) and send it to a mailbox
 port yamlTask =
     let
         get = Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
