@@ -2,7 +2,7 @@
 var lc = Elm.fullscreen(Elm.LiveColor, { clrs: [] });
 
 
-lc.ports.yamlReq.subscribe(function(s) {
+lc.ports.yamlTrig.subscribe(function(s) {
     var filt = [];
     if (s !== "") {
         var payload = jsyaml.safeLoad(s);

@@ -3740,7 +3740,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v0._1,
                     hexColor));}
                _U.badCase($moduleName,
-               "on line 88, column 53 to 97");
+               "on line 96, column 53 to 97");
             }();
          },
          _L.fromArray([{ctor: "_Tuple2"
@@ -3759,7 +3759,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v4._1,
                     str));}
                _U.badCase($moduleName,
-               "on line 90, column 21 to 55");
+               "on line 98, column 21 to 55");
             }();
          };
          var _ = A2($List.map,
@@ -3777,7 +3777,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 92, column 19 to 42");
+            "on line 100, column 19 to 42");
          }();
          var g = function () {
             switch (_.ctor)
@@ -3791,7 +3791,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 92, column 19 to 42");
+            "on line 100, column 19 to 42");
          }();
          var r = function () {
             switch (_.ctor)
@@ -3805,13 +3805,33 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 92, column 19 to 42");
+            "on line 100, column 19 to 42");
          }();
          return A3($Color.rgb,r,g,b);
       }();
    };
-   var yamlFile = $Signal.mailbox($Maybe.Nothing);
-   var yamlReq = Elm.Native.Task.make(_elm).perform($Http.getString("https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"));
+   var yamlFile = $Signal.mailbox("");
+   var yamlTask = Elm.Native.Task.make(_elm).perform(function () {
+      var send = function (str) {
+         return A2($Signal.send,
+         yamlFile.address,
+         str);
+      };
+      var recover = function (_v29) {
+         return function () {
+            return $Task.succeed("");
+         }();
+      };
+      var get = $Http.getString("https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml");
+      return A2($Task.andThen,
+      A2($Task.onError,get,recover),
+      send);
+   }());
+   var yamlTrig = Elm.Native.Port.make(_elm).outboundSignal("yamlTrig",
+   function (v) {
+      return v;
+   },
+   yamlFile.signal);
    var clrs = Elm.Native.Port.make(_elm).inboundSignal("clrs",
    "List (String, String)",
    function (v) {
@@ -3824,10 +3844,10 @@ Elm.LiveColor.make = function (_elm) {
          v);
       })) : _U.badPort("an array",v);
    });
-   var scene = F2(function (_v29,
-   ls) {
+   var scene = F2(function (_v31,
+   langColorList) {
       return function () {
-         switch (_v29.ctor)
+         switch (_v31.ctor)
          {case "_Tuple2":
             return function () {
                  var txtTiny = function ($) {
@@ -3839,18 +3859,18 @@ Elm.LiveColor.make = function (_elm) {
                                                                                                    ,"sans"]))($Text.fromString($))));
                  };
                  var alphs = A2($List.map,
-                 function (_v33) {
+                 function (_v35) {
                     return function () {
-                       switch (_v33.ctor)
+                       switch (_v35.ctor)
                        {case "_Tuple2":
                           return {ctor: "_Tuple2"
-                                 ,_0: txtFn(_v33._0)
-                                 ,_1: rgbFromCss(_v33._1)};}
+                                 ,_0: txtFn(_v35._0)
+                                 ,_1: rgbFromCss(_v35._1)};}
                        _U.badCase($moduleName,
                        "on line 43, column 38 to 59");
                     }();
                  },
-                 ls);
+                 langColorList);
                  var hues = A2($List.sortBy,
                  function ($) {
                     return function (_) {
@@ -3876,29 +3896,29 @@ Elm.LiveColor.make = function (_elm) {
                  hues);
                  var cols = _L.fromArray([columnAlpha
                                          ,columnHue]);
-                 var boxed = function (_v37) {
+                 var boxed = function (_v39) {
                     return function () {
-                       switch (_v37.ctor)
+                       switch (_v39.ctor)
                        {case "_Tuple2":
                           return function () {
-                               var rc = $Color.toRgb(_v37._1);
+                               var rc = $Color.toRgb(_v39._1);
                                var rc$ = A3($Color.rgb,
                                rc.red,
                                rc.green,
                                rc.blue);
-                               var hc = $Color.toHsl(_v37._1);
+                               var hc = $Color.toHsl(_v39._1);
                                var hc$ = A3($Color.hsl,
                                hc.hue,
                                hc.saturation,
                                hc.lightness);
-                               var mw = _v29._0 / $List.length(cols) | 0;
+                               var mw = _v31._0 / $List.length(cols) | 0;
                                return $Graphics$Element.width(mw)($Graphics$Element.color(rc$)(A4($Graphics$Element.container,
                                mw,
                                60,
                                $Graphics$Element.middle,
                                A2($Graphics$Element.flow,
                                $Graphics$Element.down,
-                               _L.fromArray([_v37._0
+                               _L.fromArray([_v39._0
                                             ,txtTiny($Basics.toString(rc$))])))));
                             }();}
                        _U.badCase($moduleName,
@@ -3911,7 +3931,7 @@ Elm.LiveColor.make = function (_elm) {
                     t));
                  };
                  var footer = $Graphics$Element.color($Color.lightGray)(A3($Graphics$Element.container,
-                 _v29._0,
+                 _v31._0,
                  200,
                  $Graphics$Element.middle)($Markdown.toElement("\nBuilt with [Elm](http://elm-lang.org/) for the fun of it,\n\nheavily inspired by GitHub\'s own [version](http://github.github.io/linguist/),\n\nand [open-sourced](https://github.com/hoosierEE/github-colors-live).")));
                  var titleStyle = $Text.style({_: {}
@@ -3923,7 +3943,7 @@ Elm.LiveColor.make = function (_elm) {
                                               ,typeface: _L.fromArray(["BentonSansBold"
                                                                       ,"sans"])});
                  var title = function ($) {
-                    return $Graphics$Element.width(_v29._0)($Graphics$Element.centered(titleStyle($Text.fromString($))));
+                    return $Graphics$Element.width(_v31._0)($Graphics$Element.centered(titleStyle($Text.fromString($))));
                  }("GitHub Language Colors");
                  var ds = $Text.defaultStyle;
                  return A2($Graphics$Element.flow,

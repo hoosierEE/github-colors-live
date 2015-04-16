@@ -20,7 +20,7 @@ import Window
 -- LAYOUT --
 ------------
 scene : (Int,Int) -> List (String, String) -> Element
-scene (w,h) ls =
+scene (w,h) langColorList =
     let
         ds = T.defaultStyle
         titleStyle = T.style { typeface = ["BentonSansBold","sans"]
@@ -40,7 +40,7 @@ and [open-sourced](https://github.com/hoosierEE/github-colors-live)."""
         txtFn = centered << T.height 26 << T.typeface ["BentonSansRegular","sans"] << T.fromString
         txtTiny = centered << T.height 12 << T.typeface ["BentonSansRegular","sans"] << T.fromString
         -- sorted lists
-        alphs = List.map (\(a,b) -> (txtFn a, rgbFromCss b)) ls
+        alphs = List.map (\(a,b) -> (txtFn a, rgbFromCss b)) langColorList
         hues = List.sortBy (.hue << Color.toHsl << snd) alphs
         columnAlpha = (txtFn "sorted alphabetically...", Color.rgb 244 244 244) :: alphs
         columnHue = (txtFn "...and by hue", Color.rgb 244 244 244) :: hues
@@ -64,14 +64,22 @@ main = Signal.map2 scene Window.dimensions clrs
 -- PORTS --
 ------------
 port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
-port yamlReq : Task Http.Error String -- (OUTPUT) get the Http response (a String) and send it to JavaScript)
-port yamlReq = Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
--- port yamlReq : Task x () -- (OUTPUT) get the Http response (a String) and send it to JavaScript)
--- port yamlReq =
---     Task.toMaybe (Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml")
---         `andThen` Signal.send yamlFile.address
-yamlFile : Signal.Mailbox (Maybe String)
-yamlFile = Signal.mailbox Nothing
+
+port yamlTrig : Signal String
+port yamlTrig = yamlFile.signal
+
+port yamlTask : Task x () -- (OUTPUT) get the Http response (a String) and send it to JavaScript)
+port yamlTask =
+    let
+        get = Http.getString "https://cdn.rawgit.com/github/linguist/master/lib/linguist/languages.yml"
+        recover _ = Task.succeed ""
+        send str = Signal.send yamlFile.address str
+    in
+       (get `onError` recover) `andThen` send
+
+yamlFile : Signal.Mailbox String
+yamlFile = Signal.mailbox ""
+
 
 
 ---------------
