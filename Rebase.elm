@@ -2,9 +2,6 @@ module Rebase (decFromHex) where
 import String as S
 
 charset_hex = "0123456789ABCDEF0123456789abcdef"
--- base58_bitcoin = toList "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghipqrstuvwxyz"
--- base58_ripple = toList "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65Fqi1tuvAxyz"
--- base58_flickr = toList "123456789abcdefghipqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 
 decFromHex hexString =
     let

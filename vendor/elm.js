@@ -3740,7 +3740,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v0._1,
                     hexColor));}
                _U.badCase($moduleName,
-               "on line 96, column 53 to 97");
+               "on line 94, column 53 to 97");
             }();
          },
          _L.fromArray([{ctor: "_Tuple2"
@@ -3759,7 +3759,7 @@ Elm.LiveColor.make = function (_elm) {
                     _v4._1,
                     str));}
                _U.badCase($moduleName,
-               "on line 98, column 21 to 55");
+               "on line 96, column 21 to 55");
             }();
          };
          var _ = A2($List.map,
@@ -3777,7 +3777,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 100, column 19 to 42");
+            "on line 98, column 19 to 42");
          }();
          var g = function () {
             switch (_.ctor)
@@ -3791,7 +3791,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 100, column 19 to 42");
+            "on line 98, column 19 to 42");
          }();
          var r = function () {
             switch (_.ctor)
@@ -3805,7 +3805,7 @@ Elm.LiveColor.make = function (_elm) {
                       break;}
                  break;}
             _U.badCase($moduleName,
-            "on line 100, column 19 to 42");
+            "on line 98, column 19 to 42");
          }();
          return A3($Color.rgb,r,g,b);
       }();
@@ -3867,7 +3867,7 @@ Elm.LiveColor.make = function (_elm) {
                                  ,_0: txtFn(_v35._0)
                                  ,_1: rgbFromCss(_v35._1)};}
                        _U.badCase($moduleName,
-                       "on line 43, column 38 to 59");
+                       "on line 41, column 38 to 59");
                     }();
                  },
                  langColorList);
@@ -3922,7 +3922,7 @@ Elm.LiveColor.make = function (_elm) {
                                             ,txtTiny($Basics.toString(rc$))])))));
                             }();}
                        _U.badCase($moduleName,
-                       "between lines 49 and 54");
+                       "between lines 47 and 52");
                     }();
                  };
                  var fds = function (t) {
@@ -3955,7 +3955,7 @@ Elm.LiveColor.make = function (_elm) {
                               ,footer]));
               }();}
          _U.badCase($moduleName,
-         "between lines 24 and 56");
+         "between lines 22 and 54");
       }();
    });
    var main = A3($Signal.map2,

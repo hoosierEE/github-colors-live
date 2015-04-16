@@ -1,8 +1,6 @@
 module LiveColor where
 
--- built with Elm 0.14.1
--- Currently rebuilding to use Elm 0.15
--- TODO : port `colr` complains about not having a default value
+-- Built with Elm 0.15
 import Color
 import Graphics.Collage exposing (..)
 import Graphics.Element exposing (..)
