@@ -14,9 +14,9 @@ import Task exposing (..)
 import Text as T
 import Window
 
-------------
+
 -- LAYOUT --
-------------
+
 scene : (Int,Int) -> List (String, String) -> Element
 scene (w,h) langColorList =
     let
@@ -53,14 +53,14 @@ and [open-sourced](https://github.com/hoosierEE/github-colors-live)."""
         fds t = flow down <| List.map boxed t
     in flow down [title, flow right <| List.map fds cols, footer]
 
-------------
+
 -- WIRING --
-------------
+
 main = Signal.map2 scene Window.dimensions clrs
 
-------------
+
 -- PORTS --
-------------
+
 port clrs : Signal (List (String,String)) -- (INPUT) result from YAML->JSON->filtering
 
 port yamlTrig : Signal String -- (OUTPUT) to corresponding port in JavaScript
@@ -80,9 +80,9 @@ yamlFile = Signal.mailbox ""
 
 
 
----------------
+
 -- UTILITIES --
----------------
+
 -- converts "#rgb" or "#rrggbb" hex color string into {r,g,b} integers
 rgbFromCss : String -> Color.Color
 rgbFromCss cssColorString =
