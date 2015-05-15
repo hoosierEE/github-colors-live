@@ -2952,7 +2952,11 @@ Elm.Http.make = function (_elm) {
                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
               }();}
          _U.badCase($moduleName,
+<<<<<<< HEAD
          "between lines 418 and 425");
+=======
+         "between lines 419 and 426");
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
       }();
    });
    var NetworkError = {ctor: "NetworkError"};
@@ -2965,7 +2969,11 @@ Elm.Http.make = function (_elm) {
             case "RawTimeout":
             return Timeout;}
          _U.badCase($moduleName,
+<<<<<<< HEAD
          "between lines 430 and 432");
+=======
+         "between lines 431 and 433");
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
       }();
    };
    var fromJson = F2(function (decoder,
@@ -2982,7 +2990,11 @@ Elm.Http.make = function (_elm) {
                   case "Ok":
                   return $Task.succeed(_v4._0);}
                _U.badCase($moduleName,
+<<<<<<< HEAD
                "between lines 408 and 411");
+=======
+               "between lines 409 and 412");
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
             }();
          };
          return A2($Task.andThen,
@@ -3141,7 +3153,11 @@ Elm.Http.make = function (_elm) {
               "=",
               queryEscape(_v7._1)));}
          _U.badCase($moduleName,
+<<<<<<< HEAD
          "on line 62, column 3 to 46");
+=======
+         "on line 63, column 3 to 46");
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
       }();
    };
    var url = F2(function (domain,
@@ -3158,8 +3174,13 @@ Elm.Http.make = function (_elm) {
          A2($List.map,queryPair,args))));
       }();
    });
+<<<<<<< HEAD
    var TODO_impliment_file_in_another_library = {ctor: "TODO_impliment_file_in_another_library"};
    var TODO_impliment_blob_in_another_library = {ctor: "TODO_impliment_blob_in_another_library"};
+=======
+   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
+   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
    _elm.Http.values = {_op: _op
                       ,getString: getString
                       ,get: get
@@ -3174,6 +3195,10 @@ Elm.Http.make = function (_elm) {
                       ,stringData: stringData
                       ,blobData: blobData
                       ,defaultSettings: defaultSettings
+<<<<<<< HEAD
+=======
+                      ,fromJson: fromJson
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
                       ,Request: Request
                       ,Settings: Settings
                       ,Response: Response
@@ -7986,6 +8011,11 @@ if (!Elm.fullscreen) {
 			inputs = rootNode.kids;
 			filterListeners(inputs, listeners);
 
+<<<<<<< HEAD
+=======
+			addReceivers(elm.ports);
+
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
 			if (typeof moduleToReplace !== 'undefined')
 			{
 				hotSwap(moduleToReplace, elm);
@@ -8005,6 +8035,36 @@ if (!Elm.fullscreen) {
 		};
 
 		function checkInputs(elm)
+<<<<<<< HEAD
+		{
+			var argsTracker = elm.argsTracker;
+			for (var name in argsTracker)
+			{
+				if (!argsTracker[name].used)
+				{
+					throw new Error(
+						"Port Error:\nYou provided an argument named '" + name +
+						"' but there is no corresponding port!\n\n" +
+						"Maybe add a port '" + name + "' to your Elm module?\n" +
+						"Maybe remove the '" + name + "' argument from your initialization code in JS?"
+					);
+				}
+			}
+		}
+
+		function errorNode(message)
+		{
+			var code = document.createElement('code');
+
+			var lines = message.split('\n');
+			code.appendChild(document.createTextNode(lines[0]));
+			code.appendChild(document.createElement('br'));
+			code.appendChild(document.createElement('br'));
+			for (var i = 1; i < lines.length; ++i)
+			{
+				code.appendChild(document.createTextNode('\u00A0 \u00A0 ' + lines[i].replace(/  /g, '\u00A0 ')));
+				code.appendChild(document.createElement('br'));
+=======
 		{
 			var argsTracker = elm.argsTracker;
 			for (var name in argsTracker)
@@ -8059,15 +8119,75 @@ if (!Elm.fullscreen) {
 					}
 				}
 				listener.domNode.removeEventListener(listener.eventName, listener.func);
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
+			}
+			code.appendChild(document.createElement('br'));
+			code.appendChild(document.createTextNode("Open the developer console for more details."));
+			return code;
+		}
+
+<<<<<<< HEAD
+
+		//// FILTER SIGNALS ////
+
+		// TODO: move this code into the signal module and create a function
+		// Signal.initializeGraph that actually instantiates everything.
+
+		function filterListeners(inputs, listeners)
+		{
+			loop:
+			for (var i = listeners.length; i--; )
+			{
+				var listener = listeners[i];
+				for (var j = inputs.length; j--; )
+				{
+					if (listener.relevantInputs.indexOf(inputs[j].id) >= 0)
+					{
+						continue loop;
+					}
+				}
+=======
+		function removeListeners(listeners)
+		{
+			for (var i = listeners.length; i--; )
+			{
+				var listener = listeners[i];
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
+				listener.domNode.removeEventListener(listener.eventName, listener.func);
 			}
 		}
 
+<<<<<<< HEAD
 		function removeListeners(listeners)
 		{
 			for (var i = listeners.length; i--; )
 			{
 				var listener = listeners[i];
 				listener.domNode.removeEventListener(listener.eventName, listener.func);
+=======
+		// add receivers for built-in ports if they are defined
+		function addReceivers(ports)
+		{
+			if ('title' in ports)
+			{
+				if (typeof ports.title === 'string')
+				{
+					document.title = ports.title;
+				}
+				else
+				{
+					ports.title.subscribe(function(v) { document.title = v; });
+				}
+			}
+			if ('redirect' in ports)
+			{
+				ports.redirect.subscribe(function(v) {
+					if (v.length > 0)
+					{
+						window.location = v;
+					}
+				});
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
 			}
 		}
 
@@ -8919,6 +9039,10 @@ Elm.Native.Signal.make = function(localRuntime) {
 		var node = {
 			id: Utils.guid(),
 			name: 'merge',
+<<<<<<< HEAD
+=======
+			value: A2(tieBreaker, leftStream.value, rightStream.value),
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
 			parents: [leftStream, rightStream],
 			kids: []
 		};
@@ -9101,7 +9225,11 @@ Elm.Native.Signal.make = function(localRuntime) {
 		sampleOn: F2(sampleOn),
 		dropRepeats: dropRepeats,
 		timestamp: timestamp,
+<<<<<<< HEAD
 		delay: delay
+=======
+		delay: F2(delay)
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
 	};
 };
 
@@ -9546,6 +9674,11 @@ Elm.Native.Task.make = function(localRuntime) {
 		}
 		Signal.output('perform-tasks-' + name, register, signal);
 
+<<<<<<< HEAD
+=======
+		register(signal.value);
+
+>>>>>>> aeaa1c54d2c0b2665a9d602752780eb4b8f1f167
 		return signal;
 	}
 
@@ -12914,7 +13047,7 @@ Elm.Signal.make = function (_elm) {
                  }();
               });}
          _U.badCase($moduleName,
-         "between lines 362 and 363");
+         "between lines 370 and 371");
       }();
    });
    var Message = function (a) {
@@ -12928,7 +13061,7 @@ Elm.Signal.make = function (_elm) {
          {case "Address":
             return Message(_v5._0(value));}
          _U.badCase($moduleName,
-         "on line 344, column 5 to 24");
+         "on line 352, column 5 to 24");
       }();
    });
    var mailbox = $Native$Signal.mailbox;
@@ -12945,7 +13078,7 @@ Elm.Signal.make = function (_elm) {
                  return _v8._0(f(x));
               });}
          _U.badCase($moduleName,
-         "on line 331, column 5 to 29");
+         "on line 339, column 5 to 29");
       }();
    });
    var Mailbox = F2(function (a,
